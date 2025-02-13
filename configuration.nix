@@ -17,6 +17,15 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Options to reduce disk usage
+  boot.loader.systemd-boot.configurationLimit = 10;
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 1w";
+  };
+  nix.settings.auto-optimise-store = true;
+
   # Network connection
   networking.hostName = "suckless"; # Define your hostname.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
