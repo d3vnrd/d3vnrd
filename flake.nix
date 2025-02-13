@@ -18,7 +18,7 @@
 
       # Add new hostname
       forAllHostnames = nixpkgs.lib.genAttrs [
-	"suckless"
+	"suckless-laptop"
       ];
     in 
     {
@@ -35,7 +35,7 @@
         modules = [
 	  { networking.hostName = hostName; }
           ./hosts/${hostName}/configuration.nix
-	  ./modules
+	  #./modules
         ];
       });
     };
