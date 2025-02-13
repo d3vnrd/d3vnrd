@@ -1,16 +1,12 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
 { config, lib, pkgs, ... }:
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./hardware-configuration.nix
     ];
 
-  # Additional options
+  # System settings 
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.supportedFilesystems = [ "btrfs" ];
   hardware.enableAllFirmware = true;
@@ -32,14 +28,6 @@
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
-
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.autorun = false;
@@ -47,13 +35,6 @@
   services.xserver.displayManager.startx.enable = true;
   services.getty.autologinUser = "flaaneurs";
   services.xserver.windowManager.dwm.enable = true;
-
-  # Configure keymap in X11
-  # services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
 
   # Enable sound daemon
   services.pipewire = {
@@ -70,14 +51,12 @@
     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
   };
 
+  # Default programs
   programs.firefox.enable = true;
   programs.zsh.enable = true;
-  
-  # Set zsh as default shell
   users.defaultUserShell = pkgs.zsh;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
+  # List packages installed in system profile
   environment.systemPackages = with pkgs; [
     vim 
     git 
@@ -113,6 +92,5 @@
   # -------------------------------------------------------
   # Do NOT change this value
   system.stateVersion = "24.11";
-
 }
 
