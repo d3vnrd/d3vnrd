@@ -28,7 +28,7 @@
   nix.settings.auto-optimise-store = true;
 
   # Network connection
-  networking.hostName = "suckless"; # Define your hostname.
+  #networking.hostName = "suckless"; # Define your hostname.
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
   # Set your time zone.
