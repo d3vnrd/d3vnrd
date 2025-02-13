@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   imports =
@@ -11,6 +11,7 @@
   boot.supportedFilesystems = [ "btrfs" ];
   hardware.enableAllFirmware = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   nixpkgs.config.allowUnfree = true;
 
   # Use the systemd-boot EFI boot loader.
