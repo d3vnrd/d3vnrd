@@ -14,30 +14,30 @@
   # results of the flake:
   outputs = { self, nixpkgs, ... } @ inputs: 
     let
-      system = "x86_64-linux";
+      # Assgin hosts with system architectures
+      systems = {
+        "sl-laptop" = "x86_64-linux";
+      };
 
-      # Add new hostname
-      forAllHostnames = nixpkgs.lib.genAttrs [
-	"suckless-laptop"
-      ];
+      forEachHost = nixpkgs.lib.genAttrs (builtins.attrNames systems);
+      forEachArchitecture = nixpkgs.lib.genAttrs (nixpkgs.lib.unique (builtins.attrValues systems));
     in 
     {
-      nixosConfigurations = forAllHostnames (hostName: nixpkgs.lib.nixosSystem {
-	inherit system;
+      nixosConfigurations = forEachHost (
+        hostname: nixpkgs.lib.nixosSystem {
+	  system = systems.${hostname};
+          specialArgs = { inherit inputs; };
+          modules = [
+	    { networking.hostname = hostname; }
+            ./hosts/${hostname}/configuration.nix
+	    ./modules
+          ];
+        }
+      );
 
-        # Set all inputs parameters as special arguments for all submodules,
-        # making it possible to directly use all dependencies in inputs in
-        # submodules. For instance, after applying the inputs parameter can
-        # now be used in ./configuration.nix to install software from other
-        # dependencies.
-        specialArgs = { inherit inputs; };
-
-        modules = [
-	  { networking.hostName = hostName; }
-          ./hosts/${hostName}/configuration.nix
-	  #./modules
-        ];
-      });
+      formatter = forEachArchitecture (
+        architecture: nixpkgs.legacyPackages.${architecture}.alejandra
+      );
     };
   # ---------------------------------------------------------------------
 }
