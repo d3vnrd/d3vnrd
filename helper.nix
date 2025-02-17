@@ -1,4 +1,3 @@
-{ ... }:
 {
   loadModules = dir: 
     let
