@@ -26,8 +26,9 @@
       nixosConfigurations = forEachHost (
         hostname: nixpkgs.lib.nixosSystem {
 	  system = systems.${hostname};
-          specialArgs = { inherit inputs hostname; };
+          specialArgs = { inherit inputs; };
           modules = [
+	    { networking.hostName = hostname }
             ./hosts/${hostname}/configuration.nix
 	    ./modules
           ];

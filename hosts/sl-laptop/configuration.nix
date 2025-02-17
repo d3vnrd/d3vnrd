@@ -1,4 +1,4 @@
-{ config, lib, pkgs, inputs, hostname, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   imports =
@@ -28,7 +28,7 @@
   nix.settings.auto-optimise-store = true;
 
   # Network connection
-  networking.hostName = hostname;
+  # networking.hostName = hostname;
   networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
 
   # Set your time zone.
