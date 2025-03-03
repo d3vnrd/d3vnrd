@@ -1,9 +1,9 @@
-{ pkgs, lib, config, inputs, helper, ... }:
+{ mylib, ... }:
 let
-  services = helper.loadModules ./service;
-  features = helper.loadModules ./feature;
-  extras = helper.loadModules ./extra;
-  home = helper.loadModules ./home;
+  services = mylib.loadModules ./service;
+  features = mylib.loadModules ./feature;
+  extras = mylib.loadModules ./extra;
+  home = mylib.loadModules ./home;
 in
 { imports = services ++ features ++ extras ++ home; }
 
