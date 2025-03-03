@@ -66,6 +66,8 @@
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
 
+  virtualisation.docker.enable = true;
+
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
     vim 
