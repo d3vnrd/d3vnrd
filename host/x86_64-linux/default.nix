@@ -2,11 +2,11 @@
   system = builtins.baseNameOf ./.;
   hosts = mylib.getDirNames ./.;
 in {
-  sl-laptop = lib.nixosSystem {
+  sl_01 = lib.nixosSystem {
     inherit system;
     specialArgs = { inherit args; };
     modules = [ 
-      ./sl-laptop/configuration.nix
+      ./sl_01/configuration.nix
       ../../module 
     ];
   };
