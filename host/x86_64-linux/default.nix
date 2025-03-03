@@ -6,7 +6,7 @@ in {
     inherit system;
     specialArgs = { inherit args; };
     modules = [ 
-      ./${hostname}/configuration.nix
+      ./sl-laptop/configuration.nix
       ../../module 
     ];
   };
