@@ -1,8 +1,8 @@
 { lib }: {
-  getSubdirNames = dir: builtins.attrNames (
+  dirsIn = dir: builtins.attrNames (
     lib.filterAttrs (_: type: type == "directory") (builtins.readDir dir)
   );
-
+ 
   loadModules = dir: 
     let
       isNix = file: builtins.match ".*\\.nix$" file != null;
