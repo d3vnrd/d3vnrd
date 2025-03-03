@@ -1,7 +1,7 @@
 {
   description = "FrameworkOS";
 
-  ouputs = inputs: import ./host inputs;
+  outputs = inputs: import ./host inputs;
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
