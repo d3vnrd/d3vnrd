@@ -1,5 +1,5 @@
 { lib }: {
-  getDirNames = dir: builtins.attrNames (
+  getSubdirNames = dir: builtins.attrNames (
     lib.filterAttrs (_: type: type == "directory") (builtins.readDir dir)
   );
 

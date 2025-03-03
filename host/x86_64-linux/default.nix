@@ -1,14 +1,10 @@
-{ mylib, lib, ... } @ args: let
-  system = builtins.baseNameOf ./.;
-  hosts = mylib.getDirNames ./.;
-in {
-  sl_01 = lib.nixosSystem {
-    inherit system;
-    specialArgs = { inherit args; };
-    modules = [ 
-      ./sl_01/configuration.nix
-      ../../module 
-    ];
-  };
-}
-
+{ lib, mylib, ... }@specialArgs: modules: let
+  hosts = mylib.getSubdirNames ./.;
+in lib.genAttrs hosts ( hostname: lib.nixosSystem {
+  inherit specialArgs;
+  system = "x86_64-linux";
+  modules = [
+    ./${hostname}/configuration.nix
+    modules
+  ];
+})
