@@ -5,10 +5,11 @@
   specialArgs = { inherit inputs lib mylib; }; 
 
   genNixHosts = system: let
+    # TODO: add fault tolerance options when no host in system dir
     hosts = mylib.dirsIn ./${system};
   in lib.genAttrs hosts (
     hostname: lib.nixosSystem {
-      inherit system args;
+      inherit system specialArgs;
       modules = [ 
 	./${system}/${hostname}/configuration.nix 
 	../module/nixos
@@ -20,5 +21,6 @@
 in {
   nixosConfigurations = lib.mergeAttrsList [
     (genNixHosts "x86_64-linux") 
+    (genNixHosts "aarch64-linux") 
   ];
 }
