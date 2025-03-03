@@ -9,7 +9,7 @@
 
   forAllSystems = func: (lib.genAttrs (mylib.getDirNames ./.) func);
 in {
-  nixosConfigurations = lib.mergeAttrsList nixosSystems;
+  nixosConfigurations = import ./x86_64-linux args;
 
   formatter = forAllSystems (
     system: nixpkgs.legacyPackages.${system}.alejandra

@@ -7,7 +7,7 @@ in {
     specialArgs = { inherit args; };
     modules = [ 
       ./${hostname}/configuration.nix
-      ../module 
+      ../../module 
     ];
   };
 }
