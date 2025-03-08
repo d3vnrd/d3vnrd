@@ -1,7 +1,7 @@
-{ lib, mylib, ... }@speicalArgs: let
+{ lib, mylib, nix-darwin, ... }@specialArgs: let
   genHosts = {system, isDarwin ? false}: let
     sysFunc = if isDarwin 
-      then args.nix-darwin.lib.darwinSystem else lib.nixosSystem;
+      then nix-darwin.lib.darwinSystem else lib.nixosSystem;
     sysType = if isDarwin
       then "darwin" else "linux";
     sysHosts = mylib.dirsIn ./${system};
