@@ -17,12 +17,12 @@
   ); # return empty set if no hosts were found
 in {
   nixosConfigurations = lib.mergeAttrsList [
-    (genHosts {system = "x86_64-linux"})
-    (genHosts {system = "aarch64-linux"})
+    (genHosts {system = "x86_64-linux";})
+    (genHosts {system = "aarch64-linux";})
   ];
 
   darwinConfigurations = lib.mergeAttrsList [
-    (genHosts {system = "x86_64-darwin"; isDarwin = true})
-    (genHosts {system = "aarch64-darwin"; isDarwin = true})
+    (genHosts {system = "x86_64-darwin"; isDarwin = true;})
+    (genHosts {system = "aarch64-darwin"; isDarwin = true;})
   ];
 }
