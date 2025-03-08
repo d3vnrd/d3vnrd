@@ -1,4 +1,4 @@
-{ lib, mylib, ... }@args: let
+{ lib, mylib, ... }@speicalArgs: let
   genHosts = {system, isDarwin ? false}: let
     sysFunc = if isDarwin 
       then args.nix-darwin.lib.darwinSystem else lib.nixosSystem;
