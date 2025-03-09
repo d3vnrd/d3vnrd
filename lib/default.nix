@@ -22,15 +22,4 @@
   );
  
   relativeToRoot = lib.path.append ../.;
-
-  loadModules = dir: 
-    let
-      isNix = file: lib.hasSuffix "..nix" file;
-      isValid = file:
-        let module = import (dir + "/${file}");
-        in builtins.isAttrs module && builtins.hasAttr "config" module;
-    in map (file: import (dir + file)) (builtins.filter 
-      (file: isNix file && isValid file) 
-      (builtins.attrNames (builtins.readDir dir))
-    );
 }

@@ -10,7 +10,7 @@
     forAllSystems = func: (lib.genAttrs (mylib.dirsIn ./host) func);
   in lib.mergeAttrsList [
     ( import ./host specialArgs )
-    ( import ./usr specialArgs )
+    #( import ./usr specialArgs )
     {
       formatter = forAllSystems (
 	system: nixpkgs.legacyPackages.${system}.alejandra

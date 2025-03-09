@@ -1,19 +1,21 @@
-{ lib, mylib, nixpkgs, home-manager, ... } @ args: let
+{ lib, mylib, inputs, ... }@extraSpecialArgs: let
+  inherit (inputs) nixpkgs home-manager;
+
   genUsers = system: let
     users = mylib.filesIn ./${system};
   in lib.genAttrs users (
     username: home-manager.lib.homeManagerConfiguration {
+      inherit extraSpecialArgs;
       pkgs = nixpkgs.legacyPackages.${system}; 
-      extraSpecialArgs = args;
-      modules = [ 
-	./${system}/${username}.nix
-	../module/home
-      ];
-    };
+      modules = ( map mylib.relativeToRoot [ 
+	"${system}/${username}.nix"
+	"module/home"
+      ]);
+    }
   );
 
 in {
   homeConfigurations = lib.mergeAttrsList
-    ( map genUsers (mylib.dirsIn ./.) )
+    ( map genUsers (mylib.dirsIn ./.) );
 }
 

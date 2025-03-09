@@ -1,7 +1,9 @@
 { lib, mylib, inputs, ... }@specialArgs: let
+  inherit (inputs) nix-darwin;
+
   genHosts = {system, isDarwin ? false}: let
     sysFunc = if isDarwin 
-      then inputs.nix-darwin.lib.darwinSystem else lib.nixosSystem;
+      then nix-darwin.lib.darwinSystem else lib.nixosSystem;
     sysType = if isDarwin
       then "darwin" else "linux";
     sysHosts = mylib.dirsIn ./${system};
@@ -15,6 +17,7 @@
       ]);
     }
   ); # return empty set if no hosts were found
+
 in {
   nixosConfigurations = lib.mergeAttrsList [
     (genHosts {system = "x86_64-linux";})
