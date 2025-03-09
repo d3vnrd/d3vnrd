@@ -12,7 +12,7 @@
     hostname: sysFunc {
       inherit system specialArgs;
       modules = ( map mylib.relativeToRoot [ 
-	"${system}/${hostname}/configuration.nix"
+	"host/${system}/${hostname}/configuration.nix"
 	"module/${sysType}"
       ]);
     }

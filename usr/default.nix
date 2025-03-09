@@ -8,7 +8,7 @@
       inherit extraSpecialArgs;
       pkgs = nixpkgs.legacyPackages.${system}; 
       modules = ( map mylib.relativeToRoot [ 
-	"${system}/${username}.nix"
+	"usr/${system}/${username}.nix"
 	"module/home"
       ]);
     }
