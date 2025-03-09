@@ -4,13 +4,13 @@
   outputs = { self, nixpkgs, ... }@inputs: let
     inherit (nixpkgs) lib;
     
-    mylib = import ../lib { inherit lib; };
+    mylib = import ./lib { inherit lib; };
     specialArgs = { inherit inputs lib mylib; };
 
     forAllSystems = func: (lib.genAttrs (mylib.dirsIn ./host) func);
   in lib.mergeAttrsList [
     ( import ./host specialArgs )
-    #( import ./usr specialArgs )
+    ( import ./usr specialArgs )
     {
       formatter = forAllSystems (
 	system: nixpkgs.legacyPackages.${system}.alejandra
