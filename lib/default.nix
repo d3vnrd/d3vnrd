@@ -4,10 +4,11 @@
     (builtins.readDir dir)
   );
 
-  filesIn = dir: builtins.attrNames ( lib.filterAttrs
-    (name: type: type == "regular" && lib.hasSuffix ".nix" name)
-    (builtins.readDir dir)
-  );
+  filesIn = dir: map lib.strings.removeSuffix ".nix" 
+    (builtins.attrNames ( lib.filterAttrs
+      (name: type: type == "regular" && lib.hasSuffix ".nix" name)
+      (builtins.readDir dir)
+    ));
 
   scanPaths = path: map (f: (path + "/${f}")) (
     builtins.attrNames (

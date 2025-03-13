@@ -1,6 +1,2 @@
-{ mylib, ... }:
-let
-  features = mylib.loadModules ./feature;
-in
-{ imports = feature; }
+{ mylib, ... }:{ imports = mylib.scanPaths ./.; }
 
