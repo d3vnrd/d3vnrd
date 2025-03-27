@@ -10,7 +10,7 @@
       modules = ( map mylib.relativeToRoot [ 
 	"usr/${system}/${username}.nix"
 	"module/home"
-      ]);
+      ])
     }
   );
 

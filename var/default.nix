@@ -1,2 +1,3 @@
-{
+{ lib }: {
+  defaultUser = "tlmp59";
 }

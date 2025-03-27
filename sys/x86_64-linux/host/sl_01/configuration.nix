@@ -1,13 +1,10 @@
 { config, lib, pkgs, inputs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${myvar.defaultUser} = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-  };
+  imports =
+    [
+      ./hardware-configuration.nix
+    ];
 
   # System settings 
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -58,6 +55,11 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;
 
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.flaaneurs = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+  };
 
   # Default programs
   programs.firefox.enable = true;

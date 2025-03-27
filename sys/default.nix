@@ -18,8 +18,7 @@
       modules = [
 	./${system}/${hostname}/configuration.nix
 	( mylib.relativeToRoot "module/${sysType}")
-	
-	# default user always gets initialized on system switch
+
         homeFunc {
 	  home-manager.useGlobalPkgs = true;
 	  home-manager.useUserPackages = true;
@@ -27,6 +26,19 @@
 	  home-manager.extraSpecialArgs = specialArgs;
 	  home-manager.users.${myvar.defaultUser} = import ./host/${system}/${hostname}/home.nix;
 	}
+      ];
+    }
+  );
+
+  genUsers = system: let
+    users = mylib.filesIn ./${system};
+  in lib.genAttrs users (
+    username: home-manager.lib.homeManagerConfiguration {
+      extraSpecialArgs = specialArgs;
+      pkgs = nixpkgs.legacyPackages.${system};
+      modules = [
+	./${system}/usr/${username}.nix
+	( mylib.relativeToRoot "module/home")
       ];
     }
   );
@@ -41,4 +53,7 @@ in {
     (genHosts {system = "x86_64-darwin"; isDarwin = true;})
     (genHosts {system = "aarch64-darwin"; isDarwin = true;})
   ];
+  
+  homeConfigurations = lib.mergeAttrsList 
+    ( map genUsers (mylib.dirsIn ./. ) );
 }
