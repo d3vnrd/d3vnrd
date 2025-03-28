@@ -1,44 +1,44 @@
 { lib, mylib, myvar, inputs, ... }@specialArgs: let
   inherit (inputs) nix-darwin home-manager;
 
-  genHosts = {system, isDarwin ? false}: let
-    sysFunc = if isDarwin 
-      then nix-darwin.lib.darwinSystem else lib.nixosSystem;
-    sysType = if isDarwin
-      then "darwin" else "linux";
-    sysHosts = mylib.dirsIn ./${system};
+  genHosts = system: let
+    sysAttrs = if lib.hasSuffix "darwin" system {
+      type = "darwin";
+      func = nix-darwin.lib.darwinSystem;
+      home = home-manager.darwinModules.home-manager;
+    } else {
+      type = "linux";
+      func = lib.nixosSystem;
+      home = home-manager.nixosModules.home-manager;
+    };
 
-    homeFunc = if isDarwin
-      then home-manager.darwinModules.home-manager
-      else home-manager.nixosModules.home-manager;
-
-  in lib.genAttrs sysHosts (
-    hostname: sysFunc {
-      inherit system specialArgs;
-      modules = [
-	./${system}/${hostname}/configuration.nix
-	( mylib.relativeToRoot "module/${sysType}")
+  in with sysAttrs;
+    lib.genAttrs mylib.dirsIn ./${system} (
+      hostname: func {
+        inherit system specialArgs;
+        modules = [
+	  ./${system}/${hostname}/configuration.nix
+	  ( mylib.relativeToRoot "module/${type}")
 	
-	# default user always gets initialized on system switch
-        homeFunc {
-	  home-manager.useGlobalPkgs = true;
-	  home-manager.useUserPackages = true;
-
-	  home-manager.extraSpecialArgs = specialArgs;
-	  home-manager.users.${myvar.defaultUser} = import ./host/${system}/${hostname}/home.nix;
-	}
-      ];
-    }
-  );
+          home {
+	    home-manager = {
+	      useGlobalPkgs = true;
+	      useUserPackages = true;
+	      extraSpeicalArgs = specialArgs;
+	      users.${myvar.user} = import
+		./${system}/${hostname}/home.nix;
+	    }; 
+	  }
+        ];
+      }
+    );
 
 in {
   nixosConfigurations = lib.mergeAttrsList [
-    (genHosts {system = "x86_64-linux";})
-    (genHosts {system = "aarch64-linux";})
+    ( map genHosts myvar.systems.linux)
   ];
 
   darwinConfigurations = lib.mergeAttrsList [
-    (genHosts {system = "x86_64-darwin"; isDarwin = true;})
-    (genHosts {system = "aarch64-darwin"; isDarwin = true;})
+    ( map genHosts myvar.systems.darwin)
   ];
 }
