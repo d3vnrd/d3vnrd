@@ -17,12 +17,12 @@
 	|| (
 	  (path != "default.nix") # ignore default.nix
 	  && (lib.hasSuffix ".nix" path) # include .nix file
-	)
-      ) (builtins.readDir path)
     ) 
   );
  
   relativeToRoot = lib.path.append ../.;
 
-  forSystems = func: (lib.genAttrs (dirsIn ./host) func);
+  forSystems = func: (lib.genAttrs
+   ( dirsIn (relativeToRoot "host/") ) func
+  );
 }
