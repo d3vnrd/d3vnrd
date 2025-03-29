@@ -20,16 +20,13 @@
         inherit system specialArgs;
         modules = [
 	  ./${system}/${hostname}/configuration.nix
-	  ( mylib.relativeToRoot "module/${type}")
+	  ( mylib.relativeToRoot "module/${type}" )
 	
           home {
-	    home-manager = {
-	      useGlobalPkgs = true;
-	      useUserPackages = true;
-	      extraSpeicalArgs = specialArgs;
-	      users.${myvar.user} = import
-		./${system}/${hostname}/home.nix;
-	    }; 
+	    home-manager.useGlobalPkgs = true;
+	    home-manager.useUserPackages = true;
+	    home-manager.extraSpecialArgs = specialArgs;
+	    home-manager.users.tlmp59 = import ./${system}/${hostname}/home.nix;
 	  }
         ];
       }
