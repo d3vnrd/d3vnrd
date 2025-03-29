@@ -1,7 +1,10 @@
 { inputs, lib, util, ... }@specialArgs: let
   inherit (inputs) nix-darwin home-manager;
+  inherit (util) mylib myvar;
 
   genHosts = system: let
+    sysHosts = mylib.dirsIn ./${system};
+
     sysAttrs = if lib.hasSuffix "darwin" system then {
       type = "darwin";
       func = nix-darwin.lib.darwinSystem;
@@ -11,9 +14,8 @@
       func = lib.nixosSystem;
       home = home-manager.nixosModules.home-manager;
     };
-
-  in with sysAttrs util;
-    lib.genAttrs mylib.dirsIn ./${system} (
+  in with sysAttrs;
+    lib.genAttrs sysHosts (
       hostname: func {
         inherit system specialArgs;
         modules = [
@@ -33,12 +35,10 @@
       }
     );
 
-in with util; {
-  nixosConfigurations = lib.mergeAttrsList [
-    ( map genHosts myvar.systems.linux)
-  ];
+in {
+  nixosConfigurations = lib.mergeAttrsList
+    ( map genHosts myvar.systems.linux);
 
-  darwinConfigurations = lib.mergeAttrsList [
-    ( map genHosts myvar.systems.darwin)
-  ];
+  darwinConfigurations = lib.mergeAttrsList
+    ( map genHosts myvar.systems.darwin);
 }

@@ -1,10 +1,10 @@
-{ config, lib, pkgs, inputs, ... }:
+{ config, lib, pkgs, inputs, util, ... }:
 
 {
   imports = [ ./hardware-configuration.nix ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${myvar.defaultUser} = {
+  users.users.${util.myvar.user} = {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
   };
