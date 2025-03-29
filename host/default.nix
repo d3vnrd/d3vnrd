@@ -22,11 +22,11 @@
 	  ./${system}/${hostname}/configuration.nix
 	  ( mylib.relativeToRoot "module/${type}" )
 	
-          home {
-	    home-manager.useGlobalPkgs = true;
-	    home-manager.useUserPackages = true;
-	    home-manager.extraSpecialArgs = specialArgs;
-	    home-manager.users.tlmp59 = import ./${system}/${hostname}/home.nix;
+          #home {
+	  #  home-manager.useGlobalPkgs = true;
+	  #  home-manager.useUserPackages = true;
+	  #  home-manager.extraSpecialArgs = specialArgs;
+	  #  home-manager.users."${myvar.user}" = import ./${system}/${hostname}/home.nix;
 	  }
         ];
       }

@@ -46,7 +46,7 @@
   services.xserver.autorun = false;
   services.xserver.displayManager.lightdm.enable = false;
   services.xserver.displayManager.startx.enable = true;
-  services.getty.autologinUser = "flaaneurs";
+  services.getty.autologinUser = "tlmp59";
   services.xserver.windowManager.dwm.enable = true;
 
   # Enable sound daemon
