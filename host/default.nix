@@ -21,6 +21,9 @@
         modules = [
 	  ./${system}/${hostname}/configuration.nix
 	  ( mylib.relativeToRoot "module/${type}" )
+	  {
+	    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+	  }
         ];
       }
     );
