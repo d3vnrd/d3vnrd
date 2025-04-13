@@ -1,6 +1,1 @@
-{ util, ... }: { 
-  imports = [
-    ( util.mylib.scanPath ./. )
-    ../default.nix
-  ]
-}
+{ util, ... }: { imports = util.mylib.scanPath ./.; }
