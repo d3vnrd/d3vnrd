@@ -1,7 +1,5 @@
 { config, pkgs, system, lib, util, ... }: with util;
 {
-  imports = [ if (lib.hasSuffix "darwin" system) then ./darwin else ./linux ];
-
   # ---General---
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   networking.hostName = hostname;
@@ -31,5 +29,7 @@
     wget
     curl
   ];
+
+  #imports = if (lib.hasSuffix "darwin" system) then [ ./darwin ] else [ ./linux ];
 }
 
