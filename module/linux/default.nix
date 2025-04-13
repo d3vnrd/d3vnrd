@@ -1,1 +1,6 @@
-{ util, ... }: { imports = util.mylib.scanPath ./.; }
+{ util, ... }: { 
+  imports = [
+    ( util.mylib.scanPath ./. )
+    ../default.nix
+  ]
+}
