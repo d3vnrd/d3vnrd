@@ -1,10 +1,12 @@
-{ config, pkgs, system, lib, util, ... }: with util;
+{ config, pkgs, system, util, ... }: with util;
 {
   # ---General---
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  networking.hostName = hostname;
   nixpkgs.config.allowUnfree = true;
   time.timeZone = "Asia/Vietnam";
+
+  # ---Programs---
+  programs.zsh.enable = true;
 
   # ---Users---
   users.users.${myvar.user} = {
@@ -29,7 +31,5 @@
     wget
     curl
   ];
-
-  #imports = if (lib.hasSuffix "darwin" system) then [ ./darwin ] else [ ./linux ];
 }
 

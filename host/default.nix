@@ -23,24 +23,24 @@
 	  ./${system}/${hostname}/configuration.nix
 	  ( mylib.relativeToRoot "module/${type}" )
 	  {
-	    # ---General---
+	  #   # ---General---
 	    networking.hostName = hostname;
-	    nix.settings.experimental-features = [ "nix-command" "flakes" ];
-	    time.timeZone = "Asia/Vietnam";
-
-	    # ---Users---
-	    users.users.${myvar.user} = {
-	      isNormalUser = true;
-	      extraGroups = [ "wheel" ];
-	    };
-
-	    # ---Reduce disk usage---
-	    nix.gc = {
-	      automatic = true;
-	      dates = "weekly";
-	      options = "--delete-older-than 1w";
-	    };
-	    nix.settings.auto-optimise-store = true;
+	  #   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+	  #   time.timeZone = "Asia/Vietnam";
+	  #
+	  #   # ---Users---
+	  #   users.users.${myvar.user} = {
+	  #     isNormalUser = true;
+	  #     extraGroups = [ "wheel" ];
+	  #   };
+	  #
+	  #   # ---Reduce disk usage---
+	  #   nix.gc = {
+	  #     automatic = true;
+	  #     dates = "weekly";
+	  #     options = "--delete-older-than 1w";
+	  #   };
+	  #   nix.settings.auto-optimise-store = true;
 	  }
         ];
       }
