@@ -30,7 +30,7 @@
 	        extraGroups = [ "wheel" ];
 	      };
 	      # ---Add new global user here---
-	    }
+	    };
 	  }
 
 	  home.home-manager {
@@ -38,9 +38,12 @@
 	    home-manager.useUserPackages = true;
 	    home-manager.extraSpecialArgs = specialArgs;
             home-manager.users = {
-	      "${mvar.user}".imports = ./${system}/${hostname}/home.nix;
+	      "${mvar.user}".imports = [
+	        ./${system}/${hostname}/home.nix
+		( mlib.relativeToRoot "module/home")
+	      ];
 	      # ---Don't forget here aswell---
-	    }
+	    };
 	  }
         ];
       }

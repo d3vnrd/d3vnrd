@@ -12,7 +12,7 @@
     ( import ./host specialArgs )
 
     {
-      formatter = mfunc.forSystems (
+      formatter = mlib.forSystems (
 	system: nixpkgs.legacyPackages.${system}.alejandra
       );
     }
