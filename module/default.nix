@@ -4,6 +4,15 @@
   nixpkgs.config.allowUnfree = true;
   time.timeZone = "Asia/Vietnam";
 
+  # ---Home manager---
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    extraspecialArgs = 
+
+  };
+
+
   # ---Programs---
   programs.zsh.enable = true;
 
