@@ -4,12 +4,6 @@
     (builtins.readDir dir)
   );
 
-  filesIn = dir: map lib.strings.removeSuffix ".nix" 
-    (builtins.attrNames ( lib.filterAttrs
-      (name: type: type == "regular" && lib.hasSuffix ".nix" name)
-      (builtins.readDir dir)
-    ));
-
   scanPath = path: map (f: (path + "/${f}")) (
     builtins.attrNames (
       lib.filterAttrs (path: type:
@@ -28,3 +22,4 @@
 
   forSystems = func: (lib.genAttrs getSystems func);
 }
+

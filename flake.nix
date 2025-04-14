@@ -1,17 +1,18 @@
 {
   description = "FrameworkOS";
 
-  outputs = { self, nixpkgs, ... }@inputs: let
+  outputs = { nixpkgs, ... }@inputs: let
     inherit (nixpkgs) lib;
     
-    util = import ./util { inherit lib; };
-    specialArgs = { inherit inputs lib util; };
+    mlib = import ./lib { inherit lib; };
+    mvar = import ./var { inherit lib mlib; };
+    specialArgs = { inherit inputs lib mlib mvar; };
 
-  in with util; lib.mergeAttrsList [
+  in lib.mergeAttrsList [
     ( import ./host specialArgs )
 
     {
-      formatter = mylib.forSystems (
+      formatter = mfunc.forSystems (
 	system: nixpkgs.legacyPackages.${system}.alejandra
       );
     }

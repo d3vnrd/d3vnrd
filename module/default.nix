@@ -1,5 +1,4 @@
-{ config, pkgs, system, util, ... }: with util;
-{
+{ config, pkgs, mlib, ... }: {
   # ---General---
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
@@ -8,11 +7,16 @@
   # ---Programs---
   programs.zsh.enable = true;
 
+  # ---Global packages---
+  environment.systemPackages = with pkgs; [
+    neovim
+    git 
+    gh
+    wget
+    curl
+  ];
+
   # ---Users---
-  users.users.${myvar.user} = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-  };
   users.defaultUserShell = pkgs.zsh;
 
   # ---Reduce disk usage---
@@ -23,13 +27,5 @@
   };
   nix.settings.auto-optimise-store = true;
 
-  # ---Packages---
-  environment.systemPackages = with pkgs; [
-    neovim 
-    git 
-    gh
-    wget
-    curl
-  ];
 }
 

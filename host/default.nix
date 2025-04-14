@@ -1,46 +1,46 @@
-{ inputs, lib, util, ... }@specialArgs: let
+{ inputs, lib, mlib, mvar }@specialArgs: let
   inherit (inputs) nix-darwin home-manager;
-  inherit (util) myvar mylib;
 
   genHosts = system: let
-    sysHosts = mylib.dirsIn ./${system};
+    sysHosts = mlib.dirsIn ./${system};
 
     sysAttrs = if lib.hasSuffix "darwin" system then {
       type = "darwin";
-      func = nix-darwin.lib.darwinSystem;
-      home = home-manager.darwinModules.home-manager;
+      conf = nix-darwin.lib.darwinSystem;
+      home = home-manager.darwinModules;
     } else {
       type = "linux";
-      func = lib.nixosSystem;
-      home = home-manager.nixosModules.home-manager;
+      conf = lib.nixosSystem;
+      home = home-manager.nixosModules;
     };
 
   in with sysAttrs;
     lib.genAttrs sysHosts (
-      hostname: func {
+      hostname: conf {
         inherit system specialArgs;
         modules = [
 	  ./${system}/${hostname}/configuration.nix
-	  ( mylib.relativeToRoot "module/${type}" )
-	  {
-	  #   # ---General---
+	  ( mlib.relativeToRoot "module/${type}" )
+
+	  { 
 	    networking.hostName = hostname;
-	  #   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-	  #   time.timeZone = "Asia/Vietnam";
-	  #
-	  #   # ---Users---
-	  #   users.users.${myvar.user} = {
-	  #     isNormalUser = true;
-	  #     extraGroups = [ "wheel" ];
-	  #   };
-	  #
-	  #   # ---Reduce disk usage---
-	  #   nix.gc = {
-	  #     automatic = true;
-	  #     dates = "weekly";
-	  #     options = "--delete-older-than 1w";
-	  #   };
-	  #   nix.settings.auto-optimise-store = true;
+	    users.users = {
+	      "${mvar.user}" = {
+	        isNormalUser = true;
+	        extraGroups = [ "wheel" ];
+	      };
+	      # ---Add new global user here---
+	    }
+	  }
+
+	  home.home-manager {
+	    home-manager.useGlobalPkgs = true;
+	    home-manager.useUserPackages = true;
+	    home-manager.extraSpecialArgs = specialArgs;
+            home-manager.users = {
+	      "${mvar.user}".imports = ./${system}/${hostname}/home.nix;
+	      # ---Don't forget here aswell---
+	    }
 	  }
         ];
       }
@@ -48,8 +48,8 @@
 
 in {
   nixosConfigurations = lib.mergeAttrsList
-    ( map genHosts myvar.systems.linux);
+    ( map genHosts mvar.systems.linux);
 
   darwinConfigurations = lib.mergeAttrsList
-    ( map genHosts myvar.systems.darwin);
+    ( map genHosts mvar.systems.darwin);
 }

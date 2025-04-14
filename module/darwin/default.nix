@@ -1,2 +1,2 @@
-{ util, ... }:{ imports = util.mylib.scanPath ./. ++ [ ../default.nix ]; }
+{ mlib, ... }:{ imports = mlib.scanPath ./. ++ [ ../default.nix ]; }
 
