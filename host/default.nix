@@ -42,10 +42,7 @@
 	    };
 
 	    home-manager.users = {
-	       ${mvar.user} = ./${system}/${hostname}/home.nix;
-
-	       # -> Also here to manage with home:
-	       # <user-name> = ./${system}/${hostname}/<user-name>.nix;
+	       ${mvar.user} = ../usr;
 	    };
 
 	    # ---General---
