@@ -32,7 +32,7 @@
 
 	    # ---Users---
 	    users.users = {
-	      "${mvar.user}" = {
+	      ${mvar.user} = {
 	        isNormalUser = true;
 	        extraGroups = [ "wheel" ];
 	      };
