@@ -42,10 +42,10 @@
 	    };
 
 	    home-manager.users = {
-	       "${mvar.user}" = import ./${system}/${host}/home.nix:
+	       ${mvar.user} = ./${system}/${hostname}/home.nix;
 
 	       # -> Also here to manage with home:
-	       # "<user-name>" = import ./${system}/${host}/<user-name>.nix;
+	       # <user-name> = ./${system}/${hostname}/<user-name>.nix;
 	    };
 
 	    # ---General---
