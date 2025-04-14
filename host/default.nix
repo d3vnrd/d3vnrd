@@ -1,5 +1,5 @@
 { inputs, lib, mlib, mvar }@specialArgs: let
-  inherit (inputs) nix-darwin home-manager;
+  inherit (inputs) nix-darwin home-manager nixpkgs;
 
   genHosts = system: let
     sysHosts = mlib.dirsIn ./${system};
@@ -19,32 +19,51 @@
       hostname: conf {
         inherit system specialArgs;
         modules = [
-	  ./${system}/${hostname}/configuration.nix
-	  ( mlib.relativeToRoot "module/${type}" )
+	  ./${system}/${hostname}
+	  ../module/${type}
+	  home.home-manager 
 
+	  # ------------------------------Global------------------------------
 	  { 
+	    nix.settings.experimental-features = [ "nix-command" "flakes" ];
 	    networking.hostName = hostname;
+	    nixpkgs.config.allowUnfree = true;
+	    time.timeZone = "Asia/Vietnam";
+
+	    # ---Users---
 	    users.users = {
 	      "${mvar.user}" = {
 	        isNormalUser = true;
 	        extraGroups = [ "wheel" ];
 	      };
-	      # ---Add new global user here---
-	    };
-	  }
 
-	  home.home-manager {
-	    home-manager.useGlobalPkgs = true;
-	    home-manager.useUserPackages = true;
-	    home-manager.extraSpecialArgs = specialArgs;
-            home-manager.users = {
-	      "${mvar.user}".imports = [
-	        ./${system}/${hostname}/home.nix
-		( mlib.relativeToRoot "module/home")
-	      ];
-	      # ---Don't forget here aswell---
+	      # -> Add new user here:
+	      # "<user-name>" = { <options> };
 	    };
+
+	    home-manager.users = {
+	       "${mvar.user}" = import ./${system}/${host}/home.nix:
+
+	       # -> Also here to manage with home:
+	       # "<user-name>" = import ./${system}/${host}/<user-name>.nix;
+	    };
+
+	    # ---General---
+	    home-manager = {
+	      useGlobalPkgs = true;
+	      useUserPackages = true;
+	      extraSpecialArgs = specialArgs;
+	    };
+
+	    # ---Reduce disk usage---
+	    nix.gc = {
+	      automatic = true;
+	      dates = "daily";
+	      options = "--delete-older-than 1w";
+	    };
+	    nix.settings.auto-optimise-store = true;
 	  }
+	  # ------------------------------------------------------------------
         ];
       }
     );
