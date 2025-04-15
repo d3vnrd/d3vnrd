@@ -4,8 +4,8 @@
   outputs = { nixpkgs, ... }@inputs: let
     inherit (nixpkgs) lib;
     
-    mlib = import .udef/lib { inherit lib; };
-    mvar = import .udef/var { inherit lib mlib; };
+    mlib = import ./udef/lib { inherit lib; };
+    mvar = import ./udef/var { inherit lib mlib; };
     specialArgs = { inherit inputs lib mlib mvar; };
 
   in lib.mergeAttrsList [
