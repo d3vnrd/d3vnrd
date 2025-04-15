@@ -1,4 +1,4 @@
-{ lib }: rec {
+{ lib }: {
   dirsIn = dir: builtins.attrNames ( lib.filterAttrs 
     (_: type: type == "directory")
     (builtins.readDir dir)
@@ -17,9 +17,5 @@
   );
  
   relativeToRoot = lib.path.append ../.;
-
-  getSystems = dirsIn ../host;
-
-  forSystems = func: (lib.genAttrs getSystems func);
 }
 

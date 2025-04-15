@@ -1,4 +1,4 @@
-{ inputs, lib, mylib, myvar }@specialArgs: let
+{ inputs, lib, mylib, myvar, systems }@specialArgs: let
   inherit (inputs) nix-darwin home-manager;
 
   genHosts = system: let
@@ -6,17 +6,17 @@
 
     sysAttrs = if lib.hasSuffix "darwin" system then {
       type = "darwin";
-      conf = nix-darwin.lib.darwinSystem;
+      init = nix-darwin.lib.darwinSystem;
       home = home-manager.darwinModules;
     } else {
       type = "linux";
-      conf = lib.nixosSystem;
+      init = lib.nixosSystem;
       home = home-manager.nixosModules;
     };
 
   in with sysAttrs;
     lib.genAttrs sysHosts (
-      hostname: conf {
+      hostname: init {
         inherit system specialArgs;
         modules = [
 	  ./${system}/${hostname}
@@ -45,9 +45,11 @@
     );
 
 in {
-  nixosConfigurations = lib.mergeAttrsList
-    ( map genHosts myvar.systems.linux);
+  nixosConfigurations = lib.mergeAttrsList ( map genHosts 
+    ( builtins.filter (dir: lib.hasSuffix "linux" dir) systems )
+  );
 
-  darwinConfigurations = lib.mergeAttrsList
-    ( map genHosts myvar.systems.darwin);
+  darwinConfigurations = lib.mergeAttrsList ( map genHosts 
+    ( builtins.filter (dir: lib.hasSuffix "darwin" dir) systems )
+  );
 }

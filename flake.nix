@@ -5,16 +5,17 @@
     inherit (nixpkgs) lib;
     
     mylib = import ./lib { inherit lib; };
-    myvar = import ./var { inherit lib mylib; };
+    myvar = import ./var { inherit lib; };
+    systems = mylib.dirsIn ./host;
+    args = { inherit inputs lib mylib myvar systems; };
 
+    forSystems = func: ( lib.genAttrs systems func );
   in lib.mergeAttrsList [
-    # ---Fetch system configs---
-    ( import ./host { inherit inputs lib mylib myvar; } )
+    ( import ./host args )
 
-    # ---Addtional options---
     {
-      formatter = mylib.forSystems (
-	system: nixpkgs.legacyPackages.${system}.alejandra
+      formatter = forSystems ( 
+        system: nixpkgs.legacyPackages.${system}.alejandra 
       );
     }
   ];

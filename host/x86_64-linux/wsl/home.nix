@@ -1,6 +1,6 @@
-{ config, pkgs, mvar, ... }:{
-  home.username = mvar.user;
-  home.homeDirectory = "/home/${mvar.user}";
+{ config, pkgs, myvar, ... }:{
+  home.username = myvar.user;
+  home.homeDirectory = "/home/${myvar.user}";
 
   programs.zsh.enable = true;
 
