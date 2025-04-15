@@ -1,13 +1,9 @@
 { config, pkgs, mvar, ... }: {
   home.username = mvar.user;
   home.homeDirectory = "/home/${mvar.user}";
-  home.username = "myuser";
-  home.homeDirectory = "/home/myuser";
-
-  programs.zsh.enable = true;
 
   home.packages = with pkgs; [
-    neovim
+    tmux 
   ];
 
   home.file = {
@@ -17,13 +13,12 @@
     EDITOR = "neovim --clean";
   };
 
-  programs.home-manager.enable = true;
-  programs.zsh.enable = true;
   programs.git = {
     enable = true;
     userName = "tlmp59";
     userEmail = "tinng.imp@gmail.com";
   };
 
+  programs.home-manager.enable = true;
   home.stateVersion = "24.11";
 }

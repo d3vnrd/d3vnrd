@@ -19,19 +19,20 @@
       hostname: conf {
         inherit system specialArgs;
         modules = [
-	  ./${system}/${hostname}/configuration.nix
-	  ../module ../module/${type} 
+	  ./${system}/${hostname}
+	  ../module/${type} 
 	  home.home-manager
 
 	  { 
-	    users.users = {
-	      ${mvar.user} = {
+	    users.users."${mvar.user}" = {
 	        isNormalUser = true;
 	        extraGroups = [ "wheel" ];
-	      };
 	    };
 
-	    home-manager.users."${mvar.user}".imports = [ ./${system}/${hostname}/home.nix ];
+	    home-manager.users."${mvar.user}".imports = [ 
+	      ../home # --> Default for any users
+	      ./${system}/${hostname}/home.nix 
+	    ];
 
 	    home-manager.useGlobalPkgs = true;
 	    home-manager.useUserPackages = true;

@@ -1,8 +1,8 @@
-{ config, pkgs, lib, ... }:{
-  home.username = "tlmp59";
-  home.homeDirectory = "/home/tlmp59";
+{ config, pkgs, mvar, ... }:{
+  home.username = mvar.user;
+  home.homeDirectory = "/home/${mvar.user}";
 
   programs.zsh.enable = true;
 
-  home.stateVersion = "23.11";
+  home.stateVersion = "24.11";
 }
