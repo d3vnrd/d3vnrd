@@ -1,6 +1,10 @@
-{ lib, pkgs, mvar, ... }: {
+{ config, pkgs, mvar, ... }: {
   home.username = mvar.user;
   home.homeDirectory = "/home/${mvar.user}";
+  home.username = "myuser";
+  home.homeDirectory = "/home/myuser";
+
+  programs.zsh.enable = true;
 
   home.packages = with pkgs; [
     neovim

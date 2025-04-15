@@ -19,7 +19,7 @@
       hostname: conf {
         inherit system specialArgs;
         modules = [
-	  ./${system}/${hostname} 
+	  ./${system}/${hostname}/configuration.nix
 	  ../module ../module/${type} 
 	  home.home-manager
 
@@ -31,13 +31,11 @@
 	      };
 	    };
 
-	    home-manager.users = {
-	      "${mvar.user}" = import ./${system}/${hostname}/home.nix;
-	    };
+	    home-manager.users."${mvar.user}".imports = [ ./${system}/${hostname}/home.nix ];
 
 	    home-manager.useGlobalPkgs = true;
 	    home-manager.useUserPackages = true;
-	    home-manager.extraSpeicalArgs = { inherit inputs mlib mvar };
+	    home-manager.extraSpecialArgs = { inherit mlib mvar; };
 
 	    networking.hostName = hostname;
 	  }
