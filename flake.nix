@@ -4,9 +4,9 @@
   outputs = { nixpkgs, ... }@inputs: let
     inherit (nixpkgs) lib;
     
-    mlib = import ./udef/lib { inherit lib; };
-    mvar = import ./udef/var { inherit lib mlib; };
-    specialArgs = { inherit inputs lib mlib mvar; };
+    ulib = import ./ulib { inherit lib; };
+    uvar = import ./uvar { inherit lib ulib; };
+    specialArgs = { inherit inputs lib ulib uvar; };
 
   in lib.mergeAttrsList [
     # ---Fetch system configs---

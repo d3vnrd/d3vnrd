@@ -18,7 +18,7 @@
  
   relativeToRoot = lib.path.append ../.;
 
-  getSystems = dirsIn (relativeToRoot "host/");
+  getSystems = dirsIn ../../host;
 
   forSystems = func: (lib.genAttrs getSystems func);
 }
