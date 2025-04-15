@@ -1,4 +1,4 @@
-{ pkgs, mvar, ... }: {
+{ lib, pkgs, mvar, ... }: {
   home.username = mvar.user;
   home.homeDirectory = "/home/${mvar.user}";
 

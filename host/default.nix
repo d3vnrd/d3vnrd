@@ -1,5 +1,5 @@
 { inputs, lib, mlib, mvar }@specialArgs: let
-  inherit (inputs) nix-darwin home-manager nixpkgs;
+  inherit (inputs) nix-darwin home-manager;
 
   genHosts = system: let
     sysHosts = mlib.dirsIn ./${system};
@@ -19,48 +19,28 @@
       hostname: conf {
         inherit system specialArgs;
         modules = [
-	  ./${system}/${hostname}
-	  ../module/${type}
-	  home.home-manager 
+	  ./${system}/${hostname} 
+	  ../module ../module/${type} 
+	  home.home-manager
 
-	  # ------------------------------Global------------------------------
 	  { 
-	    nix.settings.experimental-features = [ "nix-command" "flakes" ];
-	    networking.hostName = hostname;
-	    nixpkgs.config.allowUnfree = true;
-	    time.timeZone = "Asia/Vietnam";
-
-	    # ---Users---
 	    users.users = {
 	      ${mvar.user} = {
 	        isNormalUser = true;
 	        extraGroups = [ "wheel" ];
 	      };
-
-	      # -> Add new user here:
-	      # "<user-name>" = { <options> };
 	    };
 
 	    home-manager.users = {
-	       ${mvar.user} = ../usr;
+	      "${mvar.user}" = import ./${system}/${hostname}/home.nix;
 	    };
 
-	    # ---General---
-	    home-manager = {
-	      useGlobalPkgs = true;
-	      useUserPackages = true;
-	      extraSpecialArgs = specialArgs;
-	    };
+	    home-manager.useGlobalPkgs = true;
+	    home-manager.useUserPackages = true;
+	    home-manager.extraSpeicalArgs = { inherit inputs mlib mvar };
 
-	    # ---Reduce disk usage---
-	    nix.gc = {
-	      automatic = true;
-	      dates = "daily";
-	      options = "--delete-older-than 1w";
-	    };
-	    nix.settings.auto-optimise-store = true;
+	    networking.hostName = hostname;
 	  }
-	  # ------------------------------------------------------------------
         ];
       }
     );
