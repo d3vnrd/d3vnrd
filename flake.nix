@@ -4,17 +4,16 @@
   outputs = { nixpkgs, ... }@inputs: let
     inherit (nixpkgs) lib;
     
-    ulib = import ./ulib { inherit lib; };
-    uvar = import ./uvar { inherit lib ulib; };
-    specialArgs = { inherit inputs lib ulib uvar; };
+    mylib = import ./lib { inherit lib; };
+    myvar = import ./var { inherit lib mylib; };
 
   in lib.mergeAttrsList [
     # ---Fetch system configs---
-    ( import ./host specialArgs )
+    ( import ./host { inherit inputs lib mylib myvar; } )
 
     # ---Addtional options---
     {
-      formatter = mlib.forSystems (
+      formatter = mylib.forSystems (
 	system: nixpkgs.legacyPackages.${system}.alejandra
       );
     }

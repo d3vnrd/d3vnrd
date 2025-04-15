@@ -1,2 +1,2 @@
-{ mlib, ... }:{ imports = mlib.scanPath ./.; }
+{ mylib, ... }:{ imports = mylib.scanPath ./.; }
 

@@ -1,8 +1,8 @@
-{ inputs, lib, ulib, uvar }@specialArgs: let
+{ inputs, lib, mylib, myvar }@specialArgs: let
   inherit (inputs) nix-darwin home-manager;
 
   genHosts = system: let
-    sysHosts = ulib.dirsIn ./${system};
+    sysHosts = mylib.dirsIn ./${system};
 
     sysAttrs = if lib.hasSuffix "darwin" system then {
       type = "darwin";
@@ -24,19 +24,19 @@
 	  home.home-manager
 
 	  { 
-	    users.users."${uvar.user}" = {
+	    users.users."${myvar.user}" = {
 	        isNormalUser = true;
 	        extraGroups = [ "wheel" ];
 	    };
 
-	    home-manager.users."${uvar.user}".imports = [ 
+	    home-manager.users."${myvar.user}".imports = [ 
 	      ../home # --> Default for any users
 	      ./${system}/${hostname}/home.nix 
 	    ];
 
 	    home-manager.useGlobalPkgs = true;
 	    home-manager.useUserPackages = true;
-	    home-manager.extraSpecialArgs = { inherit ulib uvar; };
+	    home-manager.extraSpecialArgs = { inherit mylib myvar; };
 
 	    networking.hostName = hostname;
 	  }
@@ -46,8 +46,8 @@
 
 in {
   nixosConfigurations = lib.mergeAttrsList
-    ( map genHosts uvar.systems.linux);
+    ( map genHosts myvar.systems.linux);
 
   darwinConfigurations = lib.mergeAttrsList
-    ( map genHosts uvar.systems.darwin);
+    ( map genHosts myvar.systems.darwin);
 }
