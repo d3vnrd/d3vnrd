@@ -1,4 +1,4 @@
-{ inputs, lib, mylib, myvar, systems }@specialArgs: let
+{ inputs, lib, mylib, myvar, systems } @specialArgs: let
   inherit (inputs) nix-darwin home-manager;
 
   genHosts = system: let
@@ -6,17 +6,17 @@
 
     sysAttrs = if lib.hasSuffix "darwin" system then {
       type = "darwin";
-      init = nix-darwin.lib.darwinSystem;
+      conf = nix-darwin.lib.darwinSystem;
       home = home-manager.darwinModules;
     } else {
       type = "linux";
-      init = lib.nixosSystem;
+      conf = lib.nixosSystem;
       home = home-manager.nixosModules;
     };
 
   in with sysAttrs;
     lib.genAttrs sysHosts (
-      hostname: init {
+      hostname: conf {
         inherit system specialArgs;
         modules = [
 	  ./${system}/${hostname}
@@ -30,8 +30,10 @@
 	    };
 
 	    home-manager.users."${myvar.user}".imports = [ 
-	      ../home # --> Default for any users
-	      ./${system}/${hostname}/home.nix 
+	      ../usr/asmodule.nix
+	      ../home # --> Home modules
+
+	      ./${system}/${hostname}/home.nix
 	    ];
 
 	    home-manager.useGlobalPkgs = true;
