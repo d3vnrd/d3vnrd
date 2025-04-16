@@ -7,9 +7,9 @@
       pkgs = nixpkgs.legacyPackages.${system};
       modules = [
         ./standalone.nix
-	../home $ --> Home modules
+	../home # --> Home modules
       ];
     }
-  )
+  );
 
-in { homeConfigurations = lib.mergeAttrsList ( map genUsers systems ) }
+in { homeConfigurations = lib.mergeAttrsList ( map genUsers systems ); }
