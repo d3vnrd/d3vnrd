@@ -18,6 +18,7 @@
 
 	./${system}/${username}
       ];
+      extraSpecialArgs = { inherit mylib; };
     };
   }) (mylib.dirsIn ./${system}) );
 
