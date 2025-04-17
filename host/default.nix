@@ -30,7 +30,7 @@
 	    };
 
 	    home-manager.users."${myvar.user}".imports = [ 
-	      ../usr/asmodule.nix
+	      ../usr/base.nix
 	      ../home # --> Home modules
 
 	      ./${system}/${hostname}/home.nix

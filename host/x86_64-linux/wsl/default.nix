@@ -7,7 +7,9 @@
   wsl.enable = true;
   wsl.defaultUser = "tlmp59";
 
-  users.users.tlmp59.isNormalUser = true;
+  users.users = {
+    yamaha_x86l.isNormalUser = true; 
+  };
 
   system.stateVersion = "24.11";
 }
