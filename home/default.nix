@@ -12,6 +12,7 @@
     bat
     fzf
     zoxide
+    tree
     tldr
     eza
     ripgrep
