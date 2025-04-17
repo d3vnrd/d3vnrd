@@ -1,1 +1,1 @@
-{ mylib, ... }: { imports = mylib.scanPath ./. ++ [ ../base.nix ]; }
+{ mylib, ... }: { imports = mylib.scanPath ./.; }

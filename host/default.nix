@@ -1,17 +1,18 @@
-{ inputs, lib, mylib, myvar, systems } @specialArgs: let
+{ inputs, lib, mylib, myvar, systems } @ specialArgs: let
   inherit (inputs) nix-darwin home-manager;
 
+  # ---Host generating function---
   genHosts = system: let
     sysHosts = mylib.dirsIn ./${system};
 
     sysAttrs = if lib.hasSuffix "darwin" system then {
       type = "darwin";
       conf = nix-darwin.lib.darwinSystem;
-      home = home-manager.darwinModules;
+      hmodule = home-manager.darwinModules;
     } else {
       type = "linux";
       conf = lib.nixosSystem;
-      home = home-manager.nixosModules;
+      hmodule = home-manager.nixosModules;
     };
 
   in with sysAttrs;
@@ -20,9 +21,7 @@
         inherit system specialArgs;
         modules = [
 	  ./${system}/${hostname}
-	  ../module/${type} 
-	  home.home-manager
-
+	  hmodule.home-manager
 	  { 
 	    users.users."${myvar.user}" = {
 	        isNormalUser = true;
@@ -30,9 +29,7 @@
 	    };
 
 	    home-manager.users."${myvar.user}".imports = [ 
-	      ../usr/base.nix
 	      ../home # --> Home modules
-
 	      ./${system}/${hostname}/home.nix
 	    ];
 
@@ -42,9 +39,12 @@
 
 	    networking.hostName = hostname;
 	  }
+
+	  ../module ../module/${type}
         ];
       }
     );
+  # ------------------------------
 
 in {
   nixosConfigurations = lib.mergeAttrsList ( map genHosts 

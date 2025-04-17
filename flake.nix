@@ -1,7 +1,7 @@
 {
   description = "FrameworkOS";
 
-  outputs = { nixpkgs, ... } @inputs: let
+  outputs = { nixpkgs, ... } @ inputs: let
     inherit (nixpkgs) lib;
     
     mylib = import ./lib { inherit lib; };
@@ -12,7 +12,6 @@
     forSystems = func: ( lib.genAttrs systems func );
   in lib.mergeAttrsList [
     ( import ./host args )
-    ( import ./usr args )
 
     {
       formatter = forSystems ( 
