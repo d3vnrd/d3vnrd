@@ -8,6 +8,12 @@
     curl
   ];
 
+  programs.git = {
+    enable = true;
+    userName = "tlmp59";
+    userEmail = "tinng.imp@gmail.com";
+  };
+
   nix.gc = {
     automatic = true;
     dates = "weekly";

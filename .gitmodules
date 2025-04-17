@@ -1,0 +1,3 @@
+[submodule "home/neovim/config"]
+	path = home/neovim/config
+	url = https://github.com/tlmp59/nvim-config
