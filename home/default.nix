@@ -7,7 +7,6 @@
   # ---Temp packages---Belgrieve
   # Should separate this into submodules
   home.packages = with pkgs; [
-    neovim
     tmux
     bat
     fzf
@@ -19,9 +18,7 @@
   ];
 
   home.file = {};
-  home.sessionVariables = {
-    EDITOR = "neovim --clean";
-  };
+  home.sessionVariables = {};
 
   home.stateVersion = "24.11";
 }
