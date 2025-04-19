@@ -1,10 +1,10 @@
-{ config, pkgs, mylib, myvar, ... }: { 
+{ config, lib, pkgs, mylib, myvar, ... }: { 
   home.username = myvar.user;
   home.homeDirectory = "/home/${myvar.user}";
 
   imports = mylib.scanPath ./.; 
 
-  # ---Temp packages---Belgrieve
+  # ---Temp packages---
   # Should separate this into submodules
   home.packages = with pkgs; [
     tmux
@@ -16,6 +16,8 @@
     eza
     ripgrep
   ];
+
+  zsh.enable = lib.mkDefault true;
 
   home.file = {};
   home.sessionVariables = {};
