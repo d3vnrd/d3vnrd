@@ -8,16 +8,12 @@
   # Should separate this into submodules
   home.packages = with pkgs; [
     tmux
-    bat
     fzf
-    zoxide
     tree
     tldr
     eza
     ripgrep
   ];
-
-  zsh.enable = true;
 
   home.file = {};
   home.sessionVariables = {};

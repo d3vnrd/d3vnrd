@@ -21,6 +21,8 @@
         inherit system specialArgs;
         modules = [
 	  ./${system}/${hostname}
+	  ../module/base ../module/${type}
+
 	  hmodule.home-manager
 	  { 
 	    users.users."${myvar.user}" = {
@@ -39,8 +41,6 @@
 
 	    networking.hostName = hostname;
 	  }
-
-	  ../module ../module/${type}
         ];
       }
     );
