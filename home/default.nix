@@ -17,7 +17,7 @@
     ripgrep
   ];
 
-  zsh.enable = lib.mkDefault true;
+  zsh.enable = true;
 
   home.file = {};
   home.sessionVariables = {};
