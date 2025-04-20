@@ -1,9 +1,8 @@
 { config, lib, pkgs, ... }: { 
-  options = { zsh.enable = lib.mkEnableOption "enable zsh" };
-  config = lib.mkIf config.zsh.enable {
-    programs.zsh = {
-      enable = true;
 
+  # ---Zsh config on enable---
+  config = lib.mkIf (config.programs.zsh.enable) {
+    programs.zsh = {
       autocd = true;
       dotDir = "./config/zsh";
       enableCompletion = true;
@@ -30,7 +29,7 @@
       };
     };
 
-    cfg.plugins = [
+    programs.zsh.plugins = [
       # ---Auto suggestions---
       { name = pkgs.zsh-autosuggestions.pname; src = pkgs.zsh-autosuggestions.src; }
 
@@ -38,7 +37,7 @@
       { name = pkgs.zsh-completions.pname; src = pkgs.zsh-completions.src; }
     ];
 
-    cfg.initExtra = ''
+    programs.zsh.initExtra = ''
       # ---Custom keybind---
       bindkey -e
       bindkey '^p' history-search-backward
@@ -56,8 +55,6 @@
 
       PS1="%F{#008000}%B%n@%m%b %1~:%f"
     '';
-
-    programs.bat.enable = true;
   };
 }
 

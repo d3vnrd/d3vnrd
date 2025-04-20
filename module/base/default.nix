@@ -11,6 +11,7 @@
     gh
   ];
 
+  programs.zsh.enable = true;
   programs.git.enable = true;
 
   nix.gc = {

@@ -15,7 +15,7 @@
     ripgrep
   ];
 
-  zsh.enable = true;
+  programs.zsh.enable = true;
 
   home.file = {};
   home.sessionVariables = {};
