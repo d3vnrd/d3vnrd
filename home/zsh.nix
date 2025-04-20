@@ -1,7 +1,9 @@
-{ config, lib, pkgs, ... }: 
-{
-  config = lib.mkIf config.programs.zsh.enable {
+{ config, lib, pkgs, ... }: { 
+  options = { zsh.enable = lib.mkEnableOption "enable zsh" };
+  config = lib.mkIf config.zsh.enable {
     programs.zsh = {
+      enable = true;
+
       autocd = true;
       dotDir = "./config/zsh";
       enableCompletion = true;
@@ -28,7 +30,7 @@
       };
     };
 
-    programs.zsh.plugins = [
+    cfg.plugins = [
       # ---Auto suggestions---
       { name = pkgs.zsh-autosuggestions.pname; src = pkgs.zsh-autosuggestions.src; }
 
@@ -36,7 +38,7 @@
       { name = pkgs.zsh-completions.pname; src = pkgs.zsh-completions.src; }
     ];
 
-    programs.zsh.initExtra = ''
+    cfg.initExtra = ''
       # ---Custom keybind---
       bindkey -e
       bindkey '^p' history-search-backward
@@ -52,7 +54,7 @@
       autoload -Uz vcs_info 
       precmd () { vcs_info }
 
-      PS1="%F{#008000}%B%n@%m%b %1~:%f" #TODO: Config prompt for zshell
+      PS1="%F{#008000}%B%n@%m%b %1~:%f"
     '';
 
     programs.bat.enable = true;
