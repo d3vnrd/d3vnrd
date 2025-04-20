@@ -30,10 +30,37 @@
       };
     };
 
-    programs.zsh.plugins = import ./plugins.nix;
+    programs.zsh.plugins = import ./plugin.nix { inherit pkgs; };
 
     programs.zsh.initExtra = ''
+      # ---Path configuration---
+      # ~ stole from Mischa van den Burg
+      setopt extended_glob null_glob
+
+      path = (
+        $path
+	$HOME/bin
+	$HOME/.local/bin
+	$HOME/.cargo/bin
+	$HOME/.fzf/bin/
+      )
+      # ~ remove duplicate entries and non-existent directories
+      typeset -U path
+      paht = ($^path(N-/))
+
+      export PATH
+
+      # ---Custome keybind---
+      bindkey -e
+      bindkey '^p' history-search-backward
+      bindkey '^n' history-search-forward
+
+      # ---Misc---
+      set -o vi
       unsetopt BEEP
+      zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+      zstyle ':completion:*' list-colors '${"(s.:.)LS_COLORS"}'
+      zstyle ':completion:*' menu select
     '';
   };
 }
