@@ -1,24 +1,23 @@
-{ config, lib, pkgs, mylib, myvar, ... }: { 
+{ lib, pkgs, mylib, myvar, ... }: { 
   home.username = myvar.user;
   home.homeDirectory = "/home/${myvar.user}";
 
   imports = mylib.scanPath ./.; 
 
-  # ---Temp packages---
-  # Should separate this into submodules
+  # ---Packages with options---
+  programs.git.enable = true;
+  programs.neovim.enable = true;
+
+  # ---Packages without options---
   home.packages = with pkgs; [
     tmux
     fzf
-    tree
     tldr
     eza
     ripgrep
   ];
 
-  programs.zsh.enable = true;
-
   home.file = {};
   home.sessionVariables = {};
-
   home.stateVersion = "24.11";
 }

@@ -28,9 +28,6 @@
 	    users.users."${myvar.user}" = {
 	        isNormalUser = true;
 	        extraGroups = [ "wheel" ];
-		
-		# ~ use with precaution, remember to enable zsh or other shell before enable this
-		ignoreShellProgramCheck = true;
 	    };
 
 	    home-manager.users."${myvar.user}".imports = [ 

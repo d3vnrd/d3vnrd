@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }: let
+{ config, lib, pkgs, ... }: let 
   cfg = config.programs.zsh;
 in { 
   config = lib.mkIf cfg.enable {
@@ -9,7 +9,6 @@ in {
     programs.zsh.setOptions = [
       "HIST_IGNORE_SPACE"
       "HIST_IGNORE_DUPS"
-      "HIST_IGNORE_NO_DUPS"
       "HIST_FIND_NO_DUPS"
       "HIST_SAVE_NO_DUPS"
       "SHARE_HISTORY"
@@ -19,25 +18,25 @@ in {
     ];
 
     programs.zsh.histSize = 1000;
-    programs.zsh.histFile = "${config.xdg.cacheHome}/zsh/zsh_history"
+    programs.zsh.histFile = "$XDG_CACHE_HOME/zsh_history";
 
     programs.zsh.shellInit = ''
-      # ---Custom keybind---
+    '';
+
+    programs.zsh.interactiveShellInit = ''
       bindkey -e
       bindkey '^p' history-search-backward
       bindkey '^n' history-search-forward
 
-      # ---Misc---
-      set -o vi
-      unsetopt BEEP
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
       zstyle ':completion:*' menu select
+    '';
 
-      # ---Prompt config---
+    programs.zsh.promptInit = ''
       autoload -Uz vcs_info 
       precmd () { vcs_info }
 
-      PS1="%F{#008000}%B%n@%m%b %1~:%f"
+      PS1="%F{#a1b56c}%B%n@%m%b %1~:%f"
     '';
 
     programs.zsh.shellAliases = {
@@ -46,22 +45,10 @@ in {
       tree = "${pkgs.eza}/bin/eza --color=auto --tree";
     };
 
-    programs.zsh.zsh-auto-autoenv = {
+    programs.zsh.zsh-autoenv = {
+      # TODO: add packages to auto source
       enable = true;
-      package = {
-        
-      };
     };
-
-    programs.bat.enable = true;
-
-    # programs.zsh.plugins = [
-    #   # ---Auto suggestions---
-    #   { name = pkgs.zsh-autosuggestions.pname; src = pkgs.zsh-autosuggestions.src; }
-    #
-    #   # ---Completions---
-    #   { name = pkgs.zsh-completions.pname; src = pkgs.zsh-completions.src; }
-    # ];
   };
 }
 

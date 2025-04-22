@@ -12,7 +12,7 @@
   ];
 
   programs.zsh.enable = true;
-  programs.git.enable = true;
+  users.users."${myvar.user}".shell = pkgs.zsh;
 
   nix.gc = {
     automatic = true;
