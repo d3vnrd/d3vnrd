@@ -19,7 +19,7 @@ in {
     };
 
     programs.zsh.history = {
-      path = "$XDG_CACHE_HOME/zsh_history";
+      path = "${config.xdg.cacheHome}/zsh/zsh_history";
       save = 10000;
       size = 10000;
       share = true;
@@ -40,6 +40,9 @@ in {
     ];
 
     programs.zsh.initExtra = ''
+      # ---Fix weird color behaviour with tmux---
+      export TERM="xterm-256color"
+
       # ---Disable beep sound---
       setopt NO_BEEP
 

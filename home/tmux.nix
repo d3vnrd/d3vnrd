@@ -9,16 +9,13 @@ in {
       focusEvents = true;
       keyMode = "vi";
       shell = "${pkgs.zsh}/bin/zsh";
-      terminal = "xterm-256color";
+      terminal = "tmux-256color";
     };
 
     programs.tmux.extraConfig = ''
-      set-option -sa terminal-overrides ",xterm-256color:RGB"
-      set-option -g default-terminal "tmux-256color"
-      set-option -ga terminal-features ",xterm-256color:usstyle"
+      set -ga terminal-overrides ",xterm-256color:Tc"
 
       # ---Keybind---
-      bind r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
       bind a display-panes;
       bind q confirm-before -p "kill-pane? (y/n)" kill-pane
       bind x confirm-before -p "kill-session? (y/n)" kill-session

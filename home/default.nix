@@ -12,9 +12,12 @@
     programs = {
       zsh.enable = lib.mkDefault true;
       git.enable = lib.mkDefault true;
-      # tmux.enable = lib.mkDefault true;
-      zellij.enable = lib.mkDefault true;
+      tmux.enable = lib.mkDefault true;
       neovim.enable = lib.mkDefault true;
+      alacritty = {
+        enable = true;
+	enableWindowIntegration = true;
+      };
     };
 
     home.packages = with pkgs; [
