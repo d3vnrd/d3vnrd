@@ -5,7 +5,8 @@ in {
 
   config = lib.mkIf cfg.enable {
     programs.zsh = {
-      dotDir = "./config/zsh";
+      dotDir = ".config/zsh";
+      autocd = true;
       enableCompletion = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
@@ -17,29 +18,30 @@ in {
       };
     };
 
+    programs.zsh.history = {
+      path = "$XDG_CACHE_HOME/zsh_history";
+      save = 10000;
+      size = 10000;
+      share = true;
+      append = true;
+      findNoDups = true;
+      ignoreAllDups = true;
+      ignoreDups = true;
+      ignoreSpace = true;
+      saveNoDups = true;
+    };
+
     programs.zsh.plugins = [
       # ---Auto suggestions---
-      { name = pkgs.zsh-autosuggestions.pname; src = pkgs.zsh-autosuggestions.src; }
+      # { name = pkgs.zsh-autosuggestions.pname; src = pkgs.zsh-autosuggestions.src; }
 
       # ---Completions---
-      { name = pkgs.zsh-completions.pname; src = pkgs.zsh-completions.src; }
+      # { name = pkgs.zsh-completions.pname; src = pkgs.zsh-completions.src; }
     ];
 
     programs.zsh.initExtra = ''
-      # ---Options---
-      HISTFILE = "$XDG_CACHE_HOME/zsh_history"
-      HISTSIZE=1000
-      SAVEHIST=$HISTSIZE
-
-      setopt HIST_IGNORE_SPACE
-      setopt HIST_IGNORE_DUPS
-      setopt HIST_IGNORE_ALL_DUPS
-      setopt HIST_SAVE_NO_DUPS
-      setopt HIST_FIND_NO_DUPS
-      setopt SHARE_HISTORY
-      setopt APPEND_HISTORY
+      # ---Disable beep sound---
       setopt NO_BEEP
-      setopt AUTOCD
 
       # ---Custom keybind---
       bindkey '^p' history-search-backward

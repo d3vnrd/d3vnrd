@@ -11,9 +11,6 @@
     gh
   ];
 
-  programs.zsh.enable = lib.mkDefault true;
-  users.users."${myvar.user}".shell = lib.mkDefault pkgs.zsh;
-
   nix.gc = {
     automatic = true;
     dates = "weekly";
