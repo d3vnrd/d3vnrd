@@ -1,26 +1,14 @@
-{ config, lib, pkgs, ... }: { 
+{ config, lib, pkgs, ... }: let 
+  cfg = config.programs.zsh;
+in { 
+  imports = [ ./starship.nix ];
 
-  # ---Zsh config on enable---
-  config = lib.mkIf (config.programs.zsh.enable) {
+  config = lib.mkIf cfg.enable {
     programs.zsh = {
-      autocd = true;
       dotDir = "./config/zsh";
       enableCompletion = true;
       autosuggestion.enable = true;
       syntaxHighlighting.enable = true;
-
-      history = {
-        path = "${config.xdg.cacheHome}/zsh/zsh_history";
-        size = 10000;
-        save = 10000;
-	share = true;
-	append = true;
-	saveNoDups = true;
-	ignoreSpace = true;
-	ignoreDups = true;
-	ignoreAllDups = true;
-	findNoDups = true;
-      };
 
       shellAliases = {
         l = "${pkgs.eza}/bin/eza -a --group-directories-first";
@@ -38,23 +26,31 @@
     ];
 
     programs.zsh.initExtra = ''
+      # ---Options---
+      HISTFILE = "$XDG_CACHE_HOME/zsh_history"
+      HISTSIZE=1000
+      SAVEHIST=$HISTSIZE
+
+      setopt HIST_IGNORE_SPACE
+      setopt HIST_IGNORE_DUPS
+      setopt HIST_IGNORE_ALL_DUPS
+      setopt HIST_SAVE_NO_DUPS
+      setopt HIST_FIND_NO_DUPS
+      setopt SHARE_HISTORY
+      setopt APPEND_HISTORY
+      setopt NO_BEEP
+      setopt AUTOCD
+
       # ---Custom keybind---
-      bindkey -e
       bindkey '^p' history-search-backward
       bindkey '^n' history-search-forward
 
       # ---Misc---
-      set -o vi
-      unsetopt BEEP
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
       zstyle ':completion:*' menu select
-
-      # ---Prompt config---
-      autoload -Uz vcs_info 
-      precmd () { vcs_info }
-
-      PS1="%F{#008000}%B%n@%m%b %1~:%f"
     '';
+
+    programs.starship.enable = true;
   };
 }
 

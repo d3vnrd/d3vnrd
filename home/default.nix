@@ -5,6 +5,7 @@
   imports = mylib.scanPath ./.; 
 
   # ---Packages with options---
+  programs.zsh.enable = true;
   programs.git.enable = true;
   programs.neovim.enable = true;
 
