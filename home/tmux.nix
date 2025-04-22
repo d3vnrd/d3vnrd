@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }: let 
   cfg = config.programs.tmux;
 in {
-  config = lib.mkIf cfg.enable = {
+  config = lib.mkIf cfg.enable {
     programs.tmux = {
       baseIndex = 1;
       escapeTime = 10;
@@ -9,10 +9,14 @@ in {
       focusEvents = true;
       keyMode = "vi";
       shell = "${pkgs.zsh}/bin/zsh";
-      terminal = "screen-256color";
+      terminal = "xterm-256color";
     };
 
     programs.tmux.extraConfig = ''
+      set-option -sa terminal-overrides ",xterm-256color:RGB"
+      set-option -g default-terminal "tmux-256color"
+      set-option -ga terminal-features ",xterm-256color:usstyle"
+
       # ---Keybind---
       bind r source-file ~/.tmux.conf \; display-message "~/.tmux.conf reloaded"
       bind a display-panes;
