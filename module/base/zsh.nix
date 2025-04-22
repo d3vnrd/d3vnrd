@@ -1,6 +1,8 @@
 { config, lib, pkgs, ... }: let 
   cfg = config.programs.zsh;
 in { 
+  imports = [ ./starship.nix ];
+
   config = lib.mkIf cfg.enable {
     programs.zsh.syntaxHighlighting.enable = true;
     programs.zsh.autosuggestions.enable = true;
@@ -32,12 +34,12 @@ in {
       zstyle ':completion:*' menu select
     '';
 
-    programs.zsh.promptInit = ''
-      autoload -Uz vcs_info 
-      precmd () { vcs_info }
-
-      PS1="%F{#a1b56c}%B%n@%m%b %1~:%f"
-    '';
+    # programs.zsh.promptInit = ''
+    #   autoload -Uz vcs_info 
+    #   precmd () { vcs_info }
+    #
+    #   PS1="%F{#a1b56c}%B%n@%m%b %1~:%f"
+    # '';
 
     programs.zsh.shellAliases = {
       l = "${pkgs.eza}/bin/eza -a --group-directories-first";
@@ -49,6 +51,8 @@ in {
       # TODO: add packages to auto source
       enable = true;
     };
+
+    programs.starship.enable = true;
   };
 }
 

@@ -1,6 +1,6 @@
 { config, pkgs, lib, mylib, myvar, ... }: {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnfree = lib.mkDefault true;
   time.timeZone = "Asia/Vietnam";
 
   imports = mylib.scanPath ./.;
@@ -11,8 +11,8 @@
     gh
   ];
 
-  programs.zsh.enable = true;
-  users.users."${myvar.user}".shell = pkgs.zsh;
+  programs.zsh.enable = lib.mkDefault true;
+  users.users."${myvar.user}".shell = lib.mkDefault pkgs.zsh;
 
   nix.gc = {
     automatic = true;
