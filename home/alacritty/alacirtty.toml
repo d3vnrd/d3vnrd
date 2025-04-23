@@ -1,5 +1,5 @@
 [general]
-import = ["$HOME/.config/alacritty/tokyo_night.toml"]
+import = ["./tokyo_night.toml"]
 
 [cursor]
 unfocused_hollow = true
