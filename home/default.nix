@@ -14,7 +14,7 @@
       git.enable = lib.mkDefault true;
       tmux.enable = lib.mkDefault true;
       neovim.enable = lib.mkDefault true;
-      alacritty = {
+      my_alacritty = {
         enable = true;
 	enableWindowIntegration = true;
       };

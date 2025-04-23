@@ -1,0 +1,18 @@
+[general]
+import = ["$HOME/.config/alacritty/tokyo_night.toml"]
+
+[cursor]
+unfocused_hollow = true
+
+[font]
+normal.family = "JetbrainsMono Nerd Font"
+size = 12
+
+[mouse]
+hide_when_typing = true
+
+[window]
+decorations = "None"
+startup_mode = "Maximized"
+dynamic_padding = true
+dynamic_title = false
