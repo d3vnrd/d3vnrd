@@ -39,7 +39,7 @@ in {
       # { name = pkgs.zsh-completions.pname; src = pkgs.zsh-completions.src; }
     ];
 
-    programs.zsh.initExtra = ''
+    programs.zsh.initContent = ''
       # ---Fix weird color behaviour with tmux---
       export TERM="xterm-256color"
 
