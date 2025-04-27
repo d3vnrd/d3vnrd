@@ -3,7 +3,7 @@
 
   outputs = { nixpkgs, ... } @ inputs: let
     inherit (nixpkgs) lib;
-    
+
     mylib = import ./lib { inherit lib; };
     myvar = import ./var { inherit lib; };
     systems = mylib.dirsIn ./host;
@@ -14,7 +14,7 @@
     ( import ./host args )
 
     {
-      formatter = forSystems ( 
+      formatter = forSystems (
         system: nixpkgs.legacyPackages.${system}.alejandra 
       );
     }
@@ -34,7 +34,7 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    
+
     # ---Secrets management---
     sops-nix = {
       url = "github:mic92/sops-nix";

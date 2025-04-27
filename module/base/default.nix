@@ -9,6 +9,7 @@
     wget
     curl
     gh
+    gcc
   ];
 
   nix.gc = {
