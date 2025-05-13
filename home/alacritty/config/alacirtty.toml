@@ -1,5 +1,5 @@
 [general]
-import = ["./tokyo_night.toml"]
+import = ["./base16_dark.toml"]
 
 [cursor]
 unfocused_hollow = true

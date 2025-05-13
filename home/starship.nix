@@ -1,4 +1,8 @@
-{ config, lib, pkgs, ... }: let
+{
+  config,
+  lib,
+  ...
+}: let
   cfg = config.programs.starship;
 in {
   config = lib.mkIf cfg.enable {
@@ -7,7 +11,7 @@ in {
       scan_timeout = 10;
       character = {
         success_symbol = "[›](bold green)";
-	error_symbol = "[›](bold red)";
+        error_symbol = "[›](bold red)";
       };
     };
 

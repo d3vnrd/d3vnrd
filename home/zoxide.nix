@@ -1,4 +1,8 @@
-{ config, lib, pkgs, ... }: let
+{
+  config,
+  lib,
+  ...
+}: let
   cfg = config.programs.zoxide;
 in {
   config = lib.mkIf cfg.enable {

@@ -6,6 +6,7 @@
   imports = mylib.scanPath ./.;
 
   environment.systemPackages = with pkgs; [
+    unzip
     wget
     curl
     gh

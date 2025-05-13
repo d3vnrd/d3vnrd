@@ -15,7 +15,7 @@
 
     {
       formatter = forSystems (
-        system: nixpkgs.legacyPackages.${system}.alejandra 
+        system: nixpkgs.legacyPackages.${system}.alejandra
       );
     }
   ];

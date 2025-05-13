@@ -1,4 +1,8 @@
-{ config, lib, pkgs, ... }: let
+{
+  config,
+  lib,
+  ...
+}: let
   cfg = config.programs.alacritty;
   configPath = "${config.xdg.configHome}/nix/home/alacritty/config";
 in {

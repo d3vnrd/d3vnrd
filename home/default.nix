@@ -1,9 +1,11 @@
-{ config, lib, pkgs, mylib, myvar, ... }: { 
-  imports = mylib.scanPath ./.; 
-
-  options = {
-    # ...
-  };
+{
+  lib,
+  pkgs,
+  mylib,
+  myvar,
+  ...
+}: {
+  imports = mylib.scanPath ./.;
 
   config = {
     home.username = myvar.user;
@@ -25,6 +27,7 @@
       tldr
       eza
       ripgrep
+      make
     ];
 
     home.file = {};

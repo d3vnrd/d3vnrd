@@ -22,8 +22,22 @@ in {
       "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ pkgs.stdenv.cc.cc pkgs.zlib ]}"
     ];
 
-    home.packages = with pkgs; [
+    programs.neovim.extraPackages = with pkgs; [
+        # -- LSP --
         lua-language-server
+        nixd
+        pyright
+
+        # -- DAP --
+
+        # -- Linter --
+
+        # -- Format --
+        alejandra
+        black
+        isort
+        nodePackages.prettier
+        stylua
     ];
   };
 }
