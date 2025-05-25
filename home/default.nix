@@ -21,13 +21,16 @@
       lazygit.enable = lib.mkDefault true;
       zoxide.enable = lib.mkDefault true;
       fzf.enable = lib.mkDefault true;
+      nix-ld.enable = true;
     };
 
     home.packages = with pkgs; [
       tldr
       eza
       ripgrep
-      make
+      gnumake
+      glow # markdown viewer
+      quarto
     ];
 
     home.file = {};

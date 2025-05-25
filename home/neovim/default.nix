@@ -27,6 +27,8 @@ in {
         lua-language-server
         nixd
         pyright
+        harper
+        marksman
 
         # -- DAP --
 
@@ -36,8 +38,17 @@ in {
         alejandra
         black
         isort
-        nodePackages.prettier
         stylua
+        nodePackages.prettier
+        dprint
+        dprint-plugins.dprint-plugin-markdown
+
+        # -- Tools --
+        fd
+        sqlite
+        yarn
+        nodejs_22
+        tree-sitter
     ];
   };
 }
