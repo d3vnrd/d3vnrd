@@ -26,5 +26,7 @@
     autoPrune.enable = true;
   };
 
+  vscode-remote-workaround.enable = true;
+
   system.stateVersion = "24.11";
 }

@@ -22,7 +22,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
 
     nixpkgs-darwin.url = "github:/nixos/nixpkgs/nixpkgs-unstable";
     nix-darwin = {
