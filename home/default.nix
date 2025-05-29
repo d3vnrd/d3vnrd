@@ -21,7 +21,7 @@
       lazygit.enable = lib.mkDefault true;
       zoxide.enable = lib.mkDefault true;
       fzf.enable = lib.mkDefault true;
-      nix-ld.enable = true;
+      vscode.enable = false;
     };
 
     home.packages = with pkgs; [
@@ -29,8 +29,8 @@
       eza
       ripgrep
       gnumake
-      glow # markdown viewer
       quarto
+      pandoc
     ];
 
     home.file = {};

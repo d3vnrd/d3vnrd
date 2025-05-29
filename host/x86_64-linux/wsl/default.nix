@@ -1,4 +1,9 @@
-{ inputs, pkgs, myvar, ... }: {
+{
+  inputs,
+  pkgs,
+  myvar,
+  ...
+}: {
   imports = [
     inputs.nixos-wsl.nixosModules.wsl
   ];
@@ -11,13 +16,14 @@
   wsl.enable = true;
   wsl.defaultUser = "${myvar.user}";
 
+  # --Docker--
   wsl.docker-desktop.enable = false;
   # Required packages for docker support
   wsl.extraBin = with pkgs; [
-    { src = "${coreutils}/bin/cat"; }
-    { src = "${coreutils}/bin/whoami"; }
-    { src = "${busybox}/bin/addgroup"; }
-    { src = "${su}/bin/groupadd"; }
+    {src = "${coreutils}/bin/cat";}
+    {src = "${coreutils}/bin/whoami";}
+    {src = "${busybox}/bin/addgroup";}
+    {src = "${su}/bin/groupadd";}
   ];
 
   virtualisation.docker = {
@@ -26,7 +32,8 @@
     autoPrune.enable = true;
   };
 
-  vscode-remote-workaround.enable = true;
+  # --Vscode remote--
+  programs.nix-ld.enable = true;
 
   system.stateVersion = "24.11";
 }

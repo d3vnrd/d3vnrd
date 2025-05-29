@@ -1,5 +1,10 @@
-{ config, pkgs, lib, mylib, myvar, ... }: {
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+{
+  pkgs,
+  lib,
+  mylib,
+  ...
+}: {
+  nix.settings.experimental-features = ["nix-command" "flakes"];
   nixpkgs.config.allowUnfree = lib.mkDefault true;
   time.timeZone = "Asia/Vietnam";
 
@@ -13,6 +18,8 @@
     gcc
   ];
 
+  programs.nix-ld.enable = true;
+
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -20,4 +27,3 @@
   };
   nix.settings.auto-optimise-store = true;
 }
-

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }: let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   cfg = config.programs.neovim;
   configPath = "${config.xdg.configHome}/nix/home/neovim/config";
 in {
@@ -15,40 +20,43 @@ in {
       "--suffix"
       "LIBRARY_PATH"
       ":"
-      "${lib.makeLibraryPath [ pkgs.stdenv.cc.cc pkgs.zlib ]}"
+      "${lib.makeLibraryPath [pkgs.stdenv.cc.cc pkgs.zlib]}"
       "--suffix"
       "PKG_CONFIG_PATH"
       ":"
-      "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [ pkgs.stdenv.cc.cc pkgs.zlib ]}"
+      "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [pkgs.stdenv.cc.cc pkgs.zlib]}"
     ];
 
     programs.neovim.extraPackages = with pkgs; [
-        # -- LSP --
-        lua-language-server
-        nixd
-        pyright
-        harper
-        marksman
+      # -- LSP --
+      lua-language-server
+      vscode-langservers-extracted
+      yaml-language-server
+      nixd
+      pyright
+      harper
+      marksman
+      texlab
 
-        # -- DAP --
+      # -- DAP --
 
-        # -- Linter --
+      # -- Linter --
 
-        # -- Format --
-        alejandra
-        black
-        isort
-        stylua
-        nodePackages.prettier
-        dprint
-        dprint-plugins.dprint-plugin-markdown
+      # -- Formatter --
+      alejandra
+      black
+      isort
+      stylua
+      nodePackages.prettier
+      dprint
+      dprint-plugins.dprint-plugin-markdown
 
-        # -- Tools --
-        fd
-        sqlite
-        yarn
-        nodejs_22
-        tree-sitter
+      # -- Tools --
+      fd
+      sqlite
+      yarn
+      nodejs_22
+      tree-sitter
     ];
   };
 }
