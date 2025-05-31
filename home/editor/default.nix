@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: {
-  options.custom.editor = {
+  options.user.editor = {
     enable = lib.mkEnableOption "Enable VsCode + Neovim integration.";
 
     standalone = lib.mkOption {
@@ -20,15 +20,14 @@
     };
   };
 
-  config = builtins.trace "Editor module loaded" (let
-    standalone = config.custom.editor.standalone;
+  config = lib.mkIf config.user.editor.enable (let
+    standalone = config.user.editor.standalone;
     onWsl =
       if standalone
       then false
-      else config.custom.editor.onWsl;
-  in
-    lib.mkIf config.custom.editor.enable {
-      programs.vscode = builtins.trace "VsCode evaluate..." ({
+      else config.user.editor.onWsl;
+  in {
+      programs.vscode = {
         enable = !(standalone || onWsl);
 
         # source: https://nixos.wiki/wiki/Visual_Studio_Code (impure setup)
@@ -37,12 +36,17 @@
         # such as Python, C/C++ development, etc. You can install additional
         # packages as needed via VsCode integrated terminal or Python extensions.
         package = pkgs.vscode.fhs;
-      });
+      };
 
-      programs.neovim = builtins.trace "Neovim evaluate..." (lib.mergeAttrsList [
-        { enable = true; }
-        (lib.mkIf standalone {
-          extraWrapperArgs = [
+      # Don't use "mergeAttrsList" cause it will replace home-manger default setting
+      programs.neovim = lib.mkMerge [
+      	{ 
+	  enable = true;
+	  viAlias = lib.mkDefault true;
+          vimAlias = lib.mkDefault true;
+	}
+	( lib.mkIf standalone {
+	extraWrapperArgs = [
             "--suffix"
             "LIBRARY_PATH"
             ":"
@@ -53,12 +57,9 @@
             "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [pkgs.stdenv.cc.cc pkgs.zlib]}"
           ];
 
-          viAlias = lib.mkDefault true;
-          vimAlias = lib.mkDefault true;
           defaultEditor = lib.mkDefault true;
-
-          extraPackages = with pkgs; [
-            # -- Tools require for best neovim experience --
+	  extraPackages = with pkgs; [
+	    # -- Tools require for best neovim experience --
             sqlite
             yarn
             nodejs_22
@@ -83,14 +84,14 @@
             isort
             stylua
             nodePackages.prettier
-          ];
-        })
-      ]);
+	  ];
+	})
+      ];
 
       # Symlink Neovim configuration (impure setup)
       xdg.configFile."nvim".source =
-        if standalone
-        then (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/home/editor/standalone")
-        else (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/home/editor/integrated");
+          if standalone
+          then (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/home/editor/standalone")
+          else (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/home/editor/integrated");
     });
 }
