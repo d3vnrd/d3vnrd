@@ -11,17 +11,40 @@
     home.username = myvar.user;
     home.homeDirectory = "/home/${myvar.user}";
 
-    # ~ temporary enable packages
     programs = {
       zsh.enable = lib.mkDefault true;
       git.enable = lib.mkDefault true;
       tmux.enable = lib.mkDefault true;
-      neovim.enable = lib.mkDefault true;
-      yazi.enable = lib.mkDefault true;
-      lazygit.enable = lib.mkDefault true;
-      zoxide.enable = lib.mkDefault true;
-      fzf.enable = lib.mkDefault true;
-      vscode.enable = false;
+      yazi = {
+        enable = lib.mkDefault true;
+        settings = {
+          manager = {
+            show_hidden = true;
+            sort_by = "extension";
+            sort_dir_first = true;
+            sort_reverse = true;
+            show_symlink = true;
+          };
+        };
+        enableZshIntegraion = true;
+      };
+      lazygit = {
+        enable = lib.mkDefault true;
+        settings = {};
+      };
+      zoxide = {
+        enable = lib.mkDefault true;
+        enableZshIntegraion = true;
+        options = [];
+      };
+      fzf = {
+        enable = lib.mkDefault true;
+        enableZshIntegraion = true;
+      };
+    };
+
+    user = {
+      editor.enable = lib.mkDefault true;
     };
 
     home.packages = with pkgs; [
