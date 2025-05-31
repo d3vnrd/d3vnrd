@@ -26,7 +26,7 @@
             show_symlink = true;
           };
         };
-        enableZshIntegraion = true;
+        enableZshIntegration = true;
       };
       lazygit = {
         enable = lib.mkDefault true;
@@ -34,12 +34,12 @@
       };
       zoxide = {
         enable = lib.mkDefault true;
-        enableZshIntegraion = true;
+        enableZshIntegration = true;
         options = [];
       };
       fzf = {
         enable = lib.mkDefault true;
-        enableZshIntegraion = true;
+        enableZshIntegration = true;
       };
     };
 

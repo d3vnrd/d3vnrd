@@ -27,11 +27,14 @@
 
   config = let
     standalone = config.user.editor.standalone;
-    onWsl = lib.mkIF standalone false config.user.editor.onWsl;
+    onWsl =
+      if standalone
+      then false
+      else config.user.editor.onWsl;
   in
     lib.mkIf config.user.editor.enable {
       programs.vscode = {
-        enable = lib.mkIF (standalone || onWsl) false true;
+        enable = !(standalone || onWsl);
 
         # source: https://nixos.wiki/wiki/Visual_Studio_Code (impure setup)
         # Using FHS mode for VSCode to ensure compatibility with system libraries
@@ -92,8 +95,8 @@
 
       # Symlink Neovim configuration (impure setup)
       xdg.configFile."nvim".source =
-        lib.mkIf standalone
-        (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/home/editor/standalone")
-        (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/home/editor/integrated");
+        if standalone
+        then (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/home/editor/standalone")
+        else (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/home/editor/integrated");
     };
 }
