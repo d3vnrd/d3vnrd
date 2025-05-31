@@ -4,14 +4,9 @@
   pkgs,
   ...
 }: {
-  options.user.editor = {
-    enable = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Enable VsCode + Neovim integration.";
-    };
+  options.custom.editor = {
+    enable = lib.mkEnableOption "Enable VsCode + Neovim integration.";
 
-    # Should i remove this option?
     standalone = lib.mkOption {
       type = lib.types.bool;
       default = false;
@@ -25,15 +20,15 @@
     };
   };
 
-  config = let
-    standalone = config.user.editor.standalone;
+  config = builtins.trace "Editor module loaded" (let
+    standalone = config.custom.editor.standalone;
     onWsl =
       if standalone
       then false
-      else config.user.editor.onWsl;
+      else config.custom.editor.onWsl;
   in
-    lib.mkIf config.user.editor.enable {
-      programs.vscode = {
+    lib.mkIf config.custom.editor.enable {
+      programs.vscode = builtins.trace "VsCode evaluate..." ({
         enable = !(standalone || onWsl);
 
         # source: https://nixos.wiki/wiki/Visual_Studio_Code (impure setup)
@@ -42,13 +37,11 @@
         # such as Python, C/C++ development, etc. You can install additional
         # packages as needed via VsCode integrated terminal or Python extensions.
         package = pkgs.vscode.fhs;
-      };
+      });
 
-      programs.neovim =
-        {
-          enable = lib.mkForce true;
-        } # Configuration for neovim only enable when standalone
-        // lib.mkIf standalone {
+      programs.neovim = builtins.trace "Neovim evaluate..." (lib.mergeAttrsList [
+        { enable = true; }
+        (lib.mkIf standalone {
           extraWrapperArgs = [
             "--suffix"
             "LIBRARY_PATH"
@@ -91,12 +84,13 @@
             stylua
             nodePackages.prettier
           ];
-        };
+        })
+      ]);
 
       # Symlink Neovim configuration (impure setup)
       xdg.configFile."nvim".source =
         if standalone
         then (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/home/editor/standalone")
         else (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/home/editor/integrated");
-    };
+    });
 }

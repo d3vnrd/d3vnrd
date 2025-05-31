@@ -41,10 +41,12 @@
         enable = lib.mkDefault true;
         enableZshIntegration = true;
       };
+	vim.enable = true;
     };
 
-    user = {
-      editor.enable = lib.mkDefault true;
+    custom = {
+        editor.enable = true;
+        editor.onWsl = true;
     };
 
     home.packages = with pkgs; [
