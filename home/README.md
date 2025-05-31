@@ -15,3 +15,5 @@ Current found tools
 - [presenterm](https://github.com/mfontanini/presenterm)
 - [bottom](https://github.com/ClementTsang/bottom)
 - [others](https://github.com/stars/tlmp59/lists/rust-utils)
+
+- [not-rust](https://github.com/stars/tlmp59/lists/other-utils)
