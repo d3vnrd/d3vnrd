@@ -14,7 +14,6 @@
     programs = {
       zsh.enable = lib.mkDefault true;
       git.enable = lib.mkDefault true;
-      # tmux.enable = lib.mkDefault true;
       yazi = {
         enable = lib.mkDefault true;
         settings = {

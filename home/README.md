@@ -14,6 +14,8 @@ Current found tools
 - [fd](https://github.com/sharkdp/fd)
 - [presenterm](https://github.com/mfontanini/presenterm)
 - [bottom](https://github.com/ClementTsang/bottom)
+- [zellij](https://github.com/zellij-org/zellij)
 - [others](https://github.com/stars/tlmp59/lists/rust-utils)
 
 - [not-rust](https://github.com/stars/tlmp59/lists/other-utils)
+

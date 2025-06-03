@@ -6,8 +6,6 @@
 }: let
   cfg = config.programs.zsh;
 in {
-  imports = [./starship.nix];
-
   config = lib.mkIf cfg.enable {
     programs.zsh = {
       dotDir = ".config/zsh";
@@ -59,7 +57,5 @@ in {
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
       zstyle ':completion:*' menu select
     '';
-
-    programs.starship.enable = true;
   };
 }

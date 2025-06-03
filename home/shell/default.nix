@@ -8,7 +8,7 @@
 
     choice = lib.mkOption {
       default = "zsh";
-      type = lib.type.enum ["zsh" "bash"];
+      type = lib.types.enum ["zsh" "bash"];
       description = "Zsh or Bash integrations.";
     };
   };
@@ -21,16 +21,17 @@
         enable = true;
         settings = {
           add_newline = true;
-          scan_timeout = true;
+          scan_timeout = 10;
         };
         enableZshIntegration = cfg.choice == "zsh";
         enableBashIntegration = cfg.choice == "bash";
       };
 
-      programs.tmux.enable = true;
-      xdg.configFile."tmux.conf".source =
-        config.lib.file.mkOutOfStoreSymlink
-        "${config.xdg.configHome}/nix/home/shell/tmux.conf";
+      programs.zellij = {
+        enable = true;
+        settings.theme = "kanagawa";
+        enableZshIntegration = cfg.choice == "zsh";
+        enableBashIntegration = cfg.choice == "bash";
+      };
     };
 }
-
