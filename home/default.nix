@@ -14,11 +14,12 @@
     programs = {
       zsh.enable = lib.mkDefault true;
       git.enable = lib.mkDefault true;
-      tmux.enable = lib.mkDefault true;
+      # tmux.enable = lib.mkDefault true;
       yazi = {
         enable = lib.mkDefault true;
         settings = {
           manager = {
+            ratio = [0 3 5];
             show_hidden = true;
             sort_by = "extension";
             sort_dir_first = true;
@@ -44,10 +45,13 @@
     };
 
     user = {
-        editor = {
-	  enable = true;
-	  onWsl = true;
-	};
+      editor = {
+        enable = true;
+        # onWsl = true;
+        standalone = true;
+      };
+
+      shell.enable = true;
     };
 
     home.packages = with pkgs; [

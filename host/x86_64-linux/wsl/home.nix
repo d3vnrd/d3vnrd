@@ -6,6 +6,4 @@
 }: {
   programs.git.userName = "tlmp59";
   programs.git.userEmail = "tinng.imp@gmail.com";
-
-  user.editor.onWsl = true;
 }

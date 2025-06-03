@@ -1,11 +1,8 @@
-if vim.loader then
-    vim.loader.enable()
-end
-
--- Enable nerd font support
-vim.g.have_nerd_font = false
-
 -- See `:help vim.opt` and `:help option-list` for more information
+vim.g.have_nerd_font = true
+vim.g.mapleader = ' '
+vim.g.maplocalleader = '\\'
+
 local options = {
     -- Enable auto indentation
     autoindent = true,
@@ -84,24 +81,22 @@ local options = {
     cmdheight = 1,
 
     -- Decrease update time
-    updatetime = 50,
+    updatetime = 300,
 
     -- Decrease mapped sequence wait time
     timeoutlen = 500,
     ttimeoutlen = 10,
 
     -- Default wrap option
-    wrap = true,
+    wrap = false,
     linebreak = true,
+    colorcolumn = '80',
 
     -- Default float border
     winborder = 'rounded',
 
     -- Stay center
     scrolloff = 20,
-
-    -- Screen vertical line
-    colorcolumn = '100',
 }
 
 for k, v in pairs(options) do
@@ -145,3 +140,17 @@ end
 vim.schedule(function()
     vim.opt.clipboard = 'unnamedplus'
 end)
+
+-- Import other config modules
+local configs = vim.iter(vim.api.nvim_get_runtime_file('lua/config/*.lua', true))
+    :map(function(file)
+        return vim.fn.fnamemodify(file, ':t:r')
+    end)
+    :filter(function(name)
+        return name ~= 'init'
+    end)
+    :totable()
+
+for _, v in ipairs(configs) do
+    require('config.' .. v)
+end

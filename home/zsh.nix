@@ -1,7 +1,12 @@
-{ config, lib, pkgs, ... }: let 
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   cfg = config.programs.zsh;
-in { 
-  imports = [ ./starship.nix ];
+in {
+  imports = [./starship.nix];
 
   config = lib.mkIf cfg.enable {
     programs.zsh = {
@@ -13,7 +18,7 @@ in {
 
       shellAliases = {
         l = "${pkgs.eza}/bin/eza -a --group-directories-first";
-	ls = "${pkgs.eza}/bin/eza --icons -a --group-directories-first";
+        ls = "${pkgs.eza}/bin/eza --icons -a --group-directories-first";
         tree = "${pkgs.eza}/bin/eza --color=auto --tree";
       };
     };
@@ -58,4 +63,3 @@ in {
     programs.starship.enable = true;
   };
 }
-
