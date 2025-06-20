@@ -4,12 +4,12 @@
   pkgs,
   ...
 }: {
-  options.user.editor = {
-    enable = lib.mkEnableOption "Enable VsCode + Neovim integration.";
+  options.moduleal.editor = {
+    enable = lib.mkEnableOption "User default editor configuration.";
 
     standalone = lib.mkOption {
       type = lib.types.bool;
-      default = false;
+      default = true;
       description = "Enable standalone Neovim configuration.";
     };
 
@@ -20,21 +20,17 @@
     };
   };
 
-  config = lib.mkIf config.user.editor.enable (let
-    standalone = config.user.editor.standalone;
+  config = lib.mkIf config.moduleal.editor.enable (let
+    standalone = config.moduleal.editor.standalone;
     onWsl =
       if standalone
       then false
-      else config.user.editor.onWsl;
+      else config.moduleal.editor.onWsl;
   in {
     programs.vscode = {
       enable = !(standalone || onWsl);
 
       # source: https://nixos.wiki/wiki/Visual_Studio_Code (impure setup)
-      # Using FHS mode for VSCode to ensure compatibility with system libraries
-      # this is necessary for extensions that require system-level dependencies
-      # such as Python, C/C++ development, etc. You can install additional
-      # packages as needed via VsCode integrated terminal or Python extensions.
       package = pkgs.vscode.fhs;
     };
 
@@ -46,6 +42,8 @@
         vimAlias = lib.mkDefault true;
       }
       (lib.mkIf standalone {
+        defaultEditor = lib.mkDefault true;
+
         extraWrapperArgs = [
           "--suffix"
           "LIBRARY_PATH"
@@ -57,13 +55,12 @@
           "${lib.makeSearchPathOutput "dev" "lib/pkgconfig" [pkgs.stdenv.cc.cc pkgs.zlib]}"
         ];
 
-        defaultEditor = lib.mkDefault true;
         extraPackages = with pkgs; [
-          # -- Tools require for best neovim experience --
-          sqlite
-          yarn
-          nodejs_22
+          gcc
           tree-sitter
+          sqlite
+          xclip
+          fd
         ];
       })
     ];
@@ -84,6 +81,7 @@
       harper
       marksman
       texlab
+      pyright
 
       # -- DAP --
 
@@ -92,6 +90,7 @@
       # -- Formatter --
       alejandra
       black
+      dprint
       isort
       stylua
       nodePackages.prettier

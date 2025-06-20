@@ -1,6 +1,6 @@
 A collections of modules related to user level configuraions (e.g., nvim, yazi)
 
-Current found tools
+Current found programs
 
 - [spotfiy_player](https://github.com/aome510/spotify-player)
 - [yazi](https://github.com/sxyazi/yazi)

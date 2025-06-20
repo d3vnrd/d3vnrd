@@ -70,3 +70,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
         vim.hl.on_yank { higroup = 'Visual', priority = 250 }
     end,
 })
+
+-- source: https://github.com/tjdevries/config.nvim/blob/master/plugin/terminal.lua
+vim.api.nvim_create_autocmd('TermOpen', {
+    group = vim.api.nvim_create_augroup('custom-term-open', {}),
+    callback = function()
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
+        vim.opt_local.scrolloff = 0
+
+        vim.bo.filetype = 'terminal'
+    end,
+})

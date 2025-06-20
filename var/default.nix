@@ -1,4 +1,6 @@
-{ lib }: {
+# NOTE: Global variables that will be passed in both system config and home-manager
+{...}: {
   user = "tlmp59";
-  # NOTE: Placeholder for later configs
+  shell = "zsh";
+  version = "24.11";
 }

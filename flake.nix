@@ -1,24 +1,25 @@
 {
   description = "FrameworkOS";
 
-  outputs = { nixpkgs, ... } @ inputs: let
+  outputs = {nixpkgs, ...} @ inputs: let
     inherit (nixpkgs) lib;
 
-    mylib = import ./lib { inherit lib; };
-    myvar = import ./var { inherit lib; };
+    mylib = import ./lib {inherit lib;};
+    myvar = import ./var {inherit lib;};
     systems = mylib.dirsIn ./host;
-    args = { inherit inputs lib mylib myvar systems; };
+    args = {inherit inputs lib mylib myvar systems;};
 
-    forSystems = func: ( lib.genAttrs systems func );
-  in lib.mergeAttrsList [
-    ( import ./host args )
+    forSystems = func: (lib.genAttrs systems func);
+  in
+    lib.mergeAttrsList [
+      (import ./host args)
 
-    {
-      formatter = forSystems (
-        system: nixpkgs.legacyPackages.${system}.alejandra
-      );
-    }
-  ];
+      {
+        formatter = forSystems (
+          system: nixpkgs.legacyPackages.${system}.alejandra
+        );
+      }
+    ];
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -34,19 +35,19 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # ---Secrets management---
+    # --Secrets management--
     sops-nix = {
       url = "github:mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # ---Precommit---
+    # --Precommit--
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # ---Wsl support---
+    # --Wsl support--
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
   };
 }

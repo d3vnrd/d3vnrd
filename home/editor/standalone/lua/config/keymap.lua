@@ -46,18 +46,36 @@ local keymap = {
     { 'n', '<C-w>%', '<cmd>vsplit<cr>', { noremap = true, desc = 'Split window vertically', silent = true } },
 
     -- Search words under cursor
-    -- stylua: ignore
-    { 'n', '<leader>sw', [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = 'Search word under cursor' } },
+    {
+        'n',
+        '<leader>sw',
+        [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+        { desc = 'Search word under cursor' },
+    },
 
     -- Navigate in quickfix & location list
     { 'n', '<M-k>', '<cmd>cnext<cr>zz', { silent = true } },
     { 'n', '<M-j>', '<cmd>cprev<cr>zz', { silent = true } },
     { 'n', '<M-l>', '<cmd>lnext<cr>zz', { silent = true } },
     { 'n', '<M-h>', '<cmd>lprev<cr>zz', { silent = true } },
+
+    -- Open a terminal at the bottom of the screen with a fixed height
+    {
+        'n',
+        '<leader>st',
+        function()
+            vim.cmd.new()
+            vim.cmd.wincmd 'J'
+            vim.api.nvim_win_set_height(0, 12)
+            vim.wo.winfixheight = true
+            vim.cmd.term()
+        end,
+        { desc = 'Open integrated terminal' },
+    },
 }
+
+local disable = {}
 
 for _, v in ipairs(keymap) do
     vim.keymap.set(v[1], v[2], v[3], v[4] or {})
 end
-
-local disable = {}

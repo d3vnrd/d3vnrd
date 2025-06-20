@@ -9,6 +9,7 @@
 Variables, Functions, Loops, Data structures, Modules, etc.
 
 <h4 align="center">Loops</h4>
+<p></p>
 
 ```lua
 local rand_list = { 'apple', 'orange', 'banana' }
@@ -112,7 +113,7 @@ processes that communicate with some "client" - in this case, Neovim!
 
 LSP provides Neovim with features like: - Go to definition - Find references - Autocompletion - Symbol Search - and more!
 
-Thus, Language Servers are external tools that must be installed separately from
+Thus, Language Servers are external programs that must be installed separately from
 Neovim. This is where `mason` and related plugins come into play.
 
 If you're wondering about lsp vs treesitter, you can check out the wonderfully

@@ -1,5 +1,4 @@
 local M = {}
-
 M.snacks = {
     setup = function()
         local enable = {
@@ -96,95 +95,11 @@ M.snacks = {
     end,
 }
 
-M.miniclue = function()
-    local clue = require 'mini.clue'
-    return {
-        triggers = {
-            -- Leader triggers
-            { mode = 'n', keys = '<Leader>' },
-            { mode = 'x', keys = '<Leader>' },
-
-            -- Built-in completion
-            { mode = 'i', keys = '<C-x>' },
-
-            -- `g` key
-            { mode = 'n', keys = 'g' },
-            { mode = 'x', keys = 'g' },
-
-            -- Marks
-            { mode = 'n', keys = "'" },
-            { mode = 'n', keys = '`' },
-            { mode = 'x', keys = "'" },
-            { mode = 'x', keys = '`' },
-
-            -- Registers
-            { mode = 'n', keys = '"' },
-            { mode = 'x', keys = '"' },
-            { mode = 'i', keys = '<C-r>' },
-            { mode = 'c', keys = '<C-r>' },
-
-            -- Window commands
-            { mode = 'n', keys = '<C-w>' },
-
-            -- `z` key
-            { mode = 'n', keys = 'z' },
-            { mode = 'x', keys = 'z' },
-        },
-
-        clues = {
-            clue.gen_clues.builtin_completion(),
-            clue.gen_clues.g(),
-            clue.gen_clues.marks(),
-            clue.gen_clues.registers(),
-            clue.gen_clues.windows(),
-            clue.gen_clues.z(),
-        },
-
-        window = {
-            config = {
-                width = vim.api.nvim_win_get_width(0),
-                height = 5,
-                title_pos = 'center',
-                border = { '', '─', '', '', '', '', '', '' },
-            },
-            delay = 500,
-        },
-    }
-end
-
-M.miniai = function()
-    local miniai = require 'mini.ai'
-
-    return {
-        n_lines = 300,
-        custom_textobjects = {
-            f = miniai.gen_spec.treesitter({ a = '@function.outer', i = '@function.inner' }, {}),
-            -- Whole buffer.
-            g = function()
-                local from = { line = 1, col = 1 }
-                local to = {
-                    line = vim.fn.line '$',
-                    col = math.max(vim.fn.getline('$'):len(), 1),
-                }
-                return { from = from, to = to }
-            end,
-        },
-        -- Disable error feedback.
-        silent = true,
-        -- Don't use the previous or next text object.
-        search_method = 'cover',
-        mappings = {
-            -- Disable next/last variants.
-            around_next = '',
-            inside_next = '',
-            around_last = '',
-            inside_last = '',
-        },
-    }
-end
-
-M.quarto = function()
-    return {}
-end
-
-return M
+-- Small Qol plugins
+return {
+    'folke/snacks.nvim',
+    priority = 1000,
+    lazy = false,
+    keys = M.snacks.keys(),
+    opts = M.snacks.setup(),
+}

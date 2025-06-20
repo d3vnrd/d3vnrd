@@ -3,10 +3,8 @@
   lib,
   pkgs,
   ...
-}: let
-  cfg = config.programs.zsh;
-in {
-  config = lib.mkIf cfg.enable {
+}: {
+  config = lib.mkIf config.programs.zsh.enable {
     programs.zsh = {
       dotDir = ".config/zsh";
       autocd = true;

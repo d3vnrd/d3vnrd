@@ -1,7 +1,11 @@
+if vim.loader then
+    vim.loader.enable()
+end
+
 -- See `:help vim.opt` and `:help option-list` for more information
-vim.g.have_nerd_font = true
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
+vim.g.have_nerd_font = true
 
 local options = {
     -- Enable auto indentation
@@ -109,7 +113,12 @@ vim.opt.shortmess:append {
     s = true,
 }
 
--- Disable unsused default plugin
+-- Sync clipboard between OS and Neovim
+vim.schedule(function()
+    vim.opt.clipboard = 'unnamedplus'
+end)
+
+-- Disable unused default plugin
 local disabled_built_ins = {
     'netrw',
     'netrwPlugin',
@@ -136,21 +145,11 @@ for _, plugin in pairs(disabled_built_ins) do
     vim.g['loaded_' .. plugin] = 1
 end
 
--- Sync clipboard between OS and Neovim
-vim.schedule(function()
-    vim.opt.clipboard = 'unnamedplus'
-end)
-
--- Import other config modules
-local configs = vim.iter(vim.api.nvim_get_runtime_file('lua/config/*.lua', true))
-    :map(function(file)
-        return vim.fn.fnamemodify(file, ':t:r')
-    end)
-    :filter(function(name)
-        return name ~= 'init'
-    end)
-    :totable()
-
-for _, v in ipairs(configs) do
-    require('config.' .. v)
+-- Import other important modules
+local configs = vim.api.nvim_get_runtime_file('lua/config/*.lua', true)
+for _, path in ipairs(configs) do
+    local file = vim.fn.fnamemodify(path, ':t:r')
+    if file ~= 'init' then
+        pcall(require('config.' .. file))
+    end
 end

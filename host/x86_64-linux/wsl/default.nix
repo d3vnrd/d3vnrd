@@ -4,14 +4,7 @@
   myvar,
   ...
 }: {
-  imports = [
-    inputs.nixos-wsl.nixosModules.wsl
-  ];
-
-  users.users."${myvar.user}" = {
-    ignoreShellProgramCheck = true;
-    shell = pkgs.zsh;
-  };
+  imports = [inputs.nixos-wsl.nixosModules.wsl];
 
   wsl.enable = true;
   wsl.defaultUser = "${myvar.user}";
@@ -32,8 +25,8 @@
     autoPrune.enable = true;
   };
 
-  # --Vscode remote--
+  # --Vscode remote support--
   programs.nix-ld.enable = true;
 
-  system.stateVersion = "24.11";
+  system.stateVersion = myvar.version;
 }

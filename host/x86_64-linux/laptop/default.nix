@@ -1,21 +1,15 @@
-{ config, lib, pkgs, inputs, util, ... }:
-
 {
-  imports = [ ./hardware-configuration.nix ];
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  imports = [./hardware-configuration.nix];
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${util.myvar.user} = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-  };
-
-  # System settings 
+  # System settings
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.supportedFilesystems = [ "btrfs" ];
+  boot.supportedFilesystems = ["btrfs"];
   hardware.enableAllFirmware = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  nixpkgs.config.allowUnfree = true;
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -23,16 +17,10 @@
 
   # Options to reduce disk usage
   boot.loader.systemd-boot.configurationLimit = 10;
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 1w";
-  };
-  nix.settings.auto-optimise-store = true;
 
   # Network connection
   # networking.hostName = hostname;
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.networkmanager.enable = true; # Easiest to use and most distros use this by default.
 
   # Set your time zone.
   time.timeZone = "Asia/Vietnam";
@@ -58,7 +46,6 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.libinput.enable = true;
 
-
   # Default programs
   programs.firefox.enable = true;
   programs.zsh.enable = true;
@@ -68,8 +55,8 @@
 
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
-    vim 
-    git 
+    vim
+    git
     st
     dmenu
     alacritty
@@ -79,4 +66,3 @@
   # Do NOT change this value
   system.stateVersion = "24.11";
 }
-

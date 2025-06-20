@@ -1,11 +1,9 @@
-if vim.loader then
-    vim.loader.enable()
-end
-
--- Import important configs
+-- Import user config
 require 'config'
 
--- Boostrap lazy.nvim
+vim.g.base46_cache = vim.fn.stdpath 'data' .. '/base46_cache/'
+
+-- Boostrap plugin manager
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
     local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
@@ -24,9 +22,16 @@ end
 -- Put lazy into the runtimepath(rtp)
 vim.opt.rtp:prepend(lazypath)
 
--- Setup and  install plugins
-require('lazy').setup('plugin', {
+-- Setup and install plugins
+require('lazy').setup {
+    spec = {
+        { import = 'plugin' },
+        { import = 'theme' },
+    },
     ui = { border = 'rounded' },
     change_detection = { notify = false },
     rocks = { enabled = false },
-})
+}
+
+dofile(vim.g.base46_cache .. 'defaults')
+dofile(vim.g.base46_cache .. 'statusline')

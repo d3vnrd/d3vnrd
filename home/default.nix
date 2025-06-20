@@ -1,69 +1,36 @@
 {
-  lib,
   pkgs,
+  lib,
   mylib,
   myvar,
   ...
 }: {
   imports = mylib.scanPath ./.;
 
-  config = {
-    home.username = myvar.user;
-    home.homeDirectory = "/home/${myvar.user}";
+  config.module = with lib; {
+    editor.enable = mkDefault true;
+    shell.enable = mkDefault true;
+    programs.enable = mkDefault [
+      "fzf"
+      "yazi"
+      "lazygit"
+      "zoxide"
+    ];
+  };
 
-    programs = {
-      zsh.enable = lib.mkDefault true;
-      git.enable = lib.mkDefault true;
-      yazi = {
-        enable = lib.mkDefault true;
-        settings = {
-          manager = {
-            ratio = [0 3 5];
-            show_hidden = true;
-            sort_by = "extension";
-            sort_dir_first = true;
-            sort_reverse = true;
-            show_symlink = true;
-          };
-        };
-        enableZshIntegration = true;
-      };
-      lazygit = {
-        enable = lib.mkDefault true;
-        settings = {};
-      };
-      zoxide = {
-        enable = lib.mkDefault true;
-        enableZshIntegration = true;
-        options = [];
-      };
-      fzf = {
-        enable = lib.mkDefault true;
-        enableZshIntegration = true;
-      };
-    };
-
-    user = {
-      editor = {
-        enable = true;
-        # onWsl = true;
-        standalone = true;
-      };
-
-      shell.enable = true;
-    };
-
-    home.packages = with pkgs; [
+  config.home = {
+    username = myvar.user;
+    homeDirectory = "/home/${myvar.user}";
+    packages = with pkgs; [
       tldr
       eza
       ripgrep
       gnumake
-      quarto
       pandoc
     ];
 
-    home.file = {};
-    home.sessionVariables = {};
-    home.stateVersion = "24.11";
+    file = {};
+    sessionVariables = {};
+    stateVersion = myvar.version;
   };
 }

@@ -1,7 +1,7 @@
 -- Colorscheme (#colorscheme)
 return {
     'rebelot/kanagawa.nvim',
-    -- enable = true,
+    enabled = true,
     priority = 1000,
     init = function()
         vim.cmd.colorscheme 'kanagawa'
@@ -41,24 +41,10 @@ return {
                 MsgSeparator = { bg = 'none', fg = theme.ui.bg_m3 },
                 MoreMsg = { bold = true },
 
-                -- Horizontal separator (custom)
-                HorSplit = { bg = 'none', fg = theme.ui.bg_m3, strikethrough = true },
+                -- Win separator (custom)
+                WinSeparator = { fg = palette.sumiInk4 },
+                HorSplit = { bg = 'none', fg = palette.sumiInk4, strikethrough = true },
             }
         end,
     },
-
-    -- {
-    --     'projekt0n/github-nvim-theme',
-    --     enable = false,
-    --     name = 'github-theme',
-    --     priority = 1000,
-    --     init = function()
-    --         vim.cmd.colorscheme 'github_dark'
-    --     end,
-    --     opts = {
-    --         options = {
-    --             transparent = true,
-    --         },
-    --     },
-    -- },
 }
