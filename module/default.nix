@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   myvar,
@@ -6,18 +7,22 @@
 }:
 with lib; {
   # -- Default system user --
-  users.defaultUserShell = pkgs.${myvar.shell};
   users.users.root = {};
   users.users."${myvar.user}" = {
-    isNormalUser = lib.mkForce true;
-    extraGroups = lib.mkForce ["wheel"];
+    isNormalUser = mkForce true;
+    extraGroups = mkForce ["wheel"];
     description = "Default user for all host machines.";
+  };
+  users.defaultUserShell = mkDefault pkgs.${myvar.shell};
+
+  programs = {
+    zsh.enable = mkForce (config.users.defaultUserShell == pkgs.zsh);
+    git.enable = mkForce true;
   };
 
   # -- Default system packages --
   environment.systemPackages = with pkgs; [
     # utils
-    git
     gh
     gcc
     unzip
@@ -29,10 +34,6 @@ with lib; {
     # synchronize
     rsync
   ];
-
-  programs = {
-    zsh.enable = mkIf myvar.shell == "zsh"; # default shell
-  };
 
   # -- Optimize generations --
   nix.gc = {

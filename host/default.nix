@@ -4,13 +4,11 @@
   mylib,
   myvar,
   systems,
-}: let
+} @ specialArgs: let
   inherit (inputs) nix-darwin home-manager;
 
   genHosts = system: let
     sysHosts = mylib.dirsIn ./${system};
-    sysArgs = {inherit inputs system lib mylib myvar;};
-
     sysAttrs =
       if lib.hasSuffix "darwin" system
       then {
@@ -28,7 +26,7 @@
       lib.genAttrs sysHosts (
         hostname:
           conf {
-            inherit sysArgs;
+            inherit system specialArgs;
             modules = [
               ../module
               ../module/${type}

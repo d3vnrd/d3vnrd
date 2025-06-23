@@ -35,6 +35,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # --Theming framework--
+    stylix.url = "github:danth/stylix";
+
     # --Secrets management--
     sops-nix = {
       url = "github:mic92/sops-nix";

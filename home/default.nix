@@ -7,30 +7,28 @@
 }: {
   imports = mylib.scanPath ./.;
 
-  config.module = with lib; {
-    editor.enable = mkDefault true;
-    shell.enable = mkDefault true;
-    programs.enable = mkDefault [
-      "fzf"
-      "yazi"
-      "lazygit"
-      "zoxide"
-    ];
+  # -- Config available with Home-manager --
+  programs = with lib; {
+    yazi.enable = mkDefault true;
+    lazygit.enable = mkDefault true;
+    zoxide.enable = mkDefault true;
+    fzf.enable = lib.mkDefault true;
   };
 
-  config.home = {
+  home.packages = with pkgs; [
+    tldr
+    eza
+    ripgrep
+    gnumake
+    pandoc
+  ];
+
+  home = {
     username = myvar.user;
     homeDirectory = "/home/${myvar.user}";
-    packages = with pkgs; [
-      tldr
-      eza
-      ripgrep
-      gnumake
-      pandoc
-    ];
-
     file = {};
     sessionVariables = {};
-    stateVersion = myvar.version;
   };
+
+  home.stateVersion = myvar.version;
 }

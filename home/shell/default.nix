@@ -5,10 +5,7 @@
   myvar,
   ...
 }: {
-  options.module.shell = {
-    enable = lib.mkEnableOption "Enable shell configuration setup.";
-
-    choice = lib.mkOption {
+  options.M.shell = lib.mkOption {
       default = myvar.shell;
       type = lib.types.enum ["zsh" "bash"];
       description = "Zsh or Bash integrations.";
@@ -18,18 +15,18 @@
   imports = mylib.scanPath ./.;
 
   config = let
-    cfg = config.module.shell;
+    cfg = config.M.shell;
   in
     lib.mkIf cfg.enable {
-      programs.zsh.enable = cfg.choice == "zsh";
+      programs.zsh.enable = cfg== "zsh";
       programs.starship = {
         enable = true;
         settings = {
           add_newline = true;
           scan_timeout = 10;
         };
-        enableZshIntegration = cfg.choice == "zsh";
-        enableBashIntegration = cfg.choice == "bash";
+        enableZshIntegration = cfg== "zsh";
+        enableBashIntegration = cfg== "bash";
       };
 
       programs.zellij = {
@@ -37,12 +34,12 @@
         settings = {
           theme = "kanagawa";
           simplified_ui = true;
-          default_shell = cfg.choice;
+          default_shell = cfg;
           default_layout = "compact";
           mouse_mode = false;
         };
-        enableZshIntegration = cfg.choice == "zsh";
-        enableBashIntegration = cfg.choice == "bash";
+        enableZshIntegration = cfg== "zsh";
+        enableBashIntegration = cfg== "bash";
       };
     };
 }
