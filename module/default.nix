@@ -12,11 +12,12 @@ with lib; {
     isNormalUser = mkForce true;
     extraGroups = mkForce ["wheel"];
     description = "Default user for all host machines.";
+    shell = pkgs.${myvar.shell};
   };
-  users.defaultUserShell = mkDefault pkgs.${myvar.shell};
+  # users.defaultUserShell = mkDefault pkgs.${myvar.shell};
 
   programs = {
-    zsh.enable = mkForce (config.users.defaultUserShell == pkgs.zsh);
+    zsh.enable = true;
     git.enable = mkForce true;
   };
 

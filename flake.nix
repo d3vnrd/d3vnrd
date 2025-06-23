@@ -5,7 +5,7 @@
     inherit (nixpkgs) lib;
 
     mylib = import ./lib {inherit lib;};
-    myvar = import ./var {inherit lib;};
+    myvar = mylib.info;
     systems = mylib.dirsIn ./host;
     args = {inherit inputs lib mylib myvar systems;};
 

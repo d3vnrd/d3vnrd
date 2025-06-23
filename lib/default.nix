@@ -1,4 +1,12 @@
 {lib}: {
+  info = {
+    user = "tlmp59";
+    shell = "zsh";
+    version = "24.11";
+  };
+
+  networking = {};
+
   dirsIn = dir:
     builtins.attrNames (
       lib.filterAttrs
@@ -14,7 +22,7 @@
             (type == "directory") # include directories
             || (
               (path != "default.nix") # ignore default.nix
-              && (lib.hasSuffix ".nix" path) # include .nix file
+              && (lib.hasSuffix ".nix" path) # include `.nix` file
             )
         ) (builtins.readDir path)
       )

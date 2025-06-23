@@ -2,7 +2,7 @@
   zsh = config.programs.zsh.enable;
 in {
   programs = {
-    lazygit.setting = {};
+    lazygit.settings = {};
 
     zoxide = {
       enableZshIntegration = zsh;

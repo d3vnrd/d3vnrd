@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 with lib; {
@@ -11,7 +12,7 @@ with lib; {
   };
 
   config = let
-    cfg = config.custom.editor;
+    cfg = config.M.editor;
   in {
     programs = {
       neovim = mkMerge [
@@ -44,21 +45,19 @@ with lib; {
         })
       ];
 
-      xdg.configFile."nvim".source =
-        mkIf (cfg == "nvim")
-        config.lib.file.mkOutOfStoreSymlink
-        "${config.xdg.configHome}/nix/config/nvim";
 
       vscode = {
         enable = cfg == "nvim_vscode";
         # source: https://nixos.wiki/wiki/Visual_Studio_Code (impure setup)
-        packages = pkgs.vscode.fhs;
+        package = pkgs.vscode.fhs;
       };
 
       helix = {
         enable = cfg == "helix";
       };
     };
+
+	xdg.configFile."nvim".source = mkIf (cfg == "nvim") (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/config/nvim");
 
     home.packages = with pkgs; [
       # -- LSP --
