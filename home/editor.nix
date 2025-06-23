@@ -47,7 +47,7 @@ with lib; {
       xdg.configFile."nvim".source =
         mkIf (cfg == "nvim")
         config.lib.file.mkOutOfStoreSymlink
-        "${config.xdg.configHome}/nix/home/config/nvim";
+        "${config.xdg.configHome}/nix/config/nvim";
 
       vscode = {
         enable = cfg == "nvim_vscode";
