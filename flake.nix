@@ -4,10 +4,9 @@
   outputs = {nixpkgs, ...} @ inputs: let
     inherit (nixpkgs) lib;
 
-    mylib = import ./lib {inherit lib;};
-    myvar = mylib.info;
+    mylib = import ./lib lib;
     systems = mylib.dirsIn ./host;
-    args = {inherit inputs lib mylib myvar systems;};
+    args = {inherit inputs lib mylib systems;};
 
     forSystems = func: (lib.genAttrs systems func);
   in
@@ -17,6 +16,13 @@
       {
         formatter = forSystems (
           system: nixpkgs.legacyPackages.${system}.alejandra
+        );
+
+        devShell = forSystems (
+          system: let
+            pkgs = nixpkgs.legacyPackages.${system};
+          in
+            import ./shell {inherit lib mylib pkgs;}
         );
       }
     ];

@@ -61,7 +61,7 @@ local on_attach = function(client, bufnr)
 end
 
 -- Define the diagnostic signs.
--- See :help vim.diagnostic.Opts for more details
+-- See :helper vim.diagnostic.Opts for more details
 -- source: https://github.com/MariaSolOs/dotfiles/blob/main/.config/nvim/lua/lsp.lua#L146
 local dicons = require('icon').diagnostics
 for severity, icon in pairs(dicons) do

@@ -1,13 +1,13 @@
 {
   inputs,
   pkgs,
-  myvar,
+  mylib,
   ...
 }: {
   imports = [inputs.nixos-wsl.nixosModules.wsl];
 
   wsl.enable = true;
-  wsl.defaultUser = "${myvar.user}";
+  wsl.defaultUser = "${mylib.global.user}";
 
   # --Docker--
   wsl.docker-desktop.enable = false;
@@ -28,5 +28,5 @@
   # --Vscode remote support--
   programs.nix-ld.enable = true;
 
-  system.stateVersion = myvar.version;
+  system.stateVersion = mylib.global.version;
 }

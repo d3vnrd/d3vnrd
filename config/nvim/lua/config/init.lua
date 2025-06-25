@@ -2,7 +2,7 @@ if vim.loader then
     vim.loader.enable()
 end
 
--- See `:help vim.opt` and `:help option-list` for more information
+-- See `:helper vim.opt` and `:helper option-list` for more information
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 vim.g.have_nerd_font = true

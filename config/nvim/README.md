@@ -91,7 +91,7 @@ __call(self, ...)
 
 ### Chapter 2: Runtime path
 
-See :help rtp for more information
+See :helper rtp for more information
 
 This repo use the following rtp:
 
@@ -103,7 +103,7 @@ This repo use the following rtp:
 
 <h3>LSP</h3>
 
-LSP stands for Language Server Protocol. It's a protocol that helps editors
+LSP stands for Language Server Protocol. It's a protocol that helpers editors
 and language tooling communicate in a standardized fashion.
 
 In general, you have a "server" which is some tool built to understand a particular
@@ -117,8 +117,8 @@ Thus, Language Servers are external programs that must be installed separately f
 Neovim. This is where `mason` and related plugins come into play.
 
 If you're wondering about lsp vs treesitter, you can check out the wonderfully
-and elegantly composed help section, `:help lsp-vs-treesitter`
+and elegantly composed helper section, `:helper lsp-vs-treesitter`
 
-Check `:help lsp` for more information about the expected workflow with lsp
+Check `:helper lsp` for more information about the expected workflow with lsp
 
 New Neovim version 0.11+ added new vim.lsp APIs that support natively LSP config, these include: - vim.lsp.config() - vim.lsp.enable() ~ Already have builtin FileType detection

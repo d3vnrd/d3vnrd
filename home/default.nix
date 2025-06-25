@@ -2,7 +2,6 @@
   pkgs,
   lib,
   mylib,
-  myvar,
   ...
 }: {
   imports = mylib.scanPath ./.;
@@ -24,11 +23,11 @@
   ];
 
   home = {
-    username = myvar.user;
-    homeDirectory = "/home/${myvar.user}";
+    username = mylib.global.user;
+    homeDirectory = "/home/${mylib.global.user}";
     file = {};
     sessionVariables = {};
   };
 
-  home.stateVersion = myvar.version;
+  home.stateVersion = mylib.global.version;
 }

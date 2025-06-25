@@ -1,23 +1,22 @@
 {
-  config,
   pkgs,
   lib,
-  myvar,
+  mylib,
   ...
 }:
 with lib; {
   # -- Default system user --
   users.users.root = {};
-  users.users."${myvar.user}" = {
+  users.users."${mylib.global.user}" = {
     isNormalUser = mkForce true;
     extraGroups = mkForce ["wheel"];
     description = "Default user for all host machines.";
-    shell = pkgs.${myvar.shell};
+    shell = pkgs.${mylib.global.shell};
   };
-  # users.defaultUserShell = mkDefault pkgs.${myvar.shell};
+  # users.defaultUserShell = mkDefault pkgs.${mylib.global.shell};
 
   programs = {
-    zsh.enable = true;
+    zsh.enable = mkIf (mylib.global.shell == "zsh") (mkForce true);
     git.enable = mkForce true;
   };
 
@@ -27,6 +26,7 @@ with lib; {
     gh
     gcc
     unzip
+    direnv
 
     # networking
     wget
@@ -52,5 +52,5 @@ with lib; {
   time.timeZone = mkDefault "Asia/Vietnam";
 
   # -- Precaution --
-  system.stateVersion = mkForce myvar.version;
+  system.stateVersion = mkForce mylib.global.version;
 }

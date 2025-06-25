@@ -2,7 +2,6 @@
   inputs,
   lib,
   mylib,
-  myvar,
   systems,
 } @ specialArgs: let
   inherit (inputs) nix-darwin home-manager;
@@ -33,14 +32,14 @@
               ./${system}/${hostname}
               hmod.home-manager
               {
-                home-manager.users."${myvar.user}".imports = [
+                home-manager.users."${mylib.global.user}".imports = [
                   ../home
                   ./${system}/${hostname}/home.nix
                 ];
 
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = {inherit mylib myvar;};
+                home-manager.extraSpecialArgs = {inherit mylib;};
 
                 networking.hostName = hostname;
               }

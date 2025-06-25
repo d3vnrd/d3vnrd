@@ -27,7 +27,7 @@ vim.api.nvim_create_autocmd('FileType', {
     desc = 'Close with <q>',
     pattern = {
         'git',
-        'help',
+        'helper',
         'man',
         'qf',
         'scratch',

@@ -1,5 +1,5 @@
-{lib}: {
-  info = {
+lib: {
+  global = {
     user = "tlmp59";
     shell = "zsh";
     version = "24.11";
