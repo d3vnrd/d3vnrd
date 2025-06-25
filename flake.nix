@@ -5,7 +5,8 @@
     inherit (nixpkgs) lib;
 
     mylib = import ./lib lib;
-    systems = mylib.scanPath ./host {
+    systems = mylib.scanPath {
+      path = ./host;
       full = false;
       filter = "dir";
     };

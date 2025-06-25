@@ -4,7 +4,7 @@
   mylib,
   ...
 }: {
-  imports = mylib.scanPath ./.;
+  imports = mylib.scanPath {};
 
   # -- Config available with Home-manager --
   programs = with lib; {
