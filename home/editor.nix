@@ -45,7 +45,6 @@ with lib; {
         })
       ];
 
-
       vscode = {
         enable = cfg == "nvim_vscode";
         # source: https://nixos.wiki/wiki/Visual_Studio_Code (impure setup)
@@ -57,7 +56,7 @@ with lib; {
       };
     };
 
-	xdg.configFile."nvim".source = mkIf (cfg == "nvim") (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/config/nvim");
+    xdg.configFile."nvim".source = mkIf (cfg == "nvim") (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/config/nvim");
 
     home.packages = with pkgs; [
       # -- LSP --

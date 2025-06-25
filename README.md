@@ -51,3 +51,7 @@ My configurations would not be possible without these amazing guys:
 - [EmergentMind](https://github.com/EmergentMind/nix-config)
 - [Pinpox](https://github.com/pinpox/nixos)
 - [NixOs's community on Reddit](https://www.reddit.com/r/NixOS/)
+
+### Tips
+
+- When merging attributes try to use `lib.mergeAttrsList` instead of `lib.mkMerge` as it can only get processed in NixOs modules.

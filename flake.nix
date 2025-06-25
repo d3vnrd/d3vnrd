@@ -5,7 +5,10 @@
     inherit (nixpkgs) lib;
 
     mylib = import ./lib lib;
-    systems = mylib.dirsIn ./host;
+    systems = mylib.scanPath ./host {
+      full = false;
+      filter = "dir";
+    };
     args = {inherit inputs lib mylib systems;};
 
     forSystems = func: (lib.genAttrs systems func);
@@ -18,11 +21,10 @@
           system: nixpkgs.legacyPackages.${system}.alejandra
         );
 
-        devShell = forSystems (
+        devShells = forSystems (
           system: let
             pkgs = nixpkgs.legacyPackages.${system};
-          in
-            import ./shell {inherit lib mylib pkgs;}
+          in (import ./shell {inherit lib mylib pkgs;})
         );
       }
     ];

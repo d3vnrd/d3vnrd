@@ -7,7 +7,10 @@
   inherit (inputs) nix-darwin home-manager;
 
   genHosts = system: let
-    sysHosts = mylib.dirsIn ./${system};
+    sysHosts = mylib.scanPath ./${system} {
+      full = false;
+      filter = "dir";
+    };
     sysAttrs =
       if lib.hasSuffix "darwin" system
       then {

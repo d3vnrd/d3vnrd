@@ -4,21 +4,18 @@
   pkgs,
   ...
 }:
-lib.mkMerge [
+lib.mergeAttrsList [
   {
     default = pkgs.mkShell {
       packages = with pkgs; [
         python3
+        uv
       ];
-      name = "Default developing environment.";
       shellHook = ''
-        python3 --version
+        echo "Unified default shell!"
         exec zsh
       '';
+      name = "default";
     };
   }
-
-  (lib.genAttrs (mylib.scanPath ./.) (
-    env: pkgs.mkShell (import ./${env} pkgs)
-  ))
 ]
