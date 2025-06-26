@@ -10,7 +10,7 @@ lib: {
   relativeToRoot = lib.path.append ../.;
 
   scanPath = {
-    path ? ./.,
+    path,
     full ? true,
     filter ? "all",
   }: let
@@ -31,8 +31,7 @@ lib: {
             # All: directories + .nix files (excluding default.nix)
             (type == "directory")
             || (
-              (type == "regular")
-              && (name != "default.nix")
+              (name != "default.nix")
               && (lib.hasSuffix ".nix" name)
             )
       ) (builtins.readDir path)

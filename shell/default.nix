@@ -18,4 +18,17 @@ lib.mergeAttrsList [
       name = "default";
     };
   }
+
+  (
+    lib.genAttrs (
+      map (file: lib.removeSuffix ".nix" file) (
+        mylib.scanPath {
+          path = ./.;
+          full = false;
+          filter = "file";
+        }
+      )
+    )
+    (name: pkgs.mkShell (import (./. + "/${name}.nix") pkgs))
+  )
 ]

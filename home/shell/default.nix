@@ -4,7 +4,7 @@
   mylib,
   ...
 }: {
-  imports = mylib.scanPath {};
+  imports = mylib.scanPath {path = ./.;};
 
   options.M.shell = lib.mkOption {
     default = mylib.global.shell;

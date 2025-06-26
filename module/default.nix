@@ -34,6 +34,7 @@ with lib; {
 
     # synchronize
     rsync
+    neovim
   ];
 
   # -- Optimize generations --
