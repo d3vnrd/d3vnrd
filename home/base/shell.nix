@@ -3,23 +3,29 @@
   lib,
   pkgs,
   ...
-}: {
-  config = lib.mkIf config.programs.zsh.enable {
-    programs.zsh = {
-      dotDir = ".config/zsh";
-      autocd = true;
-      enableCompletion = true;
-      autosuggestion.enable = true;
-      syntaxHighlighting.enable = true;
+}:
+with lib; {
+  options.M.shell = mkOption {
+    type = types.enum ["zsh" "bash"];
+    default = "zsh";
+    description = "Selected shell for programs support.";
+  };
 
-      shellAliases = {
-        l = "${pkgs.eza}/bin/eza -a --group-directories-first";
-        ls = "${pkgs.eza}/bin/eza --icons -a --group-directories-first";
-        tree = "${pkgs.eza}/bin/eza --color=auto --tree";
-      };
+  config.programs.zsh = {
+    enable = mkForce (config.M.shell == "zsh");
+    dotDir = ".config/zsh";
+    autocd = true;
+    enableCompletion = true;
+    autosuggestion.enable = true;
+    syntaxHighlighting.enable = true;
+
+    shellAliases = {
+      l = "${pkgs.eza}/bin/eza -a --group-directories-first";
+      ls = "${pkgs.eza}/bin/eza --icons -a --group-directories-first";
+      tree = "${pkgs.eza}/bin/eza --color=auto --tree";
     };
 
-    programs.zsh.history = {
+    history = {
       path = "${config.xdg.cacheHome}/zsh/zsh_history";
       save = 10000;
       size = 10000;
@@ -32,7 +38,7 @@
       saveNoDups = true;
     };
 
-    programs.zsh.plugins = [
+    plugins = with pkgs; [
       # ---Auto suggestions---
       # { name = pkgs.zsh-autosuggestions.pname; src = pkgs.zsh-autosuggestions.src; }
 
@@ -40,7 +46,7 @@
       # { name = pkgs.zsh-completions.pname; src = pkgs.zsh-completions.src; }
     ];
 
-    programs.zsh.initContent = ''
+    initContent = ''
       # ---Fix weird color behaviour with tmux---
       export TERM="xterm-256color"
 
@@ -55,5 +61,9 @@
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
       zstyle ':completion:*' menu select
     '';
+  };
+
+  config.programs.bash = {
+    enable = mkForce (config.M.shell != "zsh");
   };
 }

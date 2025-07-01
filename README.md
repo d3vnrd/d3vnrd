@@ -1,6 +1,4 @@
-<h3 align="center">
-  T|mpLab's Development Kits
-</h3>
+<h3 align="center"> T|mpLab's Development Kits </h3>
 
 <p align="center">
   My personal user developing environment with Nix, Home-manager, and many more. Focusing on modularity, portability, usability while still being as minimal as possible.
@@ -55,3 +53,4 @@ My configurations would not be possible without these amazing guys:
 ### Tips
 
 - When merging attributes try to use `lib.mergeAttrsList` instead of `lib.mkMerge` as it can only get processed in NixOs modules.
+- When flake does not recognize a file for folder, the problem is likely because we haven't track it by git. Try `git add <file>` to see if its work?

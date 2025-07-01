@@ -3,7 +3,7 @@
   lib,
   mylib,
   systems,
-} @ specialArgs: let
+}: let
   inherit (inputs) nix-darwin home-manager;
 
   genHosts = system: let
@@ -16,28 +16,35 @@
       if lib.hasSuffix "darwin" system
       then {
         type = "darwin";
-        conf = nix-darwin.lib.darwinSystem;
-        hmod = home-manager.darwinModules;
+        hmod = "darwinModules";
+        init = nix-darwin.lib.darwinSystem;
       }
       else {
         type = "linux";
-        conf = lib.nixosSystem;
-        hmod = home-manager.nixosModules;
+        hmod = "nixosModules";
+        init = lib.nixosSystem;
       };
+    specialArgs = {inherit inputs lib mylib;};
   in
     with sysAttrs;
       lib.genAttrs sysHosts (
         hostname:
-          conf {
+          init {
             inherit system specialArgs;
             modules = [
-              ../module
+              # --Include system configurations--
+              ../module/base
               ../module/${type}
-              ./${system}/${hostname}
-              hmod.home-manager
+              ./${system}/${hostname}/configuration.nix
+
+              # --Input home-manager as flake module--
+              home-manager.${hmod}.home-manager
+
+              # --System predefined attributes--
               {
-                home-manager.users."${mylib.global.user}".imports = [
-                  ../home
+                home-manager.users."${mylib.global.username}".imports = [
+                  ../home/base
+                  ../home/${type}
                   ./${system}/${hostname}/home.nix
                 ];
 

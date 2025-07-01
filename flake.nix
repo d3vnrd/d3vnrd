@@ -22,6 +22,12 @@
           system: nixpkgs.legacyPackages.${system}.alejandra
         );
 
+        checks = forSystems (
+          system: let
+            pkgs = nixpkgs.legacyPackages.${system};
+          in (import ./lib/check.nix {inherit inputs system pkgs;})
+        );
+
         devShells = forSystems (
           system: let
             pkgs = nixpkgs.legacyPackages.${system};
@@ -44,6 +50,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # --Declarative partitioning--
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # --Theming framework--
     stylix.url = "github:danth/stylix";
 
@@ -53,9 +65,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # --Precommit--
+    # --Pre-commit--
     pre-commit-hooks = {
-      url = "github:cachix/pre-commit-hooks.nix";
+      url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

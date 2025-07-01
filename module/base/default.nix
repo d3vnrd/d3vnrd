@@ -7,7 +7,7 @@
 with lib; {
   # -- Default system user --
   users.users.root = {};
-  users.users."${mylib.global.user}" = {
+  users.users."${mylib.global.username}" = {
     isNormalUser = mkForce true;
     extraGroups = mkForce ["wheel"];
     description = "Default user for all host machines.";
@@ -27,6 +27,7 @@ with lib; {
     gcc
     unzip
     direnv
+    just
 
     # networking
     wget
@@ -53,5 +54,5 @@ with lib; {
   time.timeZone = mkDefault "Asia/Vietnam";
 
   # -- Precaution --
-  system.stateVersion = mkForce mylib.global.version;
+  system.stateVersion = mkForce mylib.global.stateVersion;
 }

@@ -7,7 +7,7 @@
   imports = [inputs.nixos-wsl.nixosModules.wsl];
 
   wsl.enable = true;
-  wsl.defaultUser = "${mylib.global.user}";
+  wsl.defaultUser = "${mylib.global.username}";
 
   # --Docker--
   wsl.docker-desktop.enable = false;
@@ -27,6 +27,4 @@
 
   # --Vscode remote support--
   programs.nix-ld.enable = true;
-
-  system.stateVersion = mylib.global.version;
 }

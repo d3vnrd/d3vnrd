@@ -1,8 +1,8 @@
 lib: {
   global = {
-    user = "tlmp59";
+    username = "tlmp59";
+    stateVersion = "24.11";
     shell = "zsh";
-    version = "24.11";
   };
 
   networking = {};

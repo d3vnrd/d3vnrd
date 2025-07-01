@@ -1,5 +1,3 @@
-{
-  pkgs,
-  mylib,
-  ...
-}: {}
+{pkgs, ...}: {
+  home.packages = with pkgs; [btop];
+}

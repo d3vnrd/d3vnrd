@@ -6,7 +6,7 @@
 }:
 with lib; {
   options.M.editor = mkOption {
-    type = lib.types.enum ["nvim" "nvim_vscode" "helix"];
+    type = types.enum ["nvim" "nvim_vscode" "helix"];
     default = "nvim";
     description = "Editor options.";
   };
@@ -56,7 +56,9 @@ with lib; {
       };
     };
 
-    xdg.configFile."nvim".source = mkIf (cfg == "nvim") (config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/config/nvim");
+    xdg.configFile."nvim".source = mkIf (cfg == "nvim") (
+      config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/config/nvim"
+    );
 
     home.packages = with pkgs; [
       # -- LSP --
