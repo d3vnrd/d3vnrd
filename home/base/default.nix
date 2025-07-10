@@ -1,8 +1,13 @@
-{lib, ...}: {
+{
+  lib,
+  globalVars,
+  ...
+}: {
   imports = lib.custom.scanPath {path = ./.;};
 
   config.home = {
-    inherit (lib.custom.global) username stateVersion;
+    inherit (globalVars) username;
+    inherit (lib.custom.global) stateVersion;
     file = {};
     sessionVariables = {};
   };

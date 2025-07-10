@@ -1,1 +1,1 @@
-Packages user config outside of nixstore
+# Packages user config outside of nix-store
