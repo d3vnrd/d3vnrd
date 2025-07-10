@@ -2,10 +2,9 @@
   inputs,
   lib,
   mylib,
-  systems,
-}: let
-  inherit (inputs) nix-darwin home-manager;
-
+  ...
+} @ args:
+with inputs; let
   genHosts = system: let
     sysHosts = mylib.scanPath {
       path = ./${system};
@@ -60,11 +59,11 @@
 in {
   nixosConfigurations = lib.mergeAttrsList (
     map genHosts
-    (builtins.filter (dir: lib.hasSuffix "linux" dir) systems)
+    (builtins.filter (dir: lib.hasSuffix "linux" dir) args.systems)
   );
 
   darwinConfigurations = lib.mergeAttrsList (
     map genHosts
-    (builtins.filter (dir: lib.hasSuffix "darwin" dir) systems)
+    (builtins.filter (dir: lib.hasSuffix "darwin" dir) args.systems)
   );
 }

@@ -1,16 +1,23 @@
 {
   description = "FrameworkOS";
 
-  outputs = {nixpkgs, ...} @ inputs: let
+  outputs = {
+    nixpkgs,
+    nix-secret,
+    ...
+  } @ inputs: let
     inherit (nixpkgs) lib;
 
     mylib = import ./lib lib;
+    myvar = nix-secret.globalVars;
+
     systems = mylib.scanPath {
       path = ./host;
       full = false;
       filter = "dir";
     };
-    args = {inherit inputs lib mylib systems;};
+
+    args = {inherit inputs lib mylib myvar systems;};
 
     forSystems = func: (lib.genAttrs systems func);
   in
@@ -24,8 +31,10 @@
 
         checks = forSystems (
           system: let
+            inherit (inputs) pre-commit-hooks;
             pkgs = nixpkgs.legacyPackages.${system};
-          in (import ./lib/check.nix {inherit inputs system pkgs;})
+          in
+            mylib.checkFunc {inherit pre-commit-hooks system pkgs;}
         );
 
         devShells = forSystems (
@@ -50,20 +59,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # --Declarative partitioning--
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # --Theming framework--
     stylix.url = "github:danth/stylix";
-
-    # --Secrets management--
-    sops-nix = {
-      url = "github:mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     # --Pre-commit--
     pre-commit-hooks = {
@@ -73,5 +70,7 @@
 
     # --Wsl support--
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+
+    nix-secret.url = "git+ssh://git@github.com/tlmp59/nix-secret.git?ref=main&shallow=1";
   };
 }

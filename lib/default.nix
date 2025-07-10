@@ -5,7 +5,19 @@ lib: {
     shell = "zsh";
   };
 
-  networking = {};
+  checkFunc = {
+    pre-commit-hooks,
+    system,
+    pkgs,
+    ...
+  }: {
+    pre-commit-check = pre-commit-hooks.lib.${system}.run {
+      src = ../.;
+      hooks = {
+        alejandra.enable = true;
+      };
+    };
+  };
 
   relativeToRoot = lib.path.append ../.;
 
