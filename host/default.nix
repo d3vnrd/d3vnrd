@@ -42,7 +42,8 @@ with inputs; let
 
               # --System predefined attributes--
               {
-                home-manager.users."${globalVars.username}".imports = [
+                home-manager.users."${nix-secret.globalVars.username}".imports = [
+                  nix-secret.homeModules.secrets
                   ../home/base
                   ../home/${type}
                   ./${system}/${hostname}/home.nix
