@@ -15,12 +15,12 @@ with inputs; let
       if lib.hasSuffix "darwin" system
       then {
         type = "darwin";
-        hmod = "darwinModules";
+        mod = "darwinModules";
         init = nix-darwin.lib.darwinSystem;
       }
       else {
         type = "linux";
-        hmod = "nixosModules";
+        mod = "nixosModules";
         init = lib.nixosSystem;
       };
     specialArgs = {inherit inputs lib mylib;};
@@ -34,14 +34,15 @@ with inputs; let
               # --Include system configurations--
               ../module/base
               ../module/${type}
-              ./${system}/${hostname}/configuration.nix
+              ./${system}/${hostname}
 
-              # --Input home-manager as flake module--
-              home-manager.${hmod}.home-manager
+              # --Input home-manager & nix-secret as flake module--
+              home-manager.${mod}.home-manager
+              nix-secret.${mod}.secrets
 
               # --System predefined attributes--
               {
-                home-manager.users."${mylib.global.username}".imports = [
+                home-manager.users."${globalVars.username}".imports = [
                   ../home/base
                   ../home/${type}
                   ./${system}/${hostname}/home.nix

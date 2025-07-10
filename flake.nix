@@ -1,23 +1,17 @@
 {
   description = "FrameworkOS";
 
-  outputs = {
-    nixpkgs,
-    nix-secret,
-    ...
-  } @ inputs: let
+  outputs = {nixpkgs, ...} @ inputs: let
     inherit (nixpkgs) lib;
 
     mylib = import ./lib lib;
-    myvar = nix-secret.globalVars;
-
     systems = mylib.scanPath {
       path = ./host;
       full = false;
       filter = "dir";
     };
 
-    args = {inherit inputs lib mylib myvar systems;};
+    args = {inherit inputs lib mylib systems;};
 
     forSystems = func: (lib.genAttrs systems func);
   in
