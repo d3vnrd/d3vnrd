@@ -1,6 +1,5 @@
 {
   lib,
-  mylib,
   pkgs,
   ...
 }:
@@ -22,7 +21,7 @@ lib.mergeAttrsList [
   (
     lib.genAttrs (
       map (file: lib.removeSuffix ".nix" file) (
-        mylib.scanPath {
+        lib.custom.scanPath {
           path = ./.;
           full = false;
           filter = "file";

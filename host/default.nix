@@ -1,12 +1,11 @@
 {
   inputs,
   lib,
-  mylib,
   ...
 } @ args:
 with inputs; let
   genHosts = system: let
-    sysHosts = mylib.scanPath {
+    sysHosts = lib.custom.scanPath {
       path = ./${system};
       full = false;
       filter = "dir";
@@ -23,7 +22,7 @@ with inputs; let
         mod = "nixosModules";
         init = lib.nixosSystem;
       };
-    specialArgs = {inherit inputs lib mylib;};
+    specialArgs = {inherit inputs lib;};
   in
     with sysAttrs;
       lib.genAttrs sysHosts (
@@ -51,7 +50,6 @@ with inputs; let
 
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = {inherit mylib;};
 
                 networking.hostName = hostname;
               }

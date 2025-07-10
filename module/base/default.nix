@@ -1,22 +1,21 @@
 {
   pkgs,
   lib,
-  mylib,
   ...
 }:
 with lib; {
   # -- Default system user --
   users.users.root = {};
-  users.users."${mylib.global.username}" = {
+  users.users."${lib.custom.global.username}" = {
     isNormalUser = mkForce true;
     extraGroups = mkForce ["wheel"];
     description = "Default user for all host machines.";
-    shell = pkgs.${mylib.global.shell};
+    shell = pkgs.${lib.custom.global.shell};
   };
-  # users.defaultUserShell = mkDefault pkgs.${mylib.global.shell};
+  # users.defaultUserShell = mkDefault pkgs.${lib.custom.global.shell};
 
   programs = {
-    zsh.enable = mkIf (mylib.global.shell == "zsh") (mkForce true);
+    zsh.enable = mkIf (lib.custom.global.shell == "zsh") (mkForce true);
     git.enable = mkForce true;
   };
 
@@ -54,5 +53,5 @@ with lib; {
   time.timeZone = mkDefault "Asia/Vietnam";
 
   # -- Precaution --
-  system.stateVersion = mkForce mylib.global.stateVersion;
+  system.stateVersion = mkForce lib.custom.global.stateVersion;
 }

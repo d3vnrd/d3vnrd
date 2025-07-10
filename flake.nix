@@ -2,16 +2,17 @@
   description = "FrameworkOS";
 
   outputs = {nixpkgs, ...} @ inputs: let
-    inherit (nixpkgs) lib;
+    lib = nixpkgs.lib.extend (self: super: {
+      custom = import ./lib nixpkgs.lib;
+    });
 
-    mylib = import ./lib lib;
-    systems = mylib.scanPath {
+    systems = lib.custom.scanPath {
       path = ./host;
       full = false;
       filter = "dir";
     };
 
-    args = {inherit inputs lib mylib systems;};
+    args = {inherit inputs lib systems;};
 
     forSystems = func: (lib.genAttrs systems func);
   in
@@ -28,13 +29,13 @@
             inherit (inputs) pre-commit-hooks;
             pkgs = nixpkgs.legacyPackages.${system};
           in
-            mylib.checkFunc {inherit pre-commit-hooks system pkgs;}
+            lib.custom.checkFunc {inherit pre-commit-hooks system pkgs;}
         );
 
         devShells = forSystems (
           system: let
             pkgs = nixpkgs.legacyPackages.${system};
-          in (import ./shell {inherit lib mylib pkgs;})
+          in (import ./shell {inherit lib pkgs;})
         );
       }
     ];

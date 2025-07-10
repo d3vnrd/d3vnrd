@@ -1,7 +1,7 @@
-{mylib, ...}: {
-  imports = mylib.scanPath {path = ./.;};
+{lib, ...}: {
+  imports = lib.custom.scanPath {path = ./.;};
 
   home = {
-    homeDirectory = "/Users/${mylib.global.username}";
+    homeDirectory = "/Users/${lib.custom.global.username}";
   };
 }
