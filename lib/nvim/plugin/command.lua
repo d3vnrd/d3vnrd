@@ -1,23 +1,21 @@
 local auto = vim.api.nvim_create_autocmd
 local user = vim.api.nvim_create_user_command
 
--- User commands --
-user('ToggleWrap', function()
-    vim.wo.wrap = not vim.wo.wrap
-    vim.notify('Wrap ' .. (vim.wo.wrap and 'enabled' or 'disabled'), vim.log.levels.INFO)
-end, { desc = 'Toggle wrap in current buffer', nargs = 0 })
-
-user('PortCheck', function()
-    vim.cmd [[Lazy! load all]]
-    vim.cmd [[checkhealth]]
-end, { desc = 'Load all plugins and run :checkhealth' })
-
 ---@param desc string
 local augroup = function(desc)
     return vim.api.nvim_create_augroup('user/' .. desc, { clear = true })
 end
 
--- Auto commands --
+user('ToggleWrap', function()
+    vim.wo.wrap = not vim.wo.wrap
+    vim.notify('Wrap ' .. (vim.wo.wrap and 'enabled' or 'disabled'), vim.log.levels.INFO)
+end, { desc = 'Toggle wrap in current buffer', nargs = 0 })
+
+user('CheckAll', function()
+    vim.cmd [[Lazy! load all]]
+    vim.cmd [[checkhealth]]
+end, { desc = 'Load all plugins and run :checkhealth' })
+
 -- source: unknown
 auto('BufHidden', {
     group = augroup 'delete_no_name',
@@ -90,18 +88,5 @@ auto('TermOpen', {
         vim.opt_local.scrolloff = 0
 
         vim.bo.filetype = 'terminal'
-    end,
-})
-
--- enable support for lsp
-auto({ 'BufReadPre', 'BufNewFile' }, {
-    once = true, -- ensure command runs only once, then automatically removed
-    callback = function()
-        local servers = vim.iter(vim.api.nvim_get_runtime_file('lsp/*.lua', true))
-            :map(function(file)
-                return vim.fn.fnamemodify(file, ':t:r')
-            end)
-            :totable()
-        vim.lsp.enable(servers)
     end,
 })

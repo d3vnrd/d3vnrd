@@ -1,0 +1,2 @@
+- `*.lua` files within this directory are loaded afer init.lua is sourced
+- `_` prefix is to make sure that option is always loaded before others

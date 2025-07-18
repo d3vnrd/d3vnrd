@@ -96,12 +96,15 @@ vim.lsp.handlers[methods.client_registerCapability] = function(err, res, ctx)
     if not client then
         return
     end
+
     on_attach(client, vim.api.nvim_get_current_buf())
     return register_capability(err, res, ctx)
 end
 
+local auto = vim.api.nvim_create_autocmd
+
 -- Lsp features on-attach caller
-vim.api.nvim_create_autocmd('LspAttach', {
+auto('LspAttach', {
     group = vim.api.nvim_create_augroup('user/lsp_attach', { clear = true }),
     callback = function(args)
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
@@ -113,14 +116,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 -- Enable support servers in pre-defined server list
-vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
+auto({ 'BufReadPre', 'BufNewFile' }, {
     once = true, -- ensure command runs only once, then automatically removed
     callback = function()
-        vim.iter(vim.api.nvim_get_runtime_file('lsp/*.lua', true)):map(function(file)
-            local server = vim.fn.fnamemodify(file, ':t:r')
-            if server ~= 'init' then
-                vim.lsp.enable(server)
-            end
+        local servers = vim.api.nvim_get_runtime_file('lsp/*.lua', true)
+        vim.iter(servers):map(function(file)
+            vim.lsp.enable(vim.fn.fnamemodify(file, ':t:r'))
         end)
     end,
 })

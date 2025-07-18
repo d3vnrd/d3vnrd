@@ -10,7 +10,7 @@ local check_version = function()
         return
     end
 
-    if vim.version.ge(ver, "0.11.0") then
+    if vim.version.ge(ver, '0.11.0') then
         ok(string.format("Neovim version is: '%s'", tostring(ver)))
     else
         error(string.format("Neovim out of date: '%s'. Upgrade to latest stable or nightly version", tostring(ver)))
@@ -18,11 +18,11 @@ local check_version = function()
 end
 local check_exeternal_reqs = function()
     for _, exe in ipairs {
-        "git",
-        "make",
-        "unzip",
-        "rg",
-        "yazi",
+        'git',
+        'make',
+        'unzip',
+        'rg',
+        'yazi',
     } do
         local is_executable = vim.fn.executable(exe) == 1
         if is_executable then
@@ -37,11 +37,11 @@ end
 
 return {
     check = function()
-        start "nvport"
+        start 'nvport'
         vim.health.info "NOTE: Not every warning is a 'must-fix' in ':checkhealth'"
 
         local uv = vim.uv or vim.loop
-        vim.health.info("System Information: " .. vim.inspect(uv.os_uname()))
+        vim.health.info('System Information: ' .. vim.inspect(uv.os_uname()))
 
         check_version()
         check_exeternal_reqs()

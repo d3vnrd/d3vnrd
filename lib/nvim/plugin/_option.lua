@@ -1,4 +1,5 @@
 local opt = vim.opt
+
 --- Backup ---
 opt.swapfile = false
 opt.backup = false
@@ -25,7 +26,6 @@ opt.autoindent = true
 opt.wrap = false
 opt.linebreak = true
 opt.colorcolumn = '80'
-opt.textwidth = 80
 
 --- Slide boundary ---
 opt.scrolloff = 8
@@ -62,6 +62,9 @@ opt.cmdheight = 1
 opt.termguicolors = true
 opt.guicursor = '' -- solid block
 opt.signcolumn = 'yes'
+
+opt.title = true
+opt.titlestring = '%t%( %M%)%( (%{expand("%:~:h")})%)%a (nvim)'
 
 --- Popup menu ---
 opt.completeopt = 'menuone,noselect,noinsert'
