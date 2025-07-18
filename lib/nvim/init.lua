@@ -17,4 +17,4 @@ require('lazy').setup('nvport.plugin', {
     rocks = { enabled = false },
 })
 
-require('nvport').setup()
+require('nvport').setup {}
