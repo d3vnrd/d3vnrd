@@ -17,7 +17,7 @@ with lib; {
     programs = {
       neovim = mkMerge [
         {
-          enable = cfg == "nvim" || "nvim_vscode";
+          enable = builtins.elem cfg ["nvim" "nvim_vscode"];
           viAlias = mkDefault true;
           vimAlias = mkDefault true;
         }
@@ -57,7 +57,7 @@ with lib; {
     };
 
     xdg.configFile."nvim".source = mkIf (cfg == "nvim") (
-      config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/config/nvim"
+      config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/lib/nvim"
     );
 
     home.packages = with pkgs; [

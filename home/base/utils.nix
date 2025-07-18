@@ -27,6 +27,7 @@ with lib; {
       ripgrep
       gnumake
       pandoc
+      nodejs_24
     ];
 
   config.programs = let

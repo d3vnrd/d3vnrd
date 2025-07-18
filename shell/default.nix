@@ -9,6 +9,7 @@ lib.mergeAttrsList [
       packages = with pkgs; [
         python3
         uv
+        hugo
       ];
       shellHook = ''
         echo "Unified default shell!"

@@ -5,7 +5,7 @@
 }: {
   imports = lib.custom.scanPath {path = ./.;};
 
-  config.home = {
+ config.home = {
     inherit (globalVars) username;
     inherit (lib.custom.global) stateVersion;
     file = {};
