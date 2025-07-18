@@ -12,9 +12,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- setup and install plugins
-require('lazy').setup {
-    spec = {},
-
+require('lazy').setup('nvport.plugin', {
     change_detection = { notify = false },
     rocks = { enabled = false },
-}
+})
+
+require('nvport').setup()
