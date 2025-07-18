@@ -28,4 +28,4 @@ require('lazy').setup('plugin', {
     rocks = { enabled = false },
 })
 
-require('lib').setup {}
+require('user').setup {}
