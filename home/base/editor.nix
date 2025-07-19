@@ -6,7 +6,7 @@
 }:
 with lib; {
   options.M.editor = mkOption {
-    type = types.enum ["nvim" "nvim_vscode" "helix"];
+    type = types.enum ["nvim" "nvim_vscode"];
     default = "nvim";
     description = "Editor options.";
   };
@@ -50,15 +50,14 @@ with lib; {
         # source: https://nixos.wiki/wiki/Visual_Studio_Code (impure setup)
         package = pkgs.vscode.fhs;
       };
-
-      helix = {
-        enable = cfg == "helix";
-      };
     };
 
-    xdg.configFile."nvim".source = mkIf (cfg == "nvim") (
-      config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/lib/nvim"
-    );
+    xdg.configFile =
+      if cfg == "nvim"
+      then {
+        "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/util/nvim";
+      }
+      else {};
 
     home.packages = with pkgs; [
       # -- LSP --
