@@ -1,48 +1,28 @@
 -- Colorscheme (#colorscheme)
 return {
-    'rebelot/kanagawa.nvim',
+    'RRethy/base16-nvim',
     priority = 1000,
-    init = function()
-        vim.cmd.colorscheme 'kanagawa'
+    config = function()
+        require('base16-colorscheme').setup {
+            -- Grayscale
+            base00 = '#101010',
+            base01 = '#252525',
+            base02 = '#464646',
+            base03 = '#525252',
+            base04 = '#ababab',
+            base05 = '#b9b9b9',
+            base06 = '#e3e3e3',
+            base07 = '#f7f7f7',
+
+            -- Dragon
+            base08 = '#c4746e',
+            base09 = '#e46876',
+            base0A = '#c4b28a',
+            base0B = '#8a9a7b',
+            base0C = '#8ea4a2',
+            base0D = '#8ba4b0',
+            base0E = '#a292a3',
+            base0F = '#7aa89f',
+        }
     end,
-    opts = {
-        colors = {
-            theme = { all = { ui = { bg_gutter = 'none' } } },
-        },
-        transparent = true,
-        overrides = function(colors)
-            local theme = colors.theme
-            local palette = colors.palette
-
-            return {
-                -- Default setting for floating window
-                NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
-                NormalFloat = { bg = 'none' },
-                FloatBorder = { bg = 'none' },
-                FloatTitle = { bg = 'none' },
-
-                -- Completion menu
-                Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_m3 },
-                PmenuSel = { fg = 'none', bg = theme.ui.bg_p2 },
-                PmenuSbar = { bg = theme.ui.bg_m1 },
-                PmenuThumb = { bg = theme.ui.bg_p2 },
-
-                -- Blink completion menu
-                BlinkCmpMenu = { bg = 'none' },
-                BlinkCmpMenuBorder = { fg = theme.ui.fg_dim, bg = 'none' },
-
-                -- Default statusline
-                StatusLine = { bg = 'none' },
-                StatusLineNC = { bg = 'none' },
-
-                -- Cmdline
-                MsgArea = { bg = 'none' },
-                MsgSeparator = { bg = 'none', fg = theme.ui.bg_m3 },
-                MoreMsg = { bold = true },
-
-                -- Horizontal separator (custom)
-                HorSplit = { bg = 'none', fg = theme.ui.bg_m3, strikethrough = true },
-            }
-        end,
-    },
 }

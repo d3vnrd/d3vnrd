@@ -17,6 +17,10 @@ M.vimrc = {
         'regex',
         'json',
     },
+
+    theme = {
+        transparent = false,
+    },
 }
 
 -- Setup function --

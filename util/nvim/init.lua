@@ -4,6 +4,7 @@ end
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
+vim.g.base18_cache = vim.fn.stdpath 'cache' .. '/theme/'
 
 -- bootstrap plugin manager
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'

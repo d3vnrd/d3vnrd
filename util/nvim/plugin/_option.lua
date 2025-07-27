@@ -59,12 +59,13 @@ opt.laststatus = 3
 opt.winborder = 'rounded' -- default float border
 opt.cmdheight = 1
 
-opt.termguicolors = true
 opt.guicursor = '' -- solid block
 opt.signcolumn = 'yes'
 
 opt.title = true
 opt.titlestring = '%t%( %M%)%( (%{expand("%:~:h")})%)%a (nvim)'
+
+opt.termguicolors = true
 
 --- Popup menu ---
 opt.completeopt = 'menuone,noselect,noinsert'

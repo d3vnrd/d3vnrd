@@ -10,6 +10,7 @@ with inputs; let
       full = false;
       filter = "dir";
     };
+
     sysAttrs =
       if lib.hasSuffix "darwin" system
       then {
@@ -22,6 +23,7 @@ with inputs; let
         mod = "nixosModules";
         init = lib.nixosSystem;
       };
+
     specialArgs = {inherit inputs lib;};
   in
     with sysAttrs;
@@ -43,6 +45,10 @@ with inputs; let
               {
                 home-manager.users."${nix-secret.globalVars.username}".imports = [
                   nix-secret.homeModules.secrets
+                  # ../module/home
+                  # {
+                  #   M.system = type;
+                  # }
                   ../home/base
                   ../home/${type}
                   ./${system}/${hostname}/home.nix

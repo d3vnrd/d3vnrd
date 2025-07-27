@@ -39,6 +39,8 @@ return {
             nix = { 'alejandra' },
             markdown = { 'dprint' },
             python = { 'dprint', 'isort', 'black', stop_after_first = true },
+            html = { 'dprint' },
+            css = { 'dprint' },
 
             -- For filetypes without a formatter
             ['_'] = { 'trim_whitespace', 'trim_newlines' },
