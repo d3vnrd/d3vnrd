@@ -1,2 +1,0 @@
-- Create an unified entry point for configuring elements that I normally change alot
-- Custom `:checkhealth`

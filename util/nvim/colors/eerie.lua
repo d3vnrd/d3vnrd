@@ -1,6 +1,12 @@
-require('theme').setup {
-    name = 'eerie',
+-- remember to include this line otherwise colors_name always return nil
+vim.cmd.highlight 'clear'
+if vim.fn.exists 'syntax_on' then
+    vim.cmd.syntax 'reset'
+end
 
+vim.g.colors_name = 'eerie'
+
+require('theme').create {
     base00 = '#101010',
     base01 = '#252525',
     base02 = '#b9b9b9',

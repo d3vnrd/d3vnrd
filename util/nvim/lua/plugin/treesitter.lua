@@ -3,7 +3,7 @@ return {
     version = false,
     build = ':TSUpdate',
     opts = {
-        ensure_installed = require('user').vimrc.support,
+        ensure_installed = vimrc.support,
 
         highlight = {
             enable = true,

@@ -1,21 +1,20 @@
 return function(scheme)
-    local result = {}
+    local M = {}
 
-    -- Get all highlight groups and merge them into a single table
-    vim.iter(vim.api.nvim_get_runtime_file('lua/theme/group/*.lua', true)):each(function(file)
+    for _, file in ipairs(vim.api.nvim_get_runtime_file('lua/theme/group/*.lua', true)) do
         local name = vim.fn.fnamemodify(file, ':t:r')
         if name ~= 'init' then
-            local ok, group = pcall(require, 'theme.group.' .. name)
-            if ok and type(group) == 'function' then
-                local hl = group(scheme)
+            local ok, load = pcall(require, 'theme.group.' .. name)
+            if ok and type(load) == 'function' then
+                local hl = load(scheme)
                 if type(hl) == 'table' then
-                    vim.tbl_deep_extend('error', result, hl)
+                    M = vim.tbl_deep_extend('error', M, hl)
                 end
             else
                 vim.notify('Failed to load highlight group: ' .. name, vim.log.levels.WARN)
             end
         end
-    end)
+    end
 
-    return result
+    return M
 end

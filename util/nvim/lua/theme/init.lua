@@ -1,14 +1,5 @@
 local M = {}
-local cachePath = vim.g.base18_cache
-
----@param tbl table[table] Highlight table
-local fallback = function(tbl)
-    for group, opts in pairs(tbl) do
-        if group ~= 'name' then
-            vim.api.nvim_set_hl(0, group, opts)
-        end
-    end
-end
+local cache = vim.g.themecache
 
 ---@param tbl table[table] Highlight table
 local tblToStr = function(tbl)
@@ -38,7 +29,7 @@ end
 ---@param str string
 local strToCache = function(filename, str)
     local lines = 'return string.dump(function()' .. str .. 'end, true)'
-    local file, err = io.open(cachePath .. filename, 'wb')
+    local file, err = io.open(cache .. filename, 'wb')
 
     if not file or err then
         vim.notify('Error writing ' .. file .. ':\n' .. err, vim.log.levels.ERROR)
@@ -51,37 +42,39 @@ local strToCache = function(filename, str)
     -- Expected output: compile highlight commands into bytecode using `string.dump`
 end
 
-local compile = function(tbl)
-    if not vim.uv.fs_stat(cachePath) then
-        vim.fn.mkdir(cachePath, 'p')
+local compile = function(groups)
+    if not vim.uv.fs_stat(cache) then
+        vim.fn.mkdir(cache, 'p')
     end
 
-    -- Expected output: compile all tables into cache file
-    -- Opt 1: compile everyting in a single cache file
-    -- Opt 2: compile into modular cache files for each hl_group
-
-    -- Additional: support multiple themes by compile each theme into their own cache file
+    strToCache(vimrc.theme.name, tblToStr(groups))
 end
 
----@param tbl table[table[string]] Colorscheme table
-M.setup = function(tbl)
-    vim.cmd.highlight 'clear'
-    if vim.fn.exists 'syntax_on' then
-        vim.cmd.syntax 'reset'
+---@param groups table[table] Highlight table
+local fallback = function(groups)
+    for k, opts in pairs(groups) do
+        vim.api.nvim_set_hl(0, k, opts)
+    end
+end
+
+---@param scheme table[table] colorscheme with base0X to base1X
+M.create = function(scheme)
+    local file = cache .. vimrc.theme.name
+    local exist, load = pcall(require, 'theme.group')
+
+    if not exist then
+        vim.notify("Directory 'theme/group' not found ...", vim.log.levels.WARN)
+        return
     end
 
-    vim.g.colors_name = tbl.name
-    local hl_group = require 'theme.group'(tbl) -- return table of highlights according to theme
-    local file = cachePath .. tbl.name
-
-    if vim.fn.filereadable(file) == 0 then
-        compile(hl_group) -- compile only when not existed
-    end
+    local groups = load(scheme)
+    compile(groups)
 
     local ok, _ = pcall(dofile, file)
+
     if not ok then
-        vim.notify('Failed to load: ' .. tbl.name .. '\n' .. '\nFalling back ...', vim.log.levels.ERROR)
-        fallback(hl_group)
+        vim.notify('Unable to load cache. Falling back to manual load ...', vim.log.levels.WARN)
+        fallback(groups)
     end
 end
 

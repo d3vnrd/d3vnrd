@@ -1,7 +1,4 @@
-local M = {}
-
--- Default config --
-M.vimrc = {
+return {
     support = {
         'bash',
         'lua',
@@ -19,13 +16,7 @@ M.vimrc = {
     },
 
     theme = {
+        name = 'eerie',
         transparent = false,
     },
 }
-
--- Setup function --
-M.setup = function(opts)
-    M.vimrc = vim.tbl_deep_extend('force', M.vimrc, opts or {})
-end
-
-return M
