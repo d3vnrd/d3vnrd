@@ -3,7 +3,7 @@
 
   outputs = {nixpkgs, ...} @ inputs: let
     lib = nixpkgs.lib.extend (self: super: {
-      custom = import ./util nixpkgs.lib;
+      custom = import ./module nixpkgs.lib;
     });
 
     systems = lib.custom.scanPath {

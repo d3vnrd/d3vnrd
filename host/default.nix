@@ -15,16 +15,19 @@ with inputs; let
       if lib.hasSuffix "darwin" system
       then {
         type = "darwin";
-        mod = "darwinModules";
+        module = "darwinModules";
         init = nix-darwin.lib.darwinSystem;
       }
       else {
         type = "linux";
-        mod = "nixosModules";
+        module = "nixosModules";
         init = lib.nixosSystem;
       };
 
-    specialArgs = {inherit inputs lib;};
+    specialArgs = {
+      inherit inputs lib;
+      var = nix-secret.globalVars;
+    };
   in
     with sysAttrs;
       lib.genAttrs sysHosts (
@@ -33,24 +36,18 @@ with inputs; let
             inherit system specialArgs;
             modules = [
               # --Include system configurations--
-              ../module/base
-              ../module/${type}
+              ../module/system
               ./${system}/${hostname}
 
               # --Input home-manager & nix-secret as flake module--
-              home-manager.${mod}.home-manager
-              nix-secret.${mod}.secrets
+              home-manager.${module}.home-manager
+              nix-secret.${module}.secrets
 
               # --System predefined attributes--
               {
                 home-manager.users."${nix-secret.globalVars.username}".imports = [
                   nix-secret.homeModules.secrets
-                  # ../module/home
-                  # {
-                  #   M.system = type;
-                  # }
-                  ../home/base
-                  ../home/${type}
+                  ../module/home
                   ./${system}/${hostname}/home.nix
                 ];
 

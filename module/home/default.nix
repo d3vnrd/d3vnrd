@@ -4,7 +4,17 @@
   ...
 }:
 with lib; {
-  imports = lib.custom.scanPath {path = ./.;};
+  imports = mergeAttrsList [
+    (custom.scanPath {exclude = ["nixos" "darwin"];})
+
+    # -- Import system based modules on demand --
+    import
+    (
+      if cfg.system == "linux"
+      then ./nixos
+      else ./darwin
+    )
+  ];
 
   # --Defined options for module configuration within host/<type>/<name>/home.nix
   options.M = {
@@ -12,24 +22,6 @@ with lib; {
       type = types.enum ["linux" "darwin"];
       default = "linux";
       description = "System type to enable supported modules.";
-    };
-
-    state = mkOption {
-      type = types.enum ["featured" "minimal"];
-      default = "minimal";
-      description = "Defined installation option for user home.";
-    };
-
-    addPkgs = mkOption {
-      type = with types; listOf package;
-      default = [];
-      description = "Additional home packages.";
-    };
-
-    defaultPkgs = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Whether to enable default predefined home packages";
     };
 
     editor = mkOption {

@@ -1,13 +1,13 @@
 {
   inputs,
   pkgs,
-  lib,
+  var,
   ...
 }: {
   imports = [inputs.nixos-wsl.nixosModules.wsl];
 
   wsl.enable = true;
-  wsl.defaultUser = "${lib.custom.global.username}";
+  wsl.defaultUser = "${var.username}";
 
   # --Docker--
   wsl.docker-desktop.enable = false;
