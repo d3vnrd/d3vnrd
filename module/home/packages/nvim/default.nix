@@ -13,6 +13,7 @@ with lib; {
 
   config = let
     cfg = config.M.editor;
+    path = "${config.xdg.configHome}/nix/module/home/packages/nvim";
   in {
     programs = {
       neovim = mkMerge [
@@ -55,7 +56,7 @@ with lib; {
     xdg.configFile =
       if cfg == "nvim"
       then {
-        "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/nix/util.bak/nvim";
+        "nvim".source = config.lib.file.mkOutOfStoreSymlink path;
       }
       else {};
 
