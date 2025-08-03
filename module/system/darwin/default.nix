@@ -1,10 +1,15 @@
 {
+config,
   lib,
   pkgs,
   ...
 }:
 with lib; {
-  imports = custom.scanPath {path = ./.;};
+  options.M.isDarwin = mkEnableOption "Enable supports for Mac-like systems.";
 
-  environment.systemPackages = with pkgs; [];
+  imports = mkIf (config.M.isDarwin) (custom.scanPath {path=./.;});
+
+  config = mkIf config.M.isDarwin {
+	  environment.systemPackages = with pkgs; [];
+  };
 }

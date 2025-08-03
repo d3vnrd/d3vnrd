@@ -5,7 +5,11 @@
   ...
 }:
 with lib; {
-  imports = custom.scanPath {path = ./.;};
+  options.M.isNixos = mkEnableOption "Enable support for Nixos systems";
 
-  environment.systemPackages = with pkgs; [];
+  imports = mkIf (config.M.isNixos) (custom.scanPath {path=./.;});
+
+  config = config.M.isNixos {
+	  environment.systemPackages = with pkgs; [];
+  };
 }

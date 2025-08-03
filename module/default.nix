@@ -1,5 +1,4 @@
-lib:
-with lib; {
+lib: {
   #TODO: write other pre-commit-check hooks
   checkFunc = {
     pre-commit-hooks,
@@ -14,26 +13,23 @@ with lib; {
     };
   };
 
-  relativeToRoot = path.append ../.;
+  relativeToRoot = lib.path.append ../.;
 
   #TODO: add parameter type checking
   scanPath = {
-    path ? ./.,
+    path,
     full ? true,
     filter ? "all",
-    exclude ? [],
   }: let
     names = builtins.attrNames (
-      filterAttrs (
+      lib.filterAttrs (
         name: type:
-          !(builtins.elem name exclude)
-          && (
             if filter == "file"
             then
               # Files only: .nix files but not default.nix
               (type == "regular")
               && (name != "default.nix")
-              && (hasSuffix ".nix" name)
+              && (lib.hasSuffix ".nix" name)
             else if filter == "dir"
             then
               # Directories only
@@ -43,9 +39,8 @@ with lib; {
               (type == "directory")
               || (
                 (name != "default.nix")
-                && (hasSuffix ".nix" name)
+                && (lib.hasSuffix ".nix" name)
               )
-          )
       ) (builtins.readDir path)
     );
   in

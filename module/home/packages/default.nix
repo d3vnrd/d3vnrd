@@ -7,6 +7,8 @@
   cfg = config.M;
 in
   with lib; {
+    imports = custom.scanPath {path = ./.;};
+
     home.packages = with pkgs;
       mkMerge [
         [

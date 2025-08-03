@@ -43,7 +43,7 @@ in
 
     # --Configurable-via-flake programs--
     programs = {
-      zsh.enable = mkIf (config.users.defaultUserShell == pkgs.zsh) (mkForce true);
-      git.enable = mkForce true;
+      zsh.enable = true;
+      git.enable = true;
     };
   }

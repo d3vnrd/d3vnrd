@@ -3,7 +3,7 @@
   var,
   ...
 }: {
-  imports = lib.custom.scanPath;
+  imports = lib.custom.scanPath {path=./.;};
 
   home = {
     homeDirectory = "/Users/${var.username}";

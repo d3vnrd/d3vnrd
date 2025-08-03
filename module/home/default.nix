@@ -4,17 +4,7 @@
   ...
 }:
 with lib; {
-  imports = mergeAttrsList [
-    (custom.scanPath {exclude = ["nixos" "darwin"];})
-
-    # -- Import system based modules on demand --
-    import
-    (
-      if cfg.system == "linux"
-      then ./nixos
-      else ./darwin
-    )
-  ];
+  imports = custom.scanPath {path = ./.;};
 
   # --Defined options for module configuration within host/<type>/<name>/home.nix
   options.M = {
