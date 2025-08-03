@@ -11,6 +11,7 @@ with lib; {
     description = "Selected shell for programs support.";
   };
 
+  config = {
   programs.zsh = {
     enable = mkForce (config.M.shell == "zsh");
     dotDir = ".config/zsh";
@@ -61,5 +62,6 @@ with lib; {
       zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
       zstyle ':completion:*' menu select
     '';
+  };
   };
 }

@@ -17,6 +17,7 @@ in
       };
     };
 
+    config = {
     # --Binaries declaration--
     environment.systemPackages = with pkgs;
       lib.mkMerge [
@@ -45,5 +46,6 @@ in
     programs = {
       zsh.enable = true;
       git.enable = true;
+    };
     };
   }

@@ -13,18 +13,6 @@ with lib; {
       default = "linux";
       description = "System type to enable supported modules.";
     };
-
-    editor = mkOption {
-      type = types.enum ["nvim" "nvim_vscode"];
-      default = "nvim";
-      description = "Editor options.";
-    };
-
-    shell = mkOption {
-      type = types.enum ["zsh" "bash"];
-      defautl = "zsh";
-      description = "Shell choice for programs support.";
-    };
   };
 
   config = {

@@ -9,6 +9,16 @@ in
   with lib; {
     imports = custom.scanPath {path = ./.;};
 
+    options.M = {
+      addPkgs = mkOption {
+        type = with types; listOf package;
+        default = [];
+        description = "Additional packages (beside default).";
+      };
+    };
+
+    config = {
+    
     home.packages = with pkgs;
       mkMerge [
         [
@@ -74,5 +84,6 @@ in
         enableZshIntegration = true;
         # enableBashIntegration = true;
       };
+    };
     };
   }
