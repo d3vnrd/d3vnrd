@@ -7,8 +7,6 @@
   cfg = config.M;
 in
   with lib; {
-    imports = custom.scanPath {path = ./.;};
-
     options.M = {
       addPkgs = mkOption {
         type = with types; listOf package;
@@ -16,6 +14,8 @@ in
         description = "Additional packages (beside default).";
       };
     };
+
+    imports = custom.scanPath {path = ./.;};
 
     config = {
       home.packages = with pkgs;
