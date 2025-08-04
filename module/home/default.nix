@@ -15,6 +15,7 @@ with lib; {
     };
   };
 
+  # --Other options must be defined within config attr--
   config = {
     home = {
       inherit (var) username stateVersion;

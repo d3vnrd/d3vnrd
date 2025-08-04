@@ -1,16 +1,17 @@
 {
+  config,
   lib,
   var,
   ...
 }:
 with lib; {
   imports =
-    mkIf (config.M.system == "darwin")
+    mkIf (config.M.system != "darwin")
     custom.scanPath {path = ./.;};
 
   config = {
     home = {
-      homeDirectory = "/Users/${var.username}";
+      homeDirectory = "/home/${var.username}";
     };
   };
 }
