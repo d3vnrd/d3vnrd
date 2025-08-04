@@ -375,6 +375,23 @@
         "type": "github"
       }
     },
+    "nvport": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1754281801,
+        "narHash": "sha256-GIiWfa4a1n6K4wfeR5WVXeLheTSfXQ0uiV+6rCA9iqg=",
+        "owner": "tlmp59",
+        "repo": "nvport",
+        "rev": "3b943cb4e9e8ceaddec4f8098b450d648708d4bb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tlmp59",
+        "ref": "main",
+        "repo": "nvport",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -405,6 +422,7 @@
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-darwin": "nixpkgs-darwin",
+        "nvport": "nvport",
         "pre-commit-hooks": "pre-commit-hooks",
         "stylix": "stylix"
       }

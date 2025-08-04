@@ -54,3 +54,4 @@ My configurations would not be possible without these amazing guys:
 
 - When merging attributes try to use `lib.mergeAttrsList` instead of `lib.mkMerge` as it can only get processed in NixOs modules.
 - When flake does not recognize a file for folder, the problem is likely because we haven't track it by git. Try `git add <file>` to see if its work?
+- Don't include `nixpkgs.lib` in `home-manager.extraSpecialArgs` as it will overide home-manager required library that get added later on.

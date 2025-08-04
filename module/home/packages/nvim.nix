@@ -53,7 +53,13 @@ with lib; {
       };
     };
 
-    xdg.configFile = mkIf (cfg == "nvim") {"nvim".source = file.mkOutOfStoreSymlink inputs.nvport;};
+    xdg.configFile =
+      mkIf (cfg == "nvim")
+      {
+        "nvim".source =
+          config.lib.file.mkOutOfStoreSymlink
+          inputs.nvport;
+      };
 
     home.packages = with pkgs; [
       # -- LSP --

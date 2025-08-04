@@ -53,7 +53,7 @@ with inputs; let
 
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
-		home-manager.extraSpecialArgs = { var = nix-secret.globalVars; };
+                home-manager.extraSpecialArgs = {inherit (specialArgs) inputs var;};
 
                 networking.hostName = hostname;
               }
