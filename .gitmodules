@@ -1,3 +1,0 @@
-[submodule "module/home/packages/nvim"]
-	path = module/home/packages/nvim
-	url = git@github.com:tlmp59/nvport.git
