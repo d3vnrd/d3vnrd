@@ -1,21 +1,5 @@
-{
-  lib,
-  var,
-  ...
-}:
+{lib, ...}:
 with lib; {
-  # -- Custom option to config system --
-  options.M = {
-    isNixos = mkEnableOption "Enable support for Nixos systems";
-    isDarwin = mkEnableOption "Enable supports for Mac-like systems.";
-
-    displayServer = mkOption {
-      type = types.enum ["wayland" "xserver" "none"];
-      default = "wayland";
-      description = "Display server protocol choices.";
-    };
-  };
-
   # --Import other important modules
   imports = custom.scanPath {path = ./.;};
 
@@ -24,9 +8,9 @@ with lib; {
     # -- Misc --
     nix.settings.experimental-features = mkForce ["nix-command" "flakes"];
     nixpkgs.config.allowUnfree = mkDefault true;
-    time.timeZone = mkDefault var.timeZone;
+    time.timeZone = mkDefault "Asia/Vietnam";
 
     # -- Precaution --
-    system.stateVersion = mkForce var.stateVersion;
+    system.stateVersion = mkForce "25.05";
   };
 }

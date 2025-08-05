@@ -12,12 +12,10 @@
       filter = "dir";
     };
 
-    args = {inherit inputs lib systems;};
-
     forSystems = func: (lib.genAttrs systems func);
   in
     lib.mergeAttrsList [
-      (import ./host args)
+      (import ./host {inherit inputs lib systems;})
 
       {
         formatter = forSystems (

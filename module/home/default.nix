@@ -1,6 +1,6 @@
 {
+  inputs,
   lib,
-  var, # global variables retrieved from sops-secret
   ...
 }:
 with lib; {
@@ -8,9 +8,10 @@ with lib; {
 
   # --Other options must be defined within config attr--
   home = {
-    inherit (var) username stateVersion;
+    username = "tlmp59";
     file = {};
     sessionVariables = {};
+    stateVersion = "25.05";
   };
 }
 #WARN: home-manager was meant to built to use anywhere on any machines not

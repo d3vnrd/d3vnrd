@@ -1,51 +1,49 @@
 {
   inputs,
   lib,
+  systems,
   ...
-} @ args:
-with inputs; let
-  genHosts = system: let
-    sysHosts = lib.custom.scanPath {
+}:
+with lib; let
+  inherit (inputs) home-manager nix-darwin nix-secret;
+
+  genConfig = system: let
+    hosts = custom.scanPath {
       path = ./${system};
       full = false;
       filter = "dir";
     };
 
-    sysAttrs =
-      if lib.hasSuffix "darwin" system
+    opts =
+      if hasSuffix "darwin" system
       then {
         type = "darwin";
-        module = "darwinModules";
-        init = nix-darwin.lib.darwinSystem;
+        bootstrap = nix-darwin.lib.darwinSystem;
       }
       else {
-        type = "linux";
-        module = "nixosModules";
-        init = lib.nixosSystem;
+        type = "nixos";
+        bootstrap = nixosSystem;
       };
-
-    specialArgs = {
-      inherit inputs lib;
-      var = nix-secret.globalVars;
-    };
   in
-    with sysAttrs;
-      lib.genAttrs sysHosts (
-        hostname:
-          init {
-            inherit system specialArgs;
+    genAttrs hosts (
+      hostname:
+        with opts;
+          bootstrap {
+            inherit system;
+            specialArgs = {inherit inputs lib;};
+
             modules = [
               # --Include system configurations--
               ../module/system
               ./${system}/${hostname}
 
               # --Input home-manager & nix-secret as flake module--
-              home-manager.${module}.home-manager
-              nix-secret.${module}.secrets
+              home-manager."${type}Modules".home-manager
+              nix-secret."${type}Modules".secrets
 
               # --System predefined attributes--
               {
-                home-manager.users."${nix-secret.globalVars.username}".imports = [
+                home-manager.users."tlmp59".imports = [
                   nix-secret.homeModules.secrets
                   ../module/home
                   ./${system}/${hostname}/home.nix
@@ -53,21 +51,21 @@ with inputs; let
 
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = {inherit (specialArgs) inputs var;};
+                home-manager.extraSpecialArgs = {inherit inputs;};
 
                 networking.hostName = hostname;
               }
             ];
           }
-      );
+    );
 in {
-  nixosConfigurations = lib.mergeAttrsList (
-    map genHosts
-    (builtins.filter (dir: lib.hasSuffix "linux" dir) args.systems)
+  nixosConfigurations = mergeAttrsList (
+    map genConfig
+    (builtins.filter (dir: hasSuffix "linux" dir) systems)
   );
 
-  darwinConfigurations = lib.mergeAttrsList (
-    map genHosts
-    (builtins.filter (dir: lib.hasSuffix "darwin" dir) args.systems)
+  darwinConfigurations = mergeAttrsList (
+    map genConfig
+    (builtins.filter (dir: hasSuffix "darwin" dir) systems)
   );
 }

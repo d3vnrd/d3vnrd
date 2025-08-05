@@ -4,16 +4,16 @@
   pkgs,
   ...
 }:
-with lib; {
+with lib; let
+  cfg = config.M.editor;
+in {
   options.M.editor = mkOption {
     type = types.enum ["nvim" "nvim_vscode"];
     default = "nvim";
     description = "Editor options.";
   };
 
-  config = let
-    cfg = config.M.editor;
-  in {
+  config = {
     programs = {
       neovim = mkMerge [
         {
@@ -53,14 +53,6 @@ with lib; {
       };
     };
 
-    xdg.configFile =
-      mkIf (cfg == "nvim")
-      {
-        "nvim".source =
-          config.lib.file.mkOutOfStoreSymlink
-          "${config.xdg.configHome}/nix/module/home/packages/nvim";
-      };
-
     home.packages = with pkgs; [
       # -- LSP --
       lua-language-server
@@ -84,5 +76,21 @@ with lib; {
       stylua
       nodePackages.prettier
     ];
+
+    home.activation.checkNvimConfig =
+      hm.dag.entryAfter ["writeBoundary"]
+      (
+        if (cfg == "nvim")
+        then ''
+          if [ ! -d "${config.xdg.configHome}/nvim" ]; then
+            echo "Neovim configuration not found, please install or create one under ${config.xdg.configHome}!"
+          fi
+        ''
+        else ''
+          if [ -d "${config.xdg.configHome}/nvim" ]; then
+            echo "Neovim configuration was found under ${config.xdg.configHome}/nvim. It is recommended to remove it for the best compatability with VsCode."
+          fi
+        ''
+      );
   };
 }
