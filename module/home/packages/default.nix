@@ -26,8 +26,11 @@ in
             ripgrep
             gnumake
             pandoc
+            cargo
             nodejs_24
+            typst
           ]
+
           cfg.addPkgs
         ];
 

@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 with lib; let
@@ -23,6 +24,7 @@ in {
         }
 
         (mkIf (cfg == "nvim") {
+          package = inputs.neovim-nightly-overlay.packages.${pkgs.system}.default;
           defaultEditor = mkDefault true;
 
           extraWrapperArgs = [
@@ -42,6 +44,7 @@ in {
             sqlite
             xclip
             fd
+            websocat # dependency for typst-preview
           ];
         })
       ];
@@ -56,13 +59,11 @@ in {
     home.packages = with pkgs; [
       # -- LSP --
       lua-language-server
-      vscode-langservers-extracted
       yaml-language-server
       nixd
       harper
-      marksman
-      texlab
       pyright
+      tinymist
 
       # -- DAP --
 
@@ -74,23 +75,6 @@ in {
       dprint
       isort
       stylua
-      nodePackages.prettier
     ];
-
-    home.activation.checkNvimConfig =
-      hm.dag.entryAfter ["writeBoundary"]
-      (
-        if (cfg == "nvim")
-        then ''
-          if [ ! -d "${config.xdg.configHome}/nvim" ]; then
-            echo "Neovim configuration not found, please install or create one under ${config.xdg.configHome}!"
-          fi
-        ''
-        else ''
-          if [ -d "${config.xdg.configHome}/nvim" ]; then
-            echo "Neovim configuration was found under ${config.xdg.configHome}/nvim. It is recommended to remove it for the best compatability with VsCode."
-          fi
-        ''
-      );
   };
 }

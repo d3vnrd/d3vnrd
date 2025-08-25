@@ -10,6 +10,7 @@ lib.mergeAttrsList [
         python3
         uv
         hugo
+        vtsls
       ];
       shellHook = ''
         echo "Unified default shell!"

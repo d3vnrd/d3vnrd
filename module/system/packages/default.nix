@@ -35,7 +35,7 @@ in
 
             # synchronize
             rsync
-            neovim
+            # neovim
           ]
 
           # additional specific host packages

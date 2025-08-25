@@ -67,10 +67,7 @@
     # --User secret--
     nix-secret.url = "git+ssh://git@github.com/tlmp59/nix-secret.git?ref=main&shallow=1";
 
-    # --Neovim configuration--
-    nvport = {
-      url = "github:tlmp59/nvport/main";
-      flake = false;
-    };
+    # -- Neovim Nightly --
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 }
