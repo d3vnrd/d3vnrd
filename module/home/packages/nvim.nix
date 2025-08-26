@@ -44,7 +44,6 @@ in {
             sqlite
             xclip
             fd
-            websocat # dependency for typst-preview
           ];
         })
       ];
@@ -75,6 +74,9 @@ in {
       dprint
       isort
       stylua
+
+      # -- Other --
+      websocat # dependency for typst-preview
     ];
   };
 }
