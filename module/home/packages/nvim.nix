@@ -74,6 +74,7 @@ in {
       dprint
       isort
       stylua
+      typstyle
 
       # -- Other --
       websocat # dependency for typst-preview
