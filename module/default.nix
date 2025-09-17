@@ -1,5 +1,6 @@
 lib: {
-  #TODO: write other pre-commit-check hooks
+  fromRoot = path: lib.path.append ../. path;
+
   checkFunc = {
     pre-commit-hooks,
     system,
@@ -13,9 +14,6 @@ lib: {
     };
   };
 
-  relativeToRoot = lib.path.append ../.;
-
-  #TODO: add parameter type checking
   scanPath = {
     path,
     full ? true,
@@ -34,13 +32,15 @@ lib: {
           then
             # Directories only
             type == "directory"
-          else
+          else if filter == "all"
+          then
             # All: directories + .nix files (excluding default.nix)
             (type == "directory")
             || (
               (name != "default.nix")
               && (lib.hasSuffix ".nix" name)
             )
+          else throw "scanPath: invalid filter option '${filter}'. Expected one of: file, dir, all."
       ) (builtins.readDir path)
     );
   in

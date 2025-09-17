@@ -39,8 +39,6 @@
             pkgs = nixpkgs.legacyPackages.${system};
           in (import ./shell {inherit lib pkgs;})
         );
-
-        homeConfigurations = import ./home.nix {inherit nixpkgs home-manager inputs;};
       }
     ];
 
