@@ -42,10 +42,15 @@ with lib; let
               nix-secret."${type}Modules".secrets
 
               # --System predefined attributes--
+              #TODO: change username to devon
               {
                 home-manager.users."tlmp59".imports = [
                   nix-secret.homeModules.secrets
                   ../module/home
+                  {
+                    home.username = "tlmp59";
+                    home.stateVersion = "25.05";
+                  }
                   ./${system}/${hostname}/home.nix
                 ];
 

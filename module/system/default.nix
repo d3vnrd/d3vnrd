@@ -5,10 +5,6 @@ with lib; {
 
   # -- Unified system info --
   config = {
-    warnings = let
-      hasHome = builtins.pathExists "/home";
-    in
-      optionals hasHome ["Home Exists"];
     # -- Misc --
     nix.settings.experimental-features = mkForce ["nix-command" "flakes"];
     nixpkgs.config.allowUnfree = mkDefault true;

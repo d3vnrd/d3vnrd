@@ -1,7 +1,11 @@
 {
   description = "FrameworkOS";
 
-  outputs = {nixpkgs, ...} @ inputs: let
+  outputs = {
+    nixpkgs,
+    home-manager,
+    ...
+  } @ inputs: let
     lib = nixpkgs.lib.extend (self: super: {
       custom = import ./module nixpkgs.lib;
     });
@@ -35,6 +39,8 @@
             pkgs = nixpkgs.legacyPackages.${system};
           in (import ./shell {inherit lib pkgs;})
         );
+
+        homeConfigurations = import ./home.nix {inherit nixpkgs home-manager inputs;};
       }
     ];
 

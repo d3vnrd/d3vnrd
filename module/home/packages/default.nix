@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  helper,
   ...
 }: let
   cfg = config.M;
@@ -15,7 +16,8 @@ in
       };
     };
 
-    imports = custom.scanPath {path = ./.;};
+    # imports = custom.scanPath {path = ./.;};
+    imports = helper.scanPath {path = ./.;};
 
     config = {
       home.packages = with pkgs;

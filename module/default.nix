@@ -24,23 +24,23 @@ lib: {
     names = builtins.attrNames (
       lib.filterAttrs (
         name: type:
-            if filter == "file"
-            then
-              # Files only: .nix files but not default.nix
-              (type == "regular")
-              && (name != "default.nix")
+          if filter == "file"
+          then
+            # Files only: .nix files but not default.nix
+            (type == "regular")
+            && (name != "default.nix")
+            && (lib.hasSuffix ".nix" name)
+          else if filter == "dir"
+          then
+            # Directories only
+            type == "directory"
+          else
+            # All: directories + .nix files (excluding default.nix)
+            (type == "directory")
+            || (
+              (name != "default.nix")
               && (lib.hasSuffix ".nix" name)
-            else if filter == "dir"
-            then
-              # Directories only
-              type == "directory"
-            else
-              # All: directories + .nix files (excluding default.nix)
-              (type == "directory")
-              || (
-                (name != "default.nix")
-                && (lib.hasSuffix ".nix" name)
-              )
+            )
       ) (builtins.readDir path)
     );
   in
