@@ -1,16 +1,11 @@
 {
   description = "FrameworkOS";
 
-  outputs = {
-    nixpkgs,
-    home-manager,
-    ...
-  } @ inputs: let
-    lib = nixpkgs.lib.extend (self: super: {
-      custom = import ./module nixpkgs.lib;
-    });
+  outputs = {nixpkgs, ...} @ inputs: let
+    inherit (nixpkgs) lib;
+    helper = import ./module lib;
 
-    systems = lib.custom.scanPath {
+    systems = helper.scanPath {
       path = ./host;
       full = false;
       filter = "dir";
@@ -19,7 +14,7 @@
     forSystems = func: (lib.genAttrs systems func);
   in
     lib.mergeAttrsList [
-      (import ./host {inherit inputs lib systems;})
+      (import ./host {inherit inputs systems helper;})
 
       {
         formatter = forSystems (
@@ -31,13 +26,13 @@
             inherit (inputs) pre-commit-hooks;
             pkgs = nixpkgs.legacyPackages.${system};
           in
-            lib.custom.checkFunc {inherit pre-commit-hooks system pkgs;}
+            helper.checkFunc {inherit pre-commit-hooks system pkgs;}
         );
 
         devShells = forSystems (
           system: let
             pkgs = nixpkgs.legacyPackages.${system};
-          in (import ./shell {inherit lib pkgs;})
+          in (import ./shell {inherit lib pkgs helper;})
         );
       }
     ];

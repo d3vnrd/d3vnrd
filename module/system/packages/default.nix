@@ -2,12 +2,13 @@
   config,
   lib,
   pkgs,
+  helper,
   ...
 }: let
   cfg = config.M;
 in
   with lib; {
-    imports = lib.custom.scanPath {path = ./.;};
+    imports = helper.scanPath {path = ./.;};
 
     options.M = {
       addPkgs = mkOption {

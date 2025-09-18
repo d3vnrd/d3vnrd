@@ -1,7 +1,11 @@
-{lib, ...}:
+{
+  lib,
+  helper,
+  ...
+}:
 with lib; {
   # --Import other important modules
-  imports = custom.scanPath {path = ./.;};
+  imports = helper.scanPath {path = ./.;};
 
   # -- Unified system info --
   config = {

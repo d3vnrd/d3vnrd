@@ -1,68 +1,67 @@
 {
   inputs,
-  lib,
   systems,
-  ...
-}:
-with lib; let
-  inherit (inputs) home-manager nix-darwin nix-secret;
+  helper,
+}: let
+  inherit (inputs) nixpkgs home-manager nix-darwin nix-secret;
+  inherit (nixpkgs) lib;
 
-  genOs = system: let
-    hosts = custom.scanPath {
-      path = ./${system};
-      full = false;
-      filter = "dir";
-    };
-
-    opts =
-      if hasSuffix "darwin" system
-      then {
-        type = "darwin";
-        bootstrap = nix-darwin.lib.darwinSystem;
-      }
-      else {
-        type = "nixos";
-        bootstrap = nixosSystem;
+  genOs = system:
+    with lib; let
+      hosts = helper.scanPath {
+        path = ./${system};
+        full = false;
+        filter = "dir";
       };
-  in
-    genAttrs hosts (
-      hostname:
-        with opts;
-          bootstrap {
-            inherit system;
-            specialArgs = {inherit inputs lib;};
 
-            modules = [
-              # --Include system configurations--
-              ../module/system
-              ./${system}/${hostname}
+      opts =
+        if hasSuffix "darwin" system
+        then {
+          type = "darwin";
+          bootstrap = nix-darwin.lib.darwinSystem;
+        }
+        else {
+          type = "nixos";
+          bootstrap = nixosSystem;
+        };
+    in
+      genAttrs hosts (
+        hostname:
+          with opts;
+            bootstrap {
+              inherit system;
+              specialArgs = {inherit inputs lib helper;};
 
-              # --Input home-manager & nix-secret as flake module--
-              home-manager."${type}Modules".home-manager
-              nix-secret."${type}Modules".secrets
+              modules = [
+                # --Include system configurations--
+                ../module/system
+                ./${system}/${hostname}
 
-              # --System predefined attributes--
-              #TODO: change username to devon
-              {
-                home-manager.users."tlmp59".imports = [
-                  nix-secret.homeModules.secrets
-                  ../module/home
-                  {
-                    home.username = "tlmp59";
-                    home.stateVersion = "25.05";
-                  }
-                  ./${system}/${hostname}/home.nix
-                ];
+                # --Input home-manager & nix-secret as flake module--
+                home-manager."${type}Modules".home-manager
+                nix-secret."${type}Modules".secrets
 
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.extraSpecialArgs = {inherit inputs;};
+                # --System predefined attributes--
+                {
+                  home-manager.users."tlmp59".imports = [
+                    nix-secret.homeModules.secrets
+                    ../module/home
+                    {
+                      home.username = "tlmp59";
+                      home.stateVersion = "25.05";
+                    }
+                    ./${system}/${hostname}/home.nix
+                  ];
 
-                networking.hostName = hostname;
-              }
-            ];
-          }
-    );
+                  home-manager.useGlobalPkgs = true;
+                  home-manager.useUserPackages = true;
+                  home-manager.extraSpecialArgs = {inherit inputs helper;};
+
+                  networking.hostName = hostname;
+                }
+              ];
+            }
+      );
 
   genHome = {
     name,
@@ -72,36 +71,34 @@ with lib; let
       home.stateVersion = "25.05";
       home.homeDirectory = "/home/" + name;
     },
-  }: let
-    inherit (inputs) nixpkgs;
-    helper = import ../module nixpkgs.lib;
-  in {
+  }: {
     "${name}" = home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs {inherit system;};
-      extraSpecialArgs = {inherit helper inputs;};
+      extraSpecialArgs = {inherit inputs lib helper;};
       modules = [../module/home opts];
     };
   };
-in {
-  nixosConfigurations = mergeAttrsList (
-    map genOs
-    (builtins.filter (dir: hasSuffix "linux" dir) systems)
-  );
+in
+  with lib; {
+    nixosConfigurations = mergeAttrsList (
+      map genOs
+      (builtins.filter (dir: hasSuffix "linux" dir) systems)
+    );
 
-  darwinConfigurations = mergeAttrsList (
-    map genOs
-    (builtins.filter (dir: hasSuffix "darwin" dir) systems)
-  );
+    darwinConfigurations = mergeAttrsList (
+      map genOs
+      (builtins.filter (dir: hasSuffix "darwin" dir) systems)
+    );
 
-  homeConfigurations = mergeAttrsList [
-    (genHome {
-      name = "daifuku";
-      system = "x86_64-linux";
-    })
+    homeConfigurations = mergeAttrsList [
+      (genHome {
+        name = "daifuku";
+        system = "x86_64-linux";
+      })
 
-    (genHome {
-      name = "genzako";
-      system = "x86_64-darwin";
-    })
-  ];
-}
+      (genHome {
+        name = "genzako";
+        system = "x86_64-darwin";
+      })
+    ];
+  }

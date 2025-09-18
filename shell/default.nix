@@ -1,35 +1,37 @@
 {
   lib,
   pkgs,
+  helper,
   ...
 }:
-lib.mergeAttrsList [
-  {
-    default = pkgs.mkShell {
-      packages = with pkgs; [
-        python3
-        uv
-        hugo
-        go
-      ];
-      shellHook = ''
-        echo "Unified default shell!"
-        exec zsh
-      '';
-      name = "default";
-    };
-  }
+with lib;
+  mergeAttrsList [
+    {
+      default = pkgs.mkShell {
+        packages = with pkgs; [
+          python3
+          uv
+          hugo
+          go
+        ];
+        shellHook = ''
+          echo "Unified default shell!"
+          exec zsh
+        '';
+        name = "default";
+      };
+    }
 
-  (
-    lib.genAttrs (
-      map (file: lib.removeSuffix ".nix" file) (
-        lib.custom.scanPath {
-          path = ./.;
-          full = false;
-          filter = "file";
-        }
+    (
+      genAttrs (
+        map (file: removeSuffix ".nix" file) (
+          helper.scanPath {
+            path = ./.;
+            full = false;
+            filter = "file";
+          }
+        )
       )
+      (name: pkgs.mkShell (import (./. + "/${name}.nix") pkgs))
     )
-    (name: pkgs.mkShell (import (./. + "/${name}.nix") pkgs))
-  )
-]
+  ]

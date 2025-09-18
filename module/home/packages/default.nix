@@ -16,7 +16,6 @@ in
       };
     };
 
-    # imports = custom.scanPath {path = ./.;};
     imports = helper.scanPath {path = ./.;};
 
     config = {

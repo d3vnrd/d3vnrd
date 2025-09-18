@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  helper,
   ...
 }:
 with lib; {
@@ -16,7 +17,7 @@ with lib; {
     };
   };
 
-  imports = custom.scanPath {path = ./.;};
+  imports = helper.scanPath {path = ./.;};
 
   config = mkIf (!config.M.isDarwin) {
     environment.systemPackages = with pkgs; [];
