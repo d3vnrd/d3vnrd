@@ -74,7 +74,7 @@
   }: {
     "${name}" = home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs {inherit system;};
-      extraSpecialArgs = {inherit inputs lib helper;};
+      extraSpecialArgs = {inherit inputs helper;};
       modules = [../module/home opts];
     };
   };

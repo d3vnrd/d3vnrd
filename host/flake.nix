@@ -31,13 +31,17 @@
   in {
     nixosConfigurations = lib.mergeAttrsList (
       map genOs [
+        # {
+        #   hostname = "wsl";
+        #   system = "x86_64-linux";
+        # }
+        # {
+        #   hostname = "laptop";
+        #   system = "x86_64-linux";
+        # }
         {
-          hostname = "wsl";
+          hostname = "machine";
           system = "x86_64-linux";
-        }
-        {
-          hostname = "laptop";
-          system = "aarch64-linux";
         }
       ]
     );
