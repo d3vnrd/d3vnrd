@@ -4,17 +4,9 @@
   ...
 }:
 with lib; {
-  # --Import other important modules
-  imports = helper.scanPath {path = ./.;};
-
-  # -- Unified system info --
-  config = {
-    # -- Misc --
-    nix.settings.experimental-features = mkForce ["nix-command" "flakes"];
-    nixpkgs.config.allowUnfree = mkDefault true;
-    time.timeZone = mkDefault "Asia/Vietnam";
-
-    # -- Precaution --
-    system.stateVersion = mkForce "25.05";
+  imports = helper.scanPath {
+    path = ./.;
+    exclude = ["nixos" "darwin"];
   };
+  time.timeZone = mkDefault "Asia/Vietnam";
 }

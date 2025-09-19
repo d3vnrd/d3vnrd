@@ -20,10 +20,12 @@
           type = "darwin";
           bootstrap = nix-darwin.lib.darwinSystem;
         }
-        else {
+        else if hasSuffix "linux" system
+        then {
           type = "nixos";
           bootstrap = nixosSystem;
-        };
+        }
+        else throw "Current ${system} are not supported by this flake.";
     in
       genAttrs hosts (
         hostname:
@@ -33,15 +35,15 @@
               specialArgs = {inherit inputs lib helper;};
 
               modules = [
-                # --Include system configurations--
+                # --Predefined system configurations--
                 ../module/system
-                ./${system}/${hostname}
+                ../module/system/${type}
 
                 # --Input home-manager & nix-secret as flake module--
                 home-manager."${type}Modules".home-manager
                 nix-secret."${type}Modules".secrets
 
-                # --System predefined attributes--
+                # --Common system attributes--
                 {
                   home-manager.users."tlmp59".imports = [
                     nix-secret.homeModules.secrets
@@ -57,25 +59,40 @@
                   home-manager.useUserPackages = true;
                   home-manager.extraSpecialArgs = {inherit inputs helper;};
 
+                  # --Set machine hostname--
                   networking.hostName = hostname;
+
+                  # --Misc--
+                  nix.settings.experimental-features = mkForce ["nix-command" "flakes"];
+                  nixpkgs.config.allowUnfree = mkDefault true;
+
+                  # --Precaution --
+                  system.stateVersion = mkForce "25.05";
                 }
+
+                # --System-based configurations--
+                ./${system}/${hostname}
               ];
             }
       );
 
   genHome = {
-    name,
+    username,
     system,
     opts ? {
-      home.username = name;
+      home.username = username;
       home.stateVersion = "25.05";
-      home.homeDirectory = "/home/" + name;
+      home.homeDirectory = "/home/" + username;
     },
   }: {
-    "${name}" = home-manager.lib.homeManagerConfiguration {
+    "${username}" = home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs {inherit system;};
       extraSpecialArgs = {inherit inputs helper;};
-      modules = [../module/home opts];
+
+      modules = [
+        ../module/home
+        opts
+      ];
     };
   };
 in
@@ -90,15 +107,17 @@ in
       (builtins.filter (dir: hasSuffix "darwin" dir) systems)
     );
 
-    homeConfigurations = mergeAttrsList [
-      (genHome {
-        name = "daifuku";
-        system = "x86_64-linux";
-      })
-
-      (genHome {
-        name = "genzako";
-        system = "x86_64-darwin";
-      })
-    ];
+    homeConfigurations = mergeAttrsList (
+      map genHome
+      [
+        {
+          username = "daifuku";
+          system = "x86_64-linux";
+        }
+        {
+          username = "genzako";
+          system = "x86_64-darwin";
+        }
+      ]
+    );
   }
