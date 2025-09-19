@@ -6,11 +6,11 @@
   ...
 }:
 with lib; {
-  options.M.isDarwin = mkEnableOption "Enable modules for darwin system.";
-
   imports = helper.scanPath {path = ./.;};
 
-  config = mkIf config.M.isDarwin {
+  options.M = {};
+
+  config = {
     environment.systemPackages = with pkgs; [];
   };
 }

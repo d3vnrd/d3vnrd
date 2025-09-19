@@ -4,50 +4,40 @@
   pkgs,
   helper,
   ...
-}: let
-  cfg = config.M;
-in
-  with lib; {
-    imports = helper.scanPath {path = ./.;};
+}:
+with lib; {
+  imports = helper.scanPath {path = ./.;};
 
-    options.M = {
-      addPkgs = mkOption {
-        type = with types; listOf package;
-        default = [];
-        description = "Additional packages (beside default).";
-      };
+  options.M = {
+    addPkgs = mkOption {
+      type = with types; listOf package;
+      default = [];
+      description = "Additional packages (beside default).";
     };
+  };
 
-    config = {
-      # --Binaries declaration--
-      environment.systemPackages = with pkgs;
-        lib.mkMerge [
-          [
-            # utils
-            gh
-            gcc
-            unzip
-            direnv
-            just
+  config = {
+    environment.variables.EDITOR = "nvim --clean";
+    environment.systemPackages = with pkgs;
+      flatten [
+        gh
+        gcc
+        unzip
+        direnv
+        just
 
-            # networking
-            wget
-            curl
+        wget
+        curl
 
-            # synchronize
-            rsync
-            # neovim
-          ]
+        rsync
+        neovim
 
-          # additional specific host packages
-          cfg.addPkgs
-        ];
+        config.M.addPkgs
+      ];
 
-      # --Configurable-via-flake programs--
-      programs = {
-        # zsh.enable = mkIf (config.users.defaultUserShell == pkgs.zsh) (mkForce true);
-        zsh.enable = true;
-        git.enable = mkForce true;
-      };
+    programs = {
+      zsh.enable = mkDefault true;
+      git.enable = mkForce true;
     };
-  }
+  };
+}

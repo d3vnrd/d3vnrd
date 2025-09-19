@@ -1,17 +1,22 @@
 {
-  inputs,
+  config,
   lib,
   pkgs,
   ...
-}:
-with lib; {
-  users.users.root = {};
+}: let
+in
+  with lib; {
+    users.users.root = {
+      # initialHashedPassword = "";
+    };
 
-  users.users."tlmp59" = {
-    isNormalUser = mkForce true;
-    extraGroups = mkDefault ["wheel"];
-    description = "Default user for all host machines.";
-  };
+    users.users."tlmp59" = {
+      description = "Default master user for all host machines.";
+      # initialHashedPassword = "";
+      isNormalUser = mkForce true;
+      extraGroups = mkDefault ["wheel"];
+      openssh.authorizedKeys.keys = {};
+    };
 
-  users.defaultUserShell = pkgs.zsh;
-}
+    users.defaultUserShell = mkIf config.programs.zsh.enable pkgs.zsh;
+  }

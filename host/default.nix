@@ -32,7 +32,7 @@
           with opts;
             bootstrap {
               inherit system;
-              specialArgs = {inherit inputs lib helper;};
+              specialArgs = {inherit inputs helper;};
 
               modules = [
                 # --Predefined system configurations--
