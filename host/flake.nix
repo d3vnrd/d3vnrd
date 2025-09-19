@@ -16,8 +16,8 @@
       opts ? {
         networking.hostName = hostname;
       },
-    }:
-      lib.nixosSystem {
+    }: {
+      "${hostname}" = lib.nixosSystem {
         inherit system;
         specialArgs = {inherit inputs helper;};
 
@@ -27,17 +27,19 @@
           opts
         ];
       };
-  in {
-    nixosConfigurations = {
-      "wsl" = genOs {
-        host = "wsl";
-        system = "x86_64-linux";
-      };
-
-      "laptop" = genOs {
-        host = "laptop";
-        system = "aarch64-linux";
-      };
     };
+  in {
+    nixosConfigurations = lib.mergeAttrsList (
+      map genOs [
+        {
+          hostname = "wsl";
+          system = "x86_64-linux";
+        }
+        {
+          hostname = "laptop";
+          system = "aarch64-linux";
+        }
+      ]
+    );
   };
 }
