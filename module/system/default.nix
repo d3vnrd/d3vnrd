@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   helper,
   ...
@@ -8,5 +9,21 @@ with lib; {
     path = ./.;
     exclude = ["nixos" "darwin"];
   };
+
+  users.defaultUserShell =
+    mkIf config.programs.zsh.enable pkgs.zsh;
+
+  users.users.root = {
+    # initialHashedPassword = "";
+  };
+
+  users.users."tlmp59" = {
+    description = "Default master user for all host machines.";
+    # initialHashedPassword = "";
+    isNormalUser = mkForce true;
+    extraGroups = mkDefault ["wheel"];
+    openssh.authorizedKeys.keys = [];
+  };
+
   time.timeZone = mkDefault "Asia/Vietnam";
 }

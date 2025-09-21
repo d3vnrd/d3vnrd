@@ -64,7 +64,7 @@
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     # --User secret--
-    nix-secret.url = "git+ssh://git@github.com/tlmp59/nix-secret.git?ref=main&shallow=1";
+    # nix-secret.url = "git+ssh://git@github.com/tlmp59/nix-secret.git?ref=main&shallow=1";
 
     # -- Neovim Nightly --
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";

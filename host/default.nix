@@ -3,7 +3,7 @@
   systems,
   helper,
 }: let
-  inherit (inputs) nixpkgs home-manager nix-darwin nix-secret;
+  inherit (inputs) nixpkgs home-manager nix-darwin;
   inherit (nixpkgs) lib;
 
   genOs = system:
@@ -41,12 +41,12 @@
 
                 # --Input home-manager & nix-secret as flake module--
                 home-manager."${type}Modules".home-manager
-                nix-secret."${type}Modules".secrets
+                # nix-secret."${type}Modules".secrets
 
                 # --Common system attributes--
                 {
                   home-manager.users."tlmp59".imports = [
-                    nix-secret.homeModules.secrets
+                    # nix-secret.homeModules.secrets
                     ../module/home
                     {
                       home.username = "tlmp59";
