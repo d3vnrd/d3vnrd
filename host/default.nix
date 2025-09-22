@@ -41,7 +41,7 @@
                 ../module/system/${type}
 
                 secrets."${type}Modules".secrets
-                (mkIf (type == "nixos") inputs.disko.nixosModules.disko)
+                # (mkIf (type == "nixos") inputs.disko.nixosModules.disko)
                 inputs.home-manager."${type}Modules".home-manager
 
                 ({vars, ...}: {
