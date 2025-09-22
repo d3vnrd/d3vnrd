@@ -28,6 +28,14 @@
         else
           throw
           "${system} is not supported.";
+
+      check = {
+        cpath,
+        message ? "",
+      }:
+        if builtins.pathExists cpath
+        then p
+        else builtins.warn message;
     in
       genAttrs hosts (
         hostname:
@@ -48,11 +56,21 @@
                   home-manager.users.${vars.username}.imports = [
                     ../module/home
                     secrets.homeModules.secrets
+
                     ({vars, ...}: {
                       home.username = mkForce vars.username;
                       home.stateVersion = mkForce vars.stateVersion;
                     })
-                    ./${system}/${hostname}/home.nix
+
+                    (
+                      check {
+                        cpath = ./${system}/${hostname}/home.nix;
+                        message = ''
+                          Home configs for ${hostname} not found.
+                          Consider create "home.nix" under host/${system}/${hostname}.
+                        '';
+                      }
+                    )
                   ];
 
                   home-manager.useGlobalPkgs = true;
@@ -73,7 +91,7 @@
   genHome = {
     username,
     system,
-    opts ? {
+    addOpts ? {
       home.username = username;
       home.stateVersion = secrets.stateVersion;
       home.homeDirectory = "/home/" + username;
@@ -85,7 +103,7 @@
 
       modules = [
         ../module/home
-        opts
+        addOpts
       ];
     };
   };
