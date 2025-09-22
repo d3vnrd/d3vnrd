@@ -3,7 +3,7 @@
   systems,
   helper,
 }: let
-  inherit (inputs) nixpkgs home-manager nix-darwin;
+  inherit (inputs) nixpkgs home-manager nix-darwin secrets;
   inherit (nixpkgs) lib;
 
   genOs = system:
@@ -25,7 +25,9 @@
           type = "nixos";
           bootstrap = nixosSystem;
         }
-        else throw "Current ${system} are not supported by this flake.";
+        else
+          throw
+          "${system} is not supported.";
     in
       genAttrs hosts (
         hostname:
@@ -35,42 +37,33 @@
               specialArgs = {inherit inputs helper;};
 
               modules = [
-                # --Predefined system configurations--
                 ../module/system
                 ../module/system/${type}
 
-                # --Input home-manager & nix-secret as flake module--
+                secrets."${type}Modules".secrets
                 home-manager."${type}Modules".home-manager
-                # nix-secret."${type}Modules".secrets
 
-                # --Common system attributes--
-                {
-                  home-manager.users."tlmp59".imports = [
-                    # nix-secret.homeModules.secrets
+                ({vars, ...}: {
+                  home-manager.users.${vars.username}.imports = [
                     ../module/home
-                    {
-                      home.username = "tlmp59";
-                      home.stateVersion = "25.05";
-                    }
+                    secrets.homeModules.secrets
+                    ({vars, ...}: {
+                      home.username = mkForce vars.username;
+                      home.stateVersion = mkForce vars.stateVersion;
+                    })
                     ./${system}/${hostname}/home.nix
                   ];
 
                   home-manager.useGlobalPkgs = true;
                   home-manager.useUserPackages = true;
-                  home-manager.extraSpecialArgs = {inherit inputs helper;};
+                  home-manager.extraSpecialArgs = mkForce {inherit inputs helper;};
 
-                  # --Set machine hostname--
-                  networking.hostName = hostname;
-
-                  # --Misc--
+                  networking.hostName = mkForce hostname;
                   nix.settings.experimental-features = mkForce ["nix-command" "flakes"];
-                  nixpkgs.config.allowUnfree = mkDefault true;
+                  nixpkgs.config.allowUnfree = true;
+                  system.stateVersion = mkForce vars.stateVersion;
+                })
 
-                  # --Precaution --
-                  system.stateVersion = mkForce "25.05";
-                }
-
-                # --System-based configurations--
                 ./${system}/${hostname}
               ];
             }
@@ -81,11 +74,11 @@
     system,
     opts ? {
       home.username = username;
-      home.stateVersion = "25.05";
+      home.stateVersion = secrets.stateVersion;
       home.homeDirectory = "/home/" + username;
     },
   }: {
-    "${username}" = home-manager.lib.homeManagerConfiguration {
+    ${username} = home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs {inherit system;};
       extraSpecialArgs = {inherit inputs helper;};
 

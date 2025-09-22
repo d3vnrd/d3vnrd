@@ -51,22 +51,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # --Pre-commit--
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # --Theming framework--
-    stylix.url = "github:danth/stylix";
-
-    # --Wsl support--
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
-
-    # --User secret--
-    # nix-secret.url = "git+ssh://git@github.com/tlmp59/nix-secret.git?ref=main&shallow=1";
-
-    # -- Neovim Nightly --
+    stylix.url = "github:danth/stylix";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    secrets.url = "git+ssh://git@github.com/d3vnrd/secrets.git?ref=main&shallow=1";
   };
 }

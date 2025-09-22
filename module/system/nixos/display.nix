@@ -7,11 +7,10 @@ with lib; {
   options.M = {
   };
 
-  assertions = {
-  };
-
   config = mkMerge [
     (mkIf (config.M.displayServer == "xserver") {
+      assertions = {};
+
       services.xserver = {
         enable = true;
         autorun = false;

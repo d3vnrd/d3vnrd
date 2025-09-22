@@ -1,7 +1,9 @@
 {
   config,
   lib,
+  pkgs,
   helper,
+  vars,
   ...
 }:
 with lib; {
@@ -17,13 +19,13 @@ with lib; {
     # initialHashedPassword = "";
   };
 
-  users.users."tlmp59" = {
-    description = "Default master user for all host machines.";
+  users.users.${vars.username} = {
+    description = "Default user for all host machines.";
     # initialHashedPassword = "";
     isNormalUser = mkForce true;
     extraGroups = mkDefault ["wheel"];
     openssh.authorizedKeys.keys = [];
   };
 
-  time.timeZone = mkDefault "Asia/Vietnam";
+  time.timeZone = mkDefault vars.timeZone;
 }
