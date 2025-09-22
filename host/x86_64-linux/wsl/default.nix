@@ -24,7 +24,10 @@
     autoPrune.enable = true;
   };
 
-  M.addPkgs = with pkgs; [wsl-open];
+  M.addPkgs = with pkgs; [
+    wsl-open
+    xclip
+  ];
 
   # --Vscode remote support--
   programs.nix-ld.enable = true;

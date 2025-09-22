@@ -30,7 +30,7 @@ in {
     };
   };
 
-  config = mkIf (cfg.name != "") (mkMerge [
+  config = mkIf (cfg.device != "") (mkMerge [
     {
       assertions = {
       };
@@ -90,7 +90,7 @@ in {
       };
     })
 
-    (mkIf (cfg.format == "btrfs-luks") {
+    (mkIf (cfg.format == "btrfs-luks-impermanance") {
       disko.devices.disk0 = {};
     })
   ]);
