@@ -3,7 +3,7 @@
   systems,
   helper,
 }: let
-  inherit (inputs) nixpkgs home-manager nix-darwin secrets;
+  inherit (inputs) nixpkgs nix-darwin secrets;
   inherit (nixpkgs) lib;
 
   genOs = system:
@@ -41,7 +41,8 @@
                 ../module/system/${type}
 
                 secrets."${type}Modules".secrets
-                home-manager."${type}Modules".home-manager
+                (mkIf (type == "nixos") inputs.disko.nixosModules.disko)
+                inputs.home-manager."${type}Modules".home-manager
 
                 ({vars, ...}: {
                   home-manager.users.${vars.username}.imports = [
@@ -78,7 +79,7 @@
       home.homeDirectory = "/home/" + username;
     },
   }: {
-    ${username} = home-manager.lib.homeManagerConfiguration {
+    ${username} = inputs.home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs {inherit system;};
       extraSpecialArgs = {inherit inputs helper;};
 

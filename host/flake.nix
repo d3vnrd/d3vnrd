@@ -10,7 +10,7 @@
     inherit (nixpkgs) lib;
     helper = import ../module lib;
 
-    genOs = {
+    genInit = {
       hostname,
       system,
       opts ? {
@@ -24,13 +24,15 @@
         modules = [
           inputs.disko.nixosModules.disko
           ./${system}/${hostname}/hardware-configuration.nix
+
+          {}
           opts
         ];
       };
     };
   in {
     nixosConfigurations = lib.mergeAttrsList (
-      map genOs [
+      map genInit [
         {
           hostname = "laptop";
           system = "x86_64-linux";
