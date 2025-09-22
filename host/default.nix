@@ -44,14 +44,7 @@
                 (optional (type == "nixos") inputs.disko.nixosModules.disko)
                 inputs.home-manager."${type}Modules".home-manager
 
-                ({vars, ...}: let
-                  homePath = ./${system}/${hostname}/home.nix;
-                  homeExisted = builtins.pathExists homePath;
-                in {
-                  warnings = optional homeExisted ''
-                    Home configuration file not found: ${system}/${hostname}/home.nix. Consider create this file for host "${hostname}".
-                  '';
-
+                ({vars, ...}: {
                   home-manager.users.${vars.username}.imports = flatten [
                     ../module/home
                     secrets.homeModules.secrets
@@ -61,7 +54,10 @@
                       home.stateVersion = mkForce vars.stateVersion;
                     })
 
-                    (optional homeExisted homePath)
+                    (let
+                      cfgPath = ./${system}/${hostname}/home.nix;
+                    in
+                      optional (builtins.pathExists cfgPath) cfgPath)
                   ];
 
                   home-manager.useGlobalPkgs = true;
