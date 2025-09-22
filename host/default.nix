@@ -28,14 +28,6 @@
         else
           throw
           "${system} is not supported.";
-
-      check = {
-        cpath,
-        message ? "",
-      }:
-        if builtins.pathExists cpath
-        then p
-        else builtins.warn message;
     in
       genAttrs hosts (
         hostname:
@@ -52,8 +44,15 @@
                 (optional (type == "nixos") inputs.disko.nixosModules.disko)
                 inputs.home-manager."${type}Modules".home-manager
 
-                ({vars, ...}: {
-                  home-manager.users.${vars.username}.imports = [
+                ({vars, ...}: let
+                  homePath = ./${system}/${hostname}/home.nix;
+                  homeExisted = builtins.pathExists homePath;
+                in {
+                  warnings = optional homeExisted ''
+                    Home configuration file not found: ${system}/${hostname}/home.nix. Consider create this file for host "${hostname}".
+                  '';
+
+                  home-manager.users.${vars.username}.imports = flatten [
                     ../module/home
                     secrets.homeModules.secrets
 
@@ -62,16 +61,7 @@
                       home.stateVersion = mkForce vars.stateVersion;
                     })
 
-                    ./${system}/${hostname}/home.nix
-                    # (
-                    #   check {
-                    #     cpath = ./${system}/${hostname}/home.nix;
-                    #     message = ''
-                    #       Home configs for ${hostname} not found.
-                    #       Consider create "home.nix" under host/${system}/${hostname}.
-                    #     '';
-                    #   }
-                    # )
+                    (optional homeExisted homePath)
                   ];
 
                   home-manager.useGlobalPkgs = true;
