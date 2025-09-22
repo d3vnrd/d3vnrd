@@ -6,29 +6,28 @@
 with lib; let
   cfg = config.M.disk;
 in {
-  options.M.disk =
-    {
-      device = mkOption {
-        type = types.str;
-        default = "";
-        description = "Device to perform format.";
-      };
-    }
-    // (mkIf (cfg.device != "") {
-      format = mkOption {
-        type = types.enum [
-          "btrfs-default"
-          "btrfs-luks"
-          "btrfs-luks-impermanance"
-        ];
-        description = "Disk format options.";
-      };
+  options.M.disk = {
+    device = mkOption {
+      type = types.str;
+      default = "";
+      description = "Device to perform format.";
+    };
 
-      swap = mkOption {
-        type = types.ints.unsigned; # only positive value
-        description = "Assign swap size for disk format.";
-      };
-    });
+    #@ Tips: conditional options declaration won't work
+    format = mkOption {
+      type = types.enum [
+        "btrfs-default"
+        "btrfs-luks"
+        "btrfs-luks-impermanance"
+      ];
+      description = "Disk format options.";
+    };
+
+    swap = mkOption {
+      type = types.ints.unsigned; # only positive value
+      description = "Assign swap size for disk format.";
+    };
+  };
 
   config = mkIf (cfg.device != "") (mkMerge [
     {

@@ -62,15 +62,16 @@
                       home.stateVersion = mkForce vars.stateVersion;
                     })
 
-                    (
-                      check {
-                        cpath = ./${system}/${hostname}/home.nix;
-                        message = ''
-                          Home configs for ${hostname} not found.
-                          Consider create "home.nix" under host/${system}/${hostname}.
-                        '';
-                      }
-                    )
+                    ./${system}/${hostname}/home.nix
+                    # (
+                    #   check {
+                    #     cpath = ./${system}/${hostname}/home.nix;
+                    #     message = ''
+                    #       Home configs for ${hostname} not found.
+                    #       Consider create "home.nix" under host/${system}/${hostname}.
+                    #     '';
+                    #   }
+                    # )
                   ];
 
                   home-manager.useGlobalPkgs = true;
