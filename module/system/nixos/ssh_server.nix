@@ -16,11 +16,11 @@ with lib; {
   config = mkIf config.M.openssh {
     services.openssh = {
       enable = true;
-      settings = {
-        PasswordAuthentication = false;
-        PermitRootLogin = "no";
-        AllowUsers = ["devon"];
-      };
+      # settings = {
+      #   PasswordAuthentication = false;
+      #   PermitRootLogin = "no";
+      #   AllowUsers = ["devon"];
+      # };
     };
   };
 }

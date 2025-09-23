@@ -29,6 +29,8 @@
     xclip
   ];
 
+  M.openssh = true;
+
   # --Vscode remote support--
   programs.nix-ld.enable = true;
 }

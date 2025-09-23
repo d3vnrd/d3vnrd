@@ -30,10 +30,6 @@ in {
   };
 
   config = mkIf (cfg.device != "") (mkMerge [
-    {
-      assertions = {};
-    }
-
     (mkIf (cfg.format == "btrfs-default") {
       disko.devices.disk = {
         disk0 = {

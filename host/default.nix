@@ -80,7 +80,7 @@
     system,
     addOpts ? {
       home.username = username;
-      home.stateVersion = secrets.stateVersion;
+      home.stateVersion = "25.05";
       home.homeDirectory = "/home/" + username;
     },
   }: {
