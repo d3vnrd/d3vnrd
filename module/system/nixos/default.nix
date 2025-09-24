@@ -16,7 +16,10 @@ with lib; {
 
   imports = helper.scanPath {path = ./.;};
 
-  config = {
-    environment.systemPackages = with pkgs; [];
-  };
+  config = mkMerge [
+    {
+      #@ Packages for nixos systems only
+      environment.systemPackages = with pkgs; [];
+    }
+  ];
 }
