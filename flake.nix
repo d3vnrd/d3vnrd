@@ -64,6 +64,10 @@
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     stylix.url = "github:danth/stylix";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    secrets.url = "git+ssh://git@github.com/d3vnrd/secrets.git?ref=main&shallow=1";
+
+    secrets = {
+      url = "git+ssh://git@github.com/d3vnrd/secrets.git?ref=main&shallow=1";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }

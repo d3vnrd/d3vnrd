@@ -518,20 +518,6 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1758446476,
-        "narHash": "sha256-5rdAi7CTvM/kSs6fHe1bREIva5W3TbImsto+dxG4mBo=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "a1f79a1770d05af18111fbbe2a3ab2c42c0f6cd0",
-        "type": "github"
-      },
-      "original": {
-        "id": "nixpkgs",
-        "type": "indirect"
-      }
-    },
-    "nixpkgs_5": {
-      "locked": {
         "lastModified": 1756819007,
         "narHash": "sha256-12V64nKG/O/guxSYnr5/nq1EfqwJCdD2+cIGmhz3nrE=",
         "owner": "NixOS",
@@ -609,14 +595,16 @@
     },
     "secrets": {
       "inputs": {
-        "nixpkgs": "nixpkgs_4",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "sops-nix": "sops-nix"
       },
       "locked": {
-        "lastModified": 1758509807,
-        "narHash": "sha256-HklxC60xm6q7PBK5ZNESU1yLBnZokZHDIIu8OAjbp8s=",
+        "lastModified": 1758701250,
+        "narHash": "sha256-MRp+eZi8CZoYCd75r9Ronr+HrDc7Ld/XMmgm/VPEDkA=",
         "ref": "main",
-        "rev": "c484014980c2be78f98c0adea99e5725c2cd390f",
+        "rev": "52d1bc829533a860c225822b45c94a25113fd950",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/d3vnrd/secrets.git"
@@ -658,7 +646,7 @@
         "firefox-gnome-theme": "firefox-gnome-theme",
         "flake-parts": "flake-parts_3",
         "gnome-shell": "gnome-shell",
-        "nixpkgs": "nixpkgs_5",
+        "nixpkgs": "nixpkgs_4",
         "nur": "nur",
         "systems": "systems",
         "tinted-foot": "tinted-foot",
