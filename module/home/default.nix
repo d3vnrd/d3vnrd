@@ -1,7 +1,7 @@
 {helper, ...}: {
   imports = helper.scanPath {path = ./.;};
 
-  services.ssh-agent.enable = true;
+  services.ssh-agentenable = true;
 
   programs.ssh = {
     enable = true;
