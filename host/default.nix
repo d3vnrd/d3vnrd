@@ -37,36 +37,34 @@
               specialArgs = {inherit inputs helper;};
 
               modules = flatten [
-                ../module/system
-                ../module/system/${type}
-
                 secrets."${type}Modules".secrets
                 (optional (type == "nixos") inputs.disko.nixosModules.disko)
                 inputs.home-manager."${type}Modules".home-manager
 
+                ../module/system
+                ../module/system/${type}
+
                 ({vars, ...}: {
                   home-manager.users.${vars.username}.imports = flatten [
-                    ../module/home
                     secrets.homeModules.secrets
-
+                    ../module/home
                     ({vars, ...}: {
                       home.username = mkForce vars.username;
                       home.stateVersion = mkForce vars.stateVersion;
                     })
-
                     (let
                       cfgPath = ./${system}/${hostname}/home.nix;
                     in
                       optional (builtins.pathExists cfgPath) cfgPath)
                   ];
 
-                  home-manager.useGlobalPkgs = true;
-                  home-manager.useUserPackages = true;
+                  home-manager.useGlobalPkgs = mkDefault true;
+                  home-manager.useUserPackages = mkDefault true;
                   home-manager.extraSpecialArgs = mkForce {inherit inputs helper;};
 
                   networking.hostName = mkForce hostname;
                   nix.settings.experimental-features = mkForce ["nix-command" "flakes"];
-                  nixpkgs.config.allowUnfree = true;
+                  nixpkgs.config.allowUnfree = mkDefault true;
                   system.stateVersion = mkForce vars.stateVersion;
                 })
 

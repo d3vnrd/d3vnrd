@@ -1,14 +1,29 @@
-{inputs, ...}: {
-  imports = [
-    ./hardware-configuration.nix
-    inputs.disko.nixosModules.disko
-  ];
+{...}: {
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
-  config = {
-    M.disk = {
-      device = "dev/nvme0";
-      format = "btrfs-default";
-      swap = 4;
+  networking.useDHCP = true;
+
+  users.users."tlmp59" = {
+    isNormalUser = true;
+    extraGroups = ["networkmanager" "wheel"];
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEQyVlweJ2+noPOb3/PwBn9xcuj/npJPz2T52Au8eoTT root@wsl"
+    ];
+  };
+
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      PermitRootLogin = "prohibit-password";
     };
+  };
+  services.qemuGuest.enable = true;
+
+  M.disk = {
+    device = "/dev/sda";
+    format = "btrfs-default";
+    swap = 2;
   };
 }

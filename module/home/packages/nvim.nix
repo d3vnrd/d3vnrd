@@ -57,6 +57,7 @@ in {
 
     home.packages = with pkgs; [
       # -- LSP --
+      bash-language-server
       lua-language-server
       yaml-language-server
       nixd
@@ -75,6 +76,7 @@ in {
       isort
       stylua
       typstyle
+      shfmt
 
       # -- Other --
       websocat # dependency for typst-preview

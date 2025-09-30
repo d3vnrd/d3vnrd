@@ -9,9 +9,19 @@
     };
   };
 
-  outputs = {nixpkgs, ...} @ inputs: let
+  outputs = {
+    nixpkgs,
+    disko,
+    ...
+  } @ inputs: let
     inherit (nixpkgs) lib;
+
     helper = import ../module lib;
+    systems = helper.scanPath {
+      path = ./.;
+      full = false;
+      filter = "dir";
+    };
 
     genInit = system:
       with lib; let
@@ -27,8 +37,8 @@
               inherit system;
               specialArgs = {inherit inputs helper;};
               modules = [
-                ../module/system
-                ../module/system/nixos
+                disko.nixosModules.disko
+                ../module/system/nixos/disk.nix
                 {
                   networking.hostName = mkForce hostname;
                   nix.settings.experimental-features = mkForce ["nix-command" "flakes"];

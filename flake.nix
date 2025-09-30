@@ -62,7 +62,11 @@
     };
 
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+
     stylix.url = "github:danth/stylix";
+
+    # colmena.url = ""; #@ Cluster mangement tool
+
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
     secrets = {

@@ -73,7 +73,7 @@ in {
                     };
                     "@swap" = mkIf (cfg.swap > 0) {
                       mountpoint = "/.swapvol";
-                      swap.swapfile.size = "${cfg.swap}G";
+                      swap.swapfile.size = "${builtins.toString cfg.swap}G";
                     };
                   };
                 };
