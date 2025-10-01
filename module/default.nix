@@ -39,7 +39,15 @@ with lib; {
     then map (f: (path + "/${f}")) names
     else names;
 
-  #TODO: add conflict hostname check before commit
+  mergeNoOverride = attrsList:
+    zipAttrsWith (
+      name: values:
+        assert assertMsg (length values == 1)
+        "Hostname '${name}' conflicts - defined in ${toString (length values)} systems";
+          head values
+    )
+    attrsList;
+
   checkFunc = {
     pre-commit-hooks,
     system,
@@ -51,7 +59,5 @@ with lib; {
     #     alejandra.enable = true;
     #   };
     # };
-
-    # hostname-conflict =
   };
 }

@@ -55,15 +55,14 @@
               cfg = ./${system}/${hostname}; # host-specific
             in [
               opts.module
+              ../module/system
 
               ({vars, ...}: {
-                imports = flatten [../module/system];
-
                 home-manager.users.${vars.username}.imports = flatten (let
                   cfg = ./${system}/${hostname}/home.nix; # host-specific
                 in [
                   ({vars, ...}: {
-                    imports = flatten [
+                    imports = [
                       secrets.homeModules.secrets
                       ../module/home
                     ];
@@ -112,7 +111,7 @@
   };
 in
   with lib; {
-    nixosConfigurations = mergeAttrsList (
+    nixosConfigurations = helper.mergeNoOverride (
       map genOs
       (builtins.filter (dir: hasSuffix "linux" dir) systems)
     );
