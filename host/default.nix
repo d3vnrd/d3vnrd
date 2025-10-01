@@ -8,7 +8,6 @@
 
   osOpts = {
     darwin = {
-      type = "darwin";
       bootstrap = nix-darwin.lib.darwinSystem;
       module = [
         secrets.darwinModules.secrets
@@ -18,7 +17,6 @@
     };
 
     linux = {
-      type = "nixos";
       bootstrap = lib.nixosSystem;
       module = [
         secrets.nixosModules.secrets
@@ -116,7 +114,7 @@ in
       (builtins.filter (dir: hasSuffix "linux" dir) systems)
     );
 
-    darwinConfigurations = mergeAttrsList (
+    darwinConfigurations = helper.mergeNoOverride (
       map genOs
       (builtins.filter (dir: hasSuffix "darwin" dir) systems)
     );

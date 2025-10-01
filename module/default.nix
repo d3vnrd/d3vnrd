@@ -39,11 +39,12 @@ with lib; {
     then map (f: (path + "/${f}")) names
     else names;
 
+  #TODO: a better way for notifying error?
   mergeNoOverride = attrsList:
     zipAttrsWith (
       name: values:
         assert assertMsg (length values == 1)
-        "Hostname '${name}' conflicts - defined in ${toString (length values)} systems";
+        "'${name}' appears ${toString (length values)} times in config.";
           head values
     )
     attrsList;
@@ -53,11 +54,11 @@ with lib; {
     system,
     ...
   }: {
-    # pre-commit-check = pre-commit-hooks.lib.${system}.run {
-    #   src = ../.;
-    #   hooks = {
-    #     alejandra.enable = true;
-    #   };
-    # };
+    pre-commit-check = pre-commit-hooks.lib.${system}.run {
+      src = ../.;
+      hooks = {
+        alejandra.enable = true;
+      };
+    };
   };
 }

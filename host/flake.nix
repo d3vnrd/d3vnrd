@@ -2,19 +2,15 @@
   description = "Minimal flake for bootstraping NixOs systems";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = {
-    nixpkgs,
-    disko,
-    ...
-  } @ inputs: let
-    inherit (nixpkgs) lib;
+  outputs = {...} @ inputs: let
+    inherit (inputs.nixpkgs) lib;
 
     helper = import ../module lib;
     systems = helper.scanPath {
@@ -36,23 +32,65 @@
             nixosSystem {
               inherit system;
               specialArgs = {inherit inputs helper;};
-              modules = [
-                disko.nixosModules.disko
+              modules = flatten (let
+                cfg = ./${system}/${hostname};
+              in [
                 ../module/system/nixos/disk.nix
                 {
                   networking.hostName = mkForce hostname;
                   nix.settings.experimental-features = mkForce ["nix-command" "flakes"];
+                  nixpkgs.config.allowUnfree = mkDefault true;
                   system.stateVersion = mkForce "25.05";
                 }
-                ./${system}/${hostname}
-              ];
+                (optional (builtins.pathExists cfg) cfg)
+              ]);
             }
         );
+
+    genIso = system:
+      with lib; {
+        "iso-${system}" = nixosSystem {
+          inherit system;
+          modules = [
+            (
+              {
+                lib,
+                modulesPath,
+                ...
+              }:
+                with lib; {
+                  imports = ["${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"];
+
+                  networking.useDHCP = mkDefault true;
+
+                  services.openssh = {
+                    enable = true;
+                    settings = {
+                      PasswordAuthentication = false;
+                      PermitRootLogin = "prohibit-password";
+                    };
+                  };
+
+                  users.users.nixos.openssh.authorizedKeys.keys = [
+                    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEQyVlweJ2+noPOb3/PwBn9xcuj/npJPz2T52Au8eoTT root@wsl"
+                  ];
+                }
+            )
+          ];
+        };
+      };
   in
     with lib; {
-      nixosConfigurations = mergeAttrsList (
-        map genInit
-        (builtins.filter (dir: hasSuffix "linux" dir) systems)
-      );
+      nixosConfigurations =
+        (helper.mergeNoOverride (
+          map genInit
+          (builtins.filter (dir: hasSuffix "linux" dir) systems)
+        ))
+        // (
+          mergeAttrsList (
+            map genIso
+            (builtins.filter (dir: hasSuffix "linux" dir) systems)
+          )
+        );
     };
 }
