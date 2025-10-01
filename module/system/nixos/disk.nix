@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  inputs,
   ...
 }:
 with lib; let
@@ -28,6 +29,8 @@ in {
       description = "Assign swap size for disk format.";
     };
   };
+
+  imports = [inputs.disko.nixosModules.disko];
 
   config = mkIf (cfg.device != "") (mkMerge [
     (mkIf (cfg.format == "btrfs-default") {

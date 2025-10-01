@@ -59,34 +59,33 @@ echo
 
 if ! confirm "Continue deploying?"; then
     exit 0
+else
+    TEMP=$(mktemp -d)
+    cleanup() {
+        rm -rf "$TEMP"
+    }
+    trap cleanup EXIT
+
+    TARGET_ADDRESS="${TARGET_USER}@${TARGET_IP}"
+
+    print -w "Installing minimal flake on ${TARGET_ADDRESS}..."
 fi
 
-TARGET_ADDRESS="${TARGET_USER}@${TARGET_IP}"
 #@ Step 1: Boostrap NixOs installation with a minimal flake
-print -w "Installing minimal flake on ${TARGET_ADDRESS}."
-print -w "Wiping known_hosts of $TARGET_ADDRESS."
-ssh-keygen -R "$TARGET_IP" >/dev/null 2>&1 || true
 nix run nixpkgs#nixos-anywhere -- \
     --show-trace \
+    --ssh-port "$SSH_PORT" \
     --flake "$ROOT/host#$TARGET_HOSTNAME" \
     --target-host "$TARGET_ADDRESS"
 
 #@ Step 2: Fetch host SSH public key
-if confirm "Start fetching host pub key?" "y"; then
-    # ssh-keygen -R "$TARGET_IP" >/dev/null 2>&1 || true
+print -i "Fetching SSH host key from $TARGET_ADDRESS."
+ssh-keygen -R "$TARGET_IP" ~/.ssh/known_hosts >/dev/null 2>&1 || true
+rsync -q "$TARGET_ADDRESS:/etc/ssh/ssh_host_ed25519_key.pub" \
+    "${TEMP}/${TARGET_HOSTNAME}_key.pub"
 
-    print -i "Fetching SSH host key from $TARGET_ADDRESS."
-    TEMP=$(mktemp -d)
-    cleanup() { rm -rf "$TEMP"; }
-    trap cleanup EXIT
-
-    rsync -q "$TARGET_ADDRESS:/etc/ssh/ssh_host_ed25519_key.pub" \
-        "${TEMP}/${TARGET_HOSTNAME}_key.pub"
-
-    PUBKEY=$(<"${TEMP}/${TARGET_HOSTNAME}_key.pub")
-    print -i "$PUBKEY"
-    ssh-keyscan -p "$SSH_PORT" "$TARGET_IP" | grep -v '^#' >>~/.ssh/known_hosts || true
-fi
+TARGET_KEY=$(<"${TEMP}/${TARGET_HOSTNAME}_key.pub")
+print -i "$TARGET_KEY"
 
 #@ Step 3: Update .sops.yaml in nix-secrets with new key if not already present
 

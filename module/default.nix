@@ -39,16 +39,19 @@ with lib; {
     then map (f: (path + "/${f}")) names
     else names;
 
+  #TODO: add conflict hostname check before commit
   checkFunc = {
     pre-commit-hooks,
     system,
     ...
   }: {
-    pre-commit-check = pre-commit-hooks.lib.${system}.run {
-      src = ../.;
-      hooks = {
-        alejandra.enable = true;
-      };
-    };
+    # pre-commit-check = pre-commit-hooks.lib.${system}.run {
+    #   src = ../.;
+    #   hooks = {
+    #     alejandra.enable = true;
+    #   };
+    # };
+
+    # hostname-conflict =
   };
 }
