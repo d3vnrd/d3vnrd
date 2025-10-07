@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -72,7 +73,7 @@
                   };
 
                   users.users.nixos.openssh.authorizedKeys.keys = [
-                    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEQyVlweJ2+noPOb3/PwBn9xcuj/npJPz2T52Au8eoTT root@wsl"
+                    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKzGrfkbSKcBDUd4ZNy72cApL3M1VP79mBn1yQGLaebP root@init"
                   ];
                 }
             )

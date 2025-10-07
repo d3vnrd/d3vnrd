@@ -80,7 +80,7 @@ check() {
         done
 
         if ((${#missing[@]})); then
-            print -e "Missing required commands: ${missing[*]}"
+            print -e "Missing required commands: ${missing[*]}. See ${ORIGIN} --help."
             exit 1
         fi
         ;;
@@ -124,7 +124,11 @@ confirm() {
 
         case "$input" in
         [Yy] | [Yy][Ee][Ss]) return 0 ;;
-        *) return 1 ;;
+        [Nn] | [Nn][Oo]) return 1 ;;
+        *)
+            print -w "Please answer yes or no."
+            continue
+            ;;
         esac
     done
 }

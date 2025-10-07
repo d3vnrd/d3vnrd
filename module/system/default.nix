@@ -18,8 +18,8 @@ with lib; {
 
       users.${vars.username} = {
         isNormalUser = mkForce true;
-        extraGroups = ["wheel"];
-        openssh.authorizedKeys.keys = [];
+        extraGroups = mkDefault ["wheel"];
+        openssh.authorizedKeys.keys = mkDefault [];
       };
     };
 

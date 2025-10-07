@@ -72,38 +72,56 @@ echo
 if ! confirm "Confirm deploying options?"; then
     exit 0
 fi
+echo
 
-# Check list:
-# - fetch host key
-# - convert it to age key
-# - update sops with host age key
-# - ensure there is a client key for current source host
-# - rebuild system
+# --PRE-INSTALL--
+print -i "Evaluating target host system state..."
+# if target system already have it client ssh key then process
+# to ask user for full flake deployment
 
+print -i "Checking authentication key..."
+if [[ ! -f "$AUTH_KEY" ]]; then
+    print -e "Authentication key not found: $AUTH_KEY"
+    exit 1
+else
+    print -d "Found authentication key at $AUTH_KEY"
+fi
+echo
+
+print -i "Testing SSH connection..."
+TARGET_ADDRESS="nixos@${TARGET_IP}"
+if ! ssh -p "$SSH_PORT" -i "$AUTH_KEY" -o ConnectTimeout=10 \
+    "$TARGET_ADDRESS" "echo 'SSH OK'" >/dev/null 2>&1; then
+    print -e "Cannot connect to $TARGET_ADDRESS"
+    exit 1
+fi
+echo
+
+print -i "Cleaning known_hosts entries for $TARGET_IP"
+ssh-keygen -R "$TARGET_IP" >/dev/null 2>&1 || true
+ssh-keygen -R "[$TARGET_IP]:$SSH_PORT" >/dev/null 2>&1 || true
+echo
+
+print -i "Adding SSH host fingerprint"
+ssh-keyscan -t ed25519 -p "$SSH_PORT" "$TARGET_IP" >>~/.ssh/known_hosts 2>/dev/null
+echo
+
+print -i "Generate target host client key..."
 TEMP=$(mktemp -d)
+chmod 700 "$TEMP"
 cleanup() { rm -rf "$TEMP"; }
 trap cleanup EXIT
 
-TARGET_USER="nixos"
-TARGET_ADDRESS="${TARGET_USER}@${TARGET_IP}"
-print -w "Stage 1: Bootstraping system at $TARGET_ADDRESS with minimal flake!"
-
-# PRE-INSTALL
-print -i "Removing existed public key of $TARGET_IP in ~/.ssh/known_hosts."
-ssh-keygen -R "$TARGET_IP" >/dev/null 2>&1 || true
-[ "$SSH_PORT" != "22" ] && ssh-keygen -R "[${TARGET_IP}]:${SSH_PORT}" >/dev/null 2>&1 || true
-
-print -i "Adding ssh host fingerprint at $TARGET_IP to ~/.ssh/known_hosts"
-ssh-keyscan -t ed25519 -p "$SSH_PORT" "$TARGET_IP" >>~/.ssh/known_hosts 2>/dev/null
-
-print -i "Preparing bootstrap key for secrets repo installation."
 install -d -m700 "$TEMP/home/nixos/.ssh"
-cat "$AUTH_KEY" >"$TEMP/home/nixos/.ssh/id_bootstrap"
-chmod 600 "$TEMP/home/nixos/.ssh/id_bootstrap"
+ssh-keygen -t ed25519 -N "" \
+    -C "host@${TARGET_HOSTNAME}" \
+    -f "$TEMP$/home/nixos/.ssh/host_$TARGET_HOSTNAME"
+chmod 600 "$TEMP$/home/nixos/.ssh/host_$TARGET_HOSTNAME"
+echo
 
 bootstrap=(
     nix run nixpkgs#nixos-anywhere --
-    -i "$KEY"
+    -i "$AUTH_KEY"
     --show-trace
     --extra-files "$TEMP"
     --ssh-port "$SSH_PORT"
@@ -112,39 +130,68 @@ bootstrap=(
 )
 
 if confirm "Generate and copy target hardware-configuration.nix?"; then
-    ARCH=$(ssh "$TARGET_ADDRESS" nix eval --raw --impure --expr 'builtins.currentSystem')
+    print -i "Detecting target architecture..."
+    SSH_CMD=(ssh -p "$SSH_PORT" -i "$AUTH_KEY" "$TARGET_ADDRESS")
+    if ARCH=$("${SSH_CMD[@]}" nix eval --raw --impure --expr 'builtins.currentSystem' 2>/dev/null); then
+        print -d "Detected architecture: $ARCH"
+    else
+        print -w "Could not detect architecture, defaulting to x86_64-linux"
+        ARCH="x86_64-linux"
+    fi
+
     TARGET_HARDWARE="$ROOT/host/$ARCH/$TARGET_HOSTNAME"
     bootstrap+=(--generate-hardware-config nixos-generate-config "$TARGET_HARDWARE")
 fi
 
-# BOOTSTRAP
-# - disk format
-# - change to default user
-# - remove bootstrap key
-# - setup permanent ssh host key pairs
 if confirm "Run nixos-anywhere to install bootstrap system?"; then
     "${bootstrap[@]}"
 else
     print -d "Script terminated because user refused to bootstrap system."
     exit 0
 fi
-
 echo
-print -d "System has been bootstaped."
-print -i "Current system is only suitable for testing purposes."
+
+print -d "Minimal state installation complete."
+print -i "The following actions have been conducted:"
+echo "  - Bootstrap system into minimal state"
+echo "  - Change to flake default user"
+echo "  - Generate target host client key for future deployment"
+echo "  - Update default ISO ssh key to source host client key"
+print -w "Current system is only suitable for testing purposes."
 echo
 
 # POST-BOOTSTRAP
-if ! confirm "To continue install please confirm"; then
+if ! confirm "Continue the installation process?"; then
     exit 0
 fi
+echo
 
-print -i "Update known_hosts fingerprint."
+print -i "Update source known_hosts fingerprint."
 ssh-keygen -R "$TARGET_IP" >/dev/null 2>&1 || true
 [ "$SSH_PORT" != "22" ] && ssh-keygen -R "[${TARGET_IP}]:${SSH_PORT}" >/dev/null 2>&1 || true
 ssh-keyscan -t ed25519 -p "$SSH_PORT" "$TARGET_IP" >>~/.ssh/known_hosts 2>/dev/null
+echo
 
-#@ Step 2: Fetch host SSH public key and convert it to age key
+TARGET_KEY=$("${SSH_CMD[@]}" echo /home/nixos/.ssh/host_"$TARGET_HOSTNAME".pub)
+while true; do
+    if confirm "Added the given public key to secrets deployment key?" "y"; then
+        break
+    else
+        print -w "Secrets ingestion is not possible without public key added to deployment key."
+        if confirm "Cancel script?"; then
+            exit 0
+        else
+            continue
+        fi
+    fi
+done
+
+if confirm "Copy public key to host config location?" "y"; then
+    cat "$TARGET_KEY" "$ROOT/host/$ARCH/$TARGET_HOSTNAME/host_$TARGET_HOSTNAME.pub"
+fi
+
+# Fetch host SSH public key and convert it to age key
+print -i "Copy and convert host server key to age format for secrets update."
 scp -p "$SSH_PORT" -i "$AUTH_KEY" \
     "${TEMP}/${TARGET_HOSTNAME}_key.pub" \
     "$TARGET_ADDRESS:/etc/ssh/ssh_host_ed25519_key.pub"

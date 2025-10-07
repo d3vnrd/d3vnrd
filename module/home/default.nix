@@ -8,7 +8,6 @@
     matchBlocks = {
       "vcs" = {
         host = "gitlab.com github.com";
-        addKeysToAgent = "confirm";
         identitiesOnly = true;
         identityFile = [
           "~/.ssh/vcs"

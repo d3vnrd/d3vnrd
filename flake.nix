@@ -70,7 +70,7 @@
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
     secrets = {
-      url = "git+ssh://git@github.com/d3vnrd/secrets.git?ref=main&shallow=1";
+      url = "git+ssh://git@github.com/d3vnrd/vault.git?ref=main&shallow=1";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
