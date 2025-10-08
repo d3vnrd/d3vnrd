@@ -2,6 +2,7 @@
   inputs,
   systems,
   helper,
+  ...
 }: let
   inherit (inputs) nixpkgs nix-darwin secrets home-manager;
   inherit (nixpkgs) lib;
@@ -50,14 +51,15 @@
             specialArgs = {inherit inputs helper;};
 
             modules = flatten (let
-              cfg = ./${system}/${hostname}; # host-specific
+              host-config = ./${system}/${hostname}; # host-specific
+              hardware = ./${system}/${hostname}/hardware-configuration.nix;
             in [
               opts.module
               ../module/system
 
               ({vars, ...}: {
                 home-manager.users.${vars.username}.imports = flatten (let
-                  cfg = ./${system}/${hostname}/home.nix; # host-specific
+                  home-config = ./${system}/${hostname}/home.nix; # host-specific
                 in [
                   ({vars, ...}: {
                     imports = [
@@ -71,7 +73,7 @@
                     };
                   })
 
-                  (optional (builtins.pathExists cfg) cfg)
+                  (optional (builtins.pathExists home-config) home-config)
                 ]);
 
                 home-manager = {
@@ -83,7 +85,8 @@
                 networking.hostName = mkForce hostname;
               })
 
-              (optional (builtins.pathExists cfg) cfg)
+              (optional (builtins.pathExists hardware) hardware)
+              (optional (builtins.pathExists host-config) host-config)
             ]);
           }
       );
@@ -97,7 +100,7 @@
       home.homeDirectory = "/home/" + username;
     },
   }: {
-    ${username} = inputs.home-manager.lib.homeManagerConfiguration {
+    ${username} = home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs {inherit system;};
       extraSpecialArgs = {inherit inputs helper;};
 

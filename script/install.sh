@@ -75,7 +75,7 @@ fi
 echo
 
 # --PRE-INSTALL--
-print -i "Evaluating target host system state..."
+# print -i "Evaluating target host system state..."
 # if target system already have it client ssh key then process
 # to ask user for full flake deployment
 
@@ -88,15 +88,6 @@ else
 fi
 echo
 
-print -i "Testing SSH connection..."
-TARGET_ADDRESS="nixos@${TARGET_IP}"
-if ! ssh -p "$SSH_PORT" -i "$AUTH_KEY" -o ConnectTimeout=10 \
-    "$TARGET_ADDRESS" "echo 'SSH OK'" >/dev/null 2>&1; then
-    print -e "Cannot connect to $TARGET_ADDRESS"
-    exit 1
-fi
-echo
-
 print -i "Cleaning known_hosts entries for $TARGET_IP"
 ssh-keygen -R "$TARGET_IP" >/dev/null 2>&1 || true
 ssh-keygen -R "[$TARGET_IP]:$SSH_PORT" >/dev/null 2>&1 || true
@@ -104,6 +95,17 @@ echo
 
 print -i "Adding SSH host fingerprint"
 ssh-keyscan -t ed25519 -p "$SSH_PORT" "$TARGET_IP" >>~/.ssh/known_hosts 2>/dev/null
+echo
+
+print -i "Testing SSH connection..."
+TARGET_ADDRESS="root@${TARGET_IP}"
+SSH_CMD=(ssh -p "$SSH_PORT" -i "$AUTH_KEY" -o ConnectTimeout=10 "$TARGET_ADDRESS")
+if ! "${SSH_CMD[@]}" "echo 'SSH OK'" >/dev/null 2>&1; then
+    print -e "Cannot connect to $TARGET_ADDRESS"
+    exit 1
+else
+    print -d "Connection ready!"
+fi
 echo
 
 print -i "Generate target host client key..."
@@ -115,8 +117,8 @@ trap cleanup EXIT
 install -d -m700 "$TEMP/home/nixos/.ssh"
 ssh-keygen -t ed25519 -N "" \
     -C "host@${TARGET_HOSTNAME}" \
-    -f "$TEMP$/home/nixos/.ssh/host_$TARGET_HOSTNAME"
-chmod 600 "$TEMP$/home/nixos/.ssh/host_$TARGET_HOSTNAME"
+    -f "$TEMP/home/nixos/.ssh/host_$TARGET_HOSTNAME"
+chmod 600 "$TEMP/home/nixos/.ssh/host_$TARGET_HOSTNAME"
 echo
 
 bootstrap=(
@@ -129,23 +131,24 @@ bootstrap=(
     --target-host "$TARGET_ADDRESS"
 )
 
-if confirm "Generate and copy target hardware-configuration.nix?"; then
-    print -i "Detecting target architecture..."
-    SSH_CMD=(ssh -p "$SSH_PORT" -i "$AUTH_KEY" "$TARGET_ADDRESS")
-    if ARCH=$("${SSH_CMD[@]}" nix eval --raw --impure --expr 'builtins.currentSystem' 2>/dev/null); then
-        print -d "Detected architecture: $ARCH"
-    else
-        print -w "Could not detect architecture, defaulting to x86_64-linux"
-        ARCH="x86_64-linux"
+if confirm "Run nixos-anywhere to install bootstrap system?"; then
+    echo
+    if confirm "Generate and copy target hardware-configuration.nix?"; then
+        print -i "Detecting target architecture..."
+        SSH_CMD=(ssh -p "$SSH_PORT" -i "$AUTH_KEY" "$TARGET_ADDRESS")
+        if ARCH="$("${SSH_CMD[@]}" uname -m 2>/dev/null)-linux"; then
+            print -d "Detected architecture: $ARCH"
+            TARGET_HARDWARE="$ROOT/host/$ARCH/$TARGET_HOSTNAME"
+            print -i "Adding hardware-configuration to $TARGET_HARDWARE"
+            bootstrap+=(--generate-hardware-config nixos-generate-config "$TARGET_HARDWARE/hardware-configuration.nix")
+        else
+            print -w "Could not detect architecture, skipping..."
+        fi
     fi
 
-    TARGET_HARDWARE="$ROOT/host/$ARCH/$TARGET_HOSTNAME"
-    bootstrap+=(--generate-hardware-config nixos-generate-config "$TARGET_HARDWARE")
-fi
-
-if confirm "Run nixos-anywhere to install bootstrap system?"; then
     "${bootstrap[@]}"
 else
+    echo
     print -d "Script terminated because user refused to bootstrap system."
     exit 0
 fi

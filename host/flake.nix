@@ -34,16 +34,35 @@
               inherit system;
               specialArgs = {inherit inputs helper;};
               modules = flatten (let
-                cfg = ./${system}/${hostname};
+                host-config = ./${system}/${hostname};
               in [
-                ../module/system/nixos/disk.nix
                 {
                   networking.hostName = mkForce hostname;
                   nix.settings.experimental-features = mkForce ["nix-command" "flakes"];
-                  nixpkgs.config.allowUnfree = mkDefault true;
-                  system.stateVersion = mkForce "25.05";
+                  nixpkgs.config.allowUnfree = true;
+
+                  services.openssh = {
+                    enable = mkForce true;
+                    settings = {
+                      PasswordAuthentication = mkForce false; # disable passwd login
+                      PermitRootLogin = mkForce "no"; # no ssh login for root
+                    };
+                  };
+
+                  users.mutableUsers = mkForce false; # disable user alternation locally
+                  users.users = {
+                    nixos = {
+                      isNormalUser = mkForce true;
+                      description = "Bootstrap user (only for testing purposes).";
+                      extraGroups = ["wheel" "networkmanager"];
+                      initialHashedPassword = "$y$j9T$1KBu8pvh7ZaL4B7ucW9eB/$JineoKvouit/1l7FcRsCxI1WtQSIe8AfcimHeDmgWS5";
+                    };
+
+                    root.initialHashedPassword = "!"; # disable passwd login locally
+                  };
                 }
-                (optional (builtins.pathExists cfg) cfg)
+
+                (optional (builtins.pathExists host-config) host-config)
               ]);
             }
         );
@@ -54,28 +73,21 @@
           inherit system;
           modules = [
             (
-              {
-                lib,
-                modulesPath,
-                ...
-              }:
-                with lib; {
-                  imports = ["${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"];
+              {modulesPath, ...}: {
+                imports = ["${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"];
 
-                  networking.useDHCP = mkDefault true;
-
-                  services.openssh = {
-                    enable = true;
-                    settings = {
-                      PasswordAuthentication = false;
-                      PermitRootLogin = "prohibit-password";
-                    };
+                services.openssh = {
+                  enable = true;
+                  settings = {
+                    PasswordAuthentication = false;
+                    PermitRootLogin = "prohibit-password"; # only allow ssh authentication
                   };
+                };
 
-                  users.users.nixos.openssh.authorizedKeys.keys = [
-                    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKzGrfkbSKcBDUd4ZNy72cApL3M1VP79mBn1yQGLaebP root@init"
-                  ];
-                }
+                users.users.root.openssh.authorizedKeys.keys = [
+                  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHAdbOcH4X1gybi1dl/nzBSyvxYdTW+tPz3F3tPh5PtF bootstrap"
+                ];
+              }
             )
           ];
         };
@@ -83,10 +95,12 @@
   in
     with lib; {
       nixosConfigurations =
-        (helper.mergeNoOverride (
-          map genInit
-          (builtins.filter (dir: hasSuffix "linux" dir) systems)
-        ))
+        (
+          helper.mergeNoOverride (
+            map genInit
+            (builtins.filter (dir: hasSuffix "linux" dir) systems)
+          )
+        )
         // (
           mergeAttrsList (
             map genIso

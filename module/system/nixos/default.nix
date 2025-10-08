@@ -6,7 +6,6 @@
 }:
 with lib; {
   options.M = {
-    #@TODO: "none" option should indicate that the current host is a server
     displayServer = mkOption {
       type = types.enum ["wayland" "xserver" "none"];
       default = "none";

@@ -14,23 +14,27 @@ with lib; {
       default = [];
       description = "Additional packages (beside default).";
     };
+
+    defaultPkgs = mkEnableOption "Enable user default packages.";
   };
 
   config = {
     environment.variables.EDITOR = "nvim --clean";
     environment.systemPackages = with pkgs;
       flatten [
-        gh
-        gcc
-        unzip
-        direnv
-        just
+        (optionals (config.M.defaultPkgs) [
+          gh
+          gcc
+          unzip
+          direnv
+          just
 
-        wget
-        curl
+          wget
+          curl
 
-        rsync
-        neovim
+          rsync
+          neovim
+        ])
 
         config.M.addPkgs
       ];

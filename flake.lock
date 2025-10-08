@@ -601,10 +601,10 @@
         "sops-nix": "sops-nix"
       },
       "locked": {
-        "lastModified": 1759746532,
-        "narHash": "sha256-PjWp7QuOLXqAU6VK1iQvizB0BRIPZzVkO38tUjzYCEo=",
+        "lastModified": 1759822123,
+        "narHash": "sha256-hscYJsZZvTin/IqoUjAai0n39BoNaHCFhvOlbPH2luE=",
         "ref": "main",
-        "rev": "4b1105a88bb14beb857a524204430e1ef53d7f2e",
+        "rev": "03f5e76ac5f4796bce0c0bd38b070cec1b64df09",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/d3vnrd/vault.git"

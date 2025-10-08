@@ -24,6 +24,7 @@
     autoPrune.enable = true;
   };
 
+  M.defaultPkgs = true;
   M.addPkgs = with pkgs; [
     wsl-open
     xclip
