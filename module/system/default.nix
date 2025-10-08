@@ -8,45 +8,27 @@
 with lib; {
   imports = [./packages];
 
-  config = mergeAttrsList [
-    {
-      nix.settings.experimental-features = mkForce ["nix-command" "flakes"];
-      nixpkgs.config.allowUnfree = mkDefault true;
-      users.defaultUserShell = mkIf config.programs.zsh.enable pkgs.zsh;
+  config = {
+    nix.settings.experimental-features = mkForce ["nix-command" "flakes"];
+    nixpkgs.config.allowUnfree = mkDefault true;
+    users.defaultUserShell = mkIf config.programs.zsh.enable pkgs.zsh;
 
-      services.openssh = {
-        enable = true;
-        settings = {
-          PasswordAuthentication = false;
-          PermitRootLogin = "no";
-        };
+    services.openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        PermitRootLogin = "no";
       };
-    }
+    };
 
-    (
-      if (builtins.isAttrs vars)
-      then {
-        users.users = {
-          ${vars.username} = {
-            isNormalUser = mkForce true;
-            extraGroups = mkDefault ["wheel"];
-          };
-        };
+    users.mutableUsers = false;
+    users.users.${vars.username} = {
+      isNormalUser = mkForce true;
+      extraGroups = mkDefault ["wheel" "networking"];
+      initialHashedPassword = "$y$j9T$M6TybczU2EA.4QsbGotzL/$D4CO6z0J.jJsIx84jlHSmQ/FRVxzp9i6.U8T2TlbMV6";
+    };
 
-        time.timeZone = mkDefault vars.timeZone;
-        system.stateVersion = mkForce vars.stateVersion;
-      }
-      else {
-        users.users = {
-          nixos = {
-            isNormalUser = mkForce true;
-            extraGroups = mkDefault ["wheel"];
-          };
-        };
-
-        time.timeZone = mkDefault "UTC";
-        system.stateVersion = mkForce "25.05";
-      }
-    )
-  ];
+    time.timeZone = mkDefault vars.timeZone;
+    system.stateVersion = mkForce vars.stateVersion;
+  };
 }

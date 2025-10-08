@@ -34,7 +34,7 @@
               inherit system;
               specialArgs = {inherit inputs helper;};
               modules = flatten (let
-                host-config = ./${system}/${hostname};
+                init-config = ./${system}/${hostname}/init.nix;
               in [
                 {
                   networking.hostName = mkForce hostname;
@@ -56,13 +56,14 @@
                       description = "Bootstrap user (only for testing purposes).";
                       extraGroups = ["wheel" "networkmanager"];
                       initialHashedPassword = "$y$j9T$1KBu8pvh7ZaL4B7ucW9eB/$JineoKvouit/1l7FcRsCxI1WtQSIe8AfcimHeDmgWS5";
+                      #@ Tips: config openssh.authorizedKeys.keys in init.nix file
                     };
 
                     root.initialHashedPassword = "!"; # disable passwd login locally
                   };
                 }
 
-                (optional (builtins.pathExists host-config) host-config)
+                (optional (builtins.pathExists init-config) init-config)
               ]);
             }
         );

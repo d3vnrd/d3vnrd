@@ -54,8 +54,8 @@
               host-config = ./${system}/${hostname}; # host-specific
               hardware = ./${system}/${hostname}/hardware-configuration.nix;
             in [
-              opts.module
               ../module/system
+              opts.module
 
               ({vars, ...}: {
                 home-manager.users.${vars.username}.imports = flatten (let

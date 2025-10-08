@@ -1,3 +1,3 @@
 {...}: {
-  M.sops = false;
+  M.sops.enable = true;
 }

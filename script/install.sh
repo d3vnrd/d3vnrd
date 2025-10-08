@@ -190,7 +190,7 @@ while true; do
 done
 
 if confirm "Copy public key to host config location?" "y"; then
-    cat "$TARGET_KEY" "$ROOT/host/$ARCH/$TARGET_HOSTNAME/host_$TARGET_HOSTNAME.pub"
+    cat "$TARGET_KEY" "$ROOT/host/$ARCH/$TARGET_HOSTNAME/key.pub"
 fi
 
 # Fetch host SSH public key and convert it to age key
