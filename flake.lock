@@ -607,13 +607,13 @@
         "rev": "4b5e32572e54fdbb752ac15043ddf493feb15b10",
         "shallow": true,
         "type": "git",
-        "url": "ssh://git@github.com/d3vnrd/vault.git"
+        "url": "ssh://git@github.com/d3vnrd/d3vnrd.secrets.git"
       },
       "original": {
         "ref": "main",
         "shallow": true,
         "type": "git",
-        "url": "ssh://git@github.com/d3vnrd/vault.git"
+        "url": "ssh://git@github.com/d3vnrd/d3vnrd.secrets.git"
       }
     },
     "sops-nix": {

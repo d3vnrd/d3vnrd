@@ -74,10 +74,18 @@ if ! confirm "Confirm deploying options?"; then
 fi
 echo
 
+# --PROCESS FUNCTIONS--
+
 # --PRE-INSTALL--
 # print -i "Evaluating target host system state..."
 # if target system already have it client ssh key then process
 # to ask user for full flake deployment
+
+TARGET_ADDRESS="nixos@${TARGET_IP}"
+SSH_CMD=(ssh -p "$SSH_PORT" -i "$AUTH_KEY" -o ConnectTimeout=10 "$TARGET_ADDRESS")
+if "${SSH_CMD[@]}" "echo 'SSH OK'" >/dev/null 2>&1; then
+    print -d "Connection ready!"
+fi
 
 print -i "Checking authentication key..."
 if [[ ! -f "$AUTH_KEY" ]]; then
@@ -175,6 +183,8 @@ ssh-keygen -R "$TARGET_IP" >/dev/null 2>&1 || true
 ssh-keyscan -t ed25519 -p "$SSH_PORT" "$TARGET_IP" >>~/.ssh/known_hosts 2>/dev/null
 echo
 
+TARGET_ADDRESS="nixos@${TARGET_IP}"
+SSH_CMD=(ssh -p "$SSH_PORT" -i ~/.ssh/host_wsl -o ConnectTimeout=10 "$TARGET_ADDRESS")
 TARGET_KEY=$("${SSH_CMD[@]}" echo /home/nixos/.ssh/host_"$TARGET_HOSTNAME".pub)
 while true; do
     if confirm "Added the given public key to secrets deployment key?" "y"; then
