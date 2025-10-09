@@ -1,0 +1,13 @@
+{{ define "main" }}
+<div class="command-line">
+  <span class="prompt">{{ .Site.Params.hostname }}@devlog:~$</span>
+  <input
+    type="text"
+    class="command-input"
+    id="commandInput"
+    placeholder="Type 'help' for available commands"
+    autofocus
+  >
+  <span class="cursor">
+</div>
+{{ end }}

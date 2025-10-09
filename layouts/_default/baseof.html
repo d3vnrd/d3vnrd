@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin="anonymous"
+    >
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap"
+    >
+    <link rel="stylesheet" href="/style/main.css">
+
+    <title>{{ if not .IsHome }}{{ .Title }} - {{ end }}{{ .Site.Title }}</title>
+  </head>
+  <body>
+    <main>
+      {{ partial "navbar" . }}
+
+      <section class="content">
+        {{ block "main" .}} {{ end }}
+      </section>
+
+      {{ partial "footer" . }}
+    </main>
+  </body>
+</html>

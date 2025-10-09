@@ -1,0 +1,22 @@
+baseURL = "https://localhost:1313"
+languageCode = "en-us"
+title = "T|mpLab"
+
+pluralizelisttitles = false
+pygmentsstyle = "monokai"
+pygmentscodefences = true
+pygmentscodefencesguesssyntax = true
+
+[params]
+    author = "Tin Nguyen"
+    hostname = "tlmp59"
+
+[[params.social]]
+    name = "Github"
+    url = ""
+[[params.social]]
+    name = "LinkedIn"
+    url = ""
+[[params.social]]
+    name = "Instagram"
+    url = ""

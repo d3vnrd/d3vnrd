@@ -1,0 +1,85 @@
+:root {
+  /* base16 colorscheme */
+  --base00: #181818;
+  --base01: #282828;
+  --base02: #383838;
+  --base03: #585858;
+  --base04: #b8b8b8;
+  --base05: #d8d8d8;
+  --base06: #e8e8e8;
+  --base07: #f8f8f8;
+
+  /* borrowed from doko */
+  --font: "Space Grotesk", arial;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 62.5%;
+}
+
+body {
+  background: var(--base00);
+  color: var(--base05);
+  font-size: 1.6rem;
+  font-family: var(--font);
+  line-height: 1.3;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  &:hover {
+    color: var(--base07);
+  }
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+}
+
+.nav-left {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.nav-right {
+  color: var(--base04);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 1.4rem;
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.foot-right {
+  color: var(--base04);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.container {
+  max-width: 768px;
+  min-height: 100vh;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

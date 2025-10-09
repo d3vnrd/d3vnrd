@@ -1,0 +1,88 @@
+:root {
+  /* main colorscheme: eerie */
+  --base00: #101010;
+  --base01: #252525;
+  --base02: #b9b9b9;
+  --base0R: #c4746e;
+  --base0G: #8a9a7b;
+  --base0B: #8ba4b0;
+  --base0Y: #c4b28a;
+  --base0P: #a292a3;
+  --base0C: #8ea4a2;
+
+  --base10: #464646;
+  --base11: #525252;
+  --base12: #e3e3e3;
+  --base1R: #e46876;
+  --base1G: #87a987;
+  --base1B: #7fb4ca;
+  --base1Y: #e6c384;
+  --base1P: #938aa9;
+  --base1C: #7aa89f;
+
+  --font: monospace, "Space Grotesk";
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 62.5%;
+  height: 100%;
+}
+
+body {
+  background: var(--base00);
+  color: var(--base02);
+  font-family: var(--font);
+  font-size: 1.6rem;
+  line-height: 1.6;
+  padding: 0 10px 0 10px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  &:hover {
+    color: var(--base12);
+  }
+}
+
+.content {
+  padding: 10px;
+  flex: 1;
+}
+
+.command-line {
+  display: flex;
+  align-items: center;
+}
+
+.prompt {
+  color: var(--base0G);
+  margin-right: 10px;
+}
+
+.command-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--base02);
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+  caret-color: var(--base02);
+}

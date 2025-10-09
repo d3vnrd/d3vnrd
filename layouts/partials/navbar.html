@@ -1,0 +1,28 @@
+<style>
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0 10px 0;
+  border-bottom: 1px solid var(--base01);
+}
+</style>
+<!-- TODO: add language dropdown -->
+<nav>
+  <a class="title" href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
+
+  <div class="location">
+    <a
+      href="https://www.google.com/maps/place/Ho+Chi+Minh+City,+Vietnam/@10.755446,106.0358238,308142m/data=!3m2!1e3!4b1!4m6!3m5!1s0x317529292e8d3dd1:0xf15f5aad773c112b!8m2!3d10.8230989!4d106.6296638!16zL20vMGhuNGg?entry=ttu&g_ep=EgoyMDI1MDgwNC4wIKXMDSoASAFQAw%3D%3D"
+    >Saigon</a>
+    <span> / </span>
+    <a href="/remote">Remote</a>
+  </div>
+
+  <div class="language-dropdown">
+    <a>Language</a>
+    <!-- <a class="language-option active" data-lang="en">English</a> -->
+    <!-- <span> / </span> -->
+    <!-- <a class="language-option" data-lang="vn">Vietnamese</a> -->
+  </div>
+</nav>
