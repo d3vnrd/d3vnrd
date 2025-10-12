@@ -60,6 +60,7 @@ in {
       bash-language-server
       lua-language-server
       yaml-language-server
+      vscode-css-languageserver
       nixd
       harper
       pyright
