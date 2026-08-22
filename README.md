@@ -8,10 +8,10 @@
 
 A short introduction. Who you are, what you do, and perhaps what you're currently interested in.
 
-<h4>$ cat ./dev-corner</h4>
+<h4>$ cat ./dev-corner/readme</h4>
 
 Your technical playground. Languages, tools, projects, current experiments, and things you're learning.
 
-<h4>$ cat ./contact-info</h4>
+<h4>$ ls ./contact-info</h4>
 
 Links to GitHub, LinkedIn, email, personal site, etc.
