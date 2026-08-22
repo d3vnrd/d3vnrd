@@ -4,18 +4,14 @@
   "Be curious, not judgmental" - Not Walt Whitman
 </p>
 
-```bash
-curl devonrd.dev
-```
-
-### About meh
+<h4>$ whoami</h4>
 
 A short introduction. Who you are, what you do, and perhaps what you're currently interested in.
 
-### Dev corner
+<h4>$ cat ./dev-corner</h4>
 
 Your technical playground. Languages, tools, projects, current experiments, and things you're learning.
 
-### Contact info
+<h4>$ cat ./contact-info</h4>
 
 Links to GitHub, LinkedIn, email, personal site, etc.
